@@ -4,17 +4,32 @@ const fse = require('fs-extra');
 const {UWProskomma} = require('uw-proskomma');
 const {doRender} = require('proskomma-render-perf');
 const perf2html = require('../../src/perf2html').default;
+const Epitelete = require('../../src/index').default;
 
 const testGroup = 'Smoke';
 
+const pk = new UWProskomma();
+const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_succinct.json')));
+pk.loadSuccinctDocSet(succinctJson);
+
 test(
-    `Hello (${testGroup})`,
+    `Instantiate Epitelete (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            t.doesNotThrow(() => new Epitelete(pk, "eBible/fra_fraLSG"));
+            t.throws(() => new Epitelete(pk), "2 arguments");
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
+    `Hello - REPLACE ASAP (${testGroup})`,
     async function (t) {
         try {
             t.plan(1);
-            const pk = new UWProskomma();
-            const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_succinct.json')));
-            pk.loadSuccinctDocSet(succinctJson);
             const config = {
                 selectedSequenceId: null,
                 output: {
@@ -33,7 +48,7 @@ test(
             );
             // console.log(config2.output.docSets["eBible/fra_fraLSG"].documents["JON"].sequences);
             t.equal(config2.validationErrors, null);
-            console.log(perf2html(config2.output));
+            // console.log(perf2html(config2.output));
             // console.log(JSON.stringify(config2.output.docSets["eBible/fra_fraLSG"].documents["JON"]));
             // console.log(config2.validationErrors);
         } catch (err) {

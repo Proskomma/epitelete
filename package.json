@@ -26,7 +26,7 @@
   "homepage": "https://github.com/Proskomma/epitelete#readme",
   "dependencies": {
     "@babel/core": "^7.17.10",
-    "proskomma-render-perf": "0.0.1"
+    "proskomma-render-perf": "0.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",

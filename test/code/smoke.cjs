@@ -4,7 +4,6 @@ const fse = require('fs-extra');
 const {UWProskomma} = require('uw-proskomma');
 const {doRender} = require('proskomma-render-perf');
 const perf2html = require('../../src/perf2html').default;
-console.log(perf2html);
 
 const testGroup = 'Smoke';
 
@@ -32,6 +31,7 @@ test(
                 [docSetId],
                 [documentId],
             );
+            // console.log(config2.output.docSets["eBible/fra_fraLSG"].documents["JON"].sequences);
             t.equal(config2.validationErrors, null);
             console.log(perf2html(config2.output));
             // console.log(JSON.stringify(config2.output.docSets["eBible/fra_fraLSG"].documents["JON"]));

@@ -25,7 +25,7 @@ const perf2html = perf => {
     const [bookCode, documentOb] = Object.entries(docSetOb.documents)[0];
     const [sequenceId, sequenceOb] = Object.entries(documentOb.sequences).filter(s => s[1].selected)[0];
     return `<div id="document" data-docSetId="${docSetId}" data-bookCode="${bookCode}">
-<div id="sequence" data-sequenceId="${sequenceId}">
+<div id="sequence" data-sequenceId="${sequenceId}" data-sequenceType="${sequenceOb.type}">
   <div id="headers">
 ${
         Object.entries(documentOb.headers).map(h =>

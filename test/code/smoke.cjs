@@ -9,7 +9,8 @@ const Epitelete = require('../../src/index').default;
 const testGroup = 'Smoke';
 
 const pk = new UWProskomma();
-const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_succinct.json')));
+// const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'fra_lsg_succinct.json')));
+const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'eng_engWEBBE_succinct.json')));
 pk.loadSuccinctDocSet(succinctJson);
 
 test(
@@ -40,7 +41,7 @@ test(
             const query = '{docSets { id documents {id bookCode: header(id:"bookCode")} } }';
             const gqlResult = pk.gqlQuerySync(query);
             const docSetId = gqlResult.data.docSets[0].id;
-            const bookCode = "JON";
+            const bookCode = "LUK";
             const documentId = gqlResult.data.docSets[0].documents.filter(d => d.bookCode === bookCode)[0].id;
             const config2 = await doRender(
                 pk,

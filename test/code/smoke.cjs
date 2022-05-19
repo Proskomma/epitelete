@@ -32,6 +32,7 @@ test(
             t.plan(1);
             const config = {
                 selectedSequenceId: null,
+                allSequences: true,
                 output: {
                     docSets: {},
                 }
@@ -39,17 +40,28 @@ test(
             const query = '{docSets { id documents {id bookCode: header(id:"bookCode")} } }';
             const gqlResult = pk.gqlQuerySync(query);
             const docSetId = gqlResult.data.docSets[0].id;
-            const documentId = gqlResult.data.docSets[0].documents.filter(d => d.bookCode === 'JON')[0].id;
+            const bookCode = "JON";
+            const documentId = gqlResult.data.docSets[0].documents.filter(d => d.bookCode === bookCode)[0].id;
             const config2 = await doRender(
                 pk,
                 config,
                 [docSetId],
                 [documentId],
             );
-            // console.log(config2.output.docSets["eBible/fra_fraLSG"].documents["JON"].sequences);
+            // console.log(config2.output.docSets[docSetId].documents[bookCode].sequences);
             t.equal(config2.validationErrors, null);
+            const ret = {
+                docSetId,
+                documentId,
+                mainSequenceId: config2.output.docSets[docSetId].documents[bookCode].mainSequence,
+                headers: config2.output.docSets[docSetId].documents[bookCode].headers,
+                sequenceHtml: {},
+            };
+            Object.keys(config2.output.docSets[docSetId].documents[bookCode].sequences)
+                .forEach(seqId => {ret.sequenceHtml[seqId] = perf2html(config2.output, seqId)});
+            console.log(JSON.stringify(ret, null, 2));
             // console.log(perf2html(config2.output));
-            // console.log(JSON.stringify(config2.output.docSets["eBible/fra_fraLSG"].documents["JON"]));
+            // console.log(JSON.stringify(config2.output.docSets[docSetId].documents[bookCode]));
             // console.log(config2.validationErrors);
         } catch (err) {
             console.log(err);

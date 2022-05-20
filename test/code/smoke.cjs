@@ -17,9 +17,10 @@ test(
     `Instantiate Epitelete (${testGroup})`,
     async function (t) {
         try {
-            t.plan(2);
-            t.doesNotThrow(() => new Epitelete(pk, "eBible/fra_fraLSG"));
+            t.plan(3);
+            t.doesNotThrow(() => new Epitelete(pk, "DBL/eng_engWEBBE"));
             t.throws(() => new Epitelete(pk), "2 arguments");
+            t.throws(() => new Epitelete(pk, "eBible/fra_fraLSG"),"docSetId not found");
         } catch (err) {
             console.log(err);
         }
@@ -60,7 +61,7 @@ test(
             };
             Object.keys(config2.output.docSets[docSetId].documents[bookCode].sequences)
                 .forEach(seqId => {ret.sequenceHtml[seqId] = perf2html(config2.output, seqId)});
-            console.log(JSON.stringify(ret, null, 2));
+            // console.log(JSON.stringify(ret, null, 2));
             // console.log(perf2html(config2.output));
             // console.log(JSON.stringify(config2.output.docSets[docSetId].documents[bookCode]));
             // console.log(config2.validationErrors);

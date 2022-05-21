@@ -30,12 +30,27 @@ test(
 );
 
 test(
-    `Run fetchPerf (${testGroup})`,
+    `Call fetchPerf (${testGroup})`,
     async function (t) {
+        t.plan(1);
         try{
-            t.plan(1);
-            t.ok(await epitelete.fetchPerf("LUK"));
+            const output = await epitelete.fetchPerf("LUK");
+            t.ok(output);
+            // const ret = {
+            //     docSetId,
+            //     documentId,
+            //     mainSequenceId: config2.output.docSets[docSetId].documents[bookCode].mainSequence,
+            //     headers: config2.output.docSets[docSetId].documents[bookCode].headers,
+            //     sequenceHtml: {},
+            // };
+            // Object.keys(config2.output.docSets[docSetId].documents[bookCode].sequences)
+            //     .forEach(seqId => {ret.sequenceHtml[seqId] = perf2html(config2.output, seqId)});
+            // // console.log(JSON.stringify(ret, null, 2));
+            // // console.log(perf2html(config2.output));
+            // // console.log(JSON.stringify(config2.output.docSets[docSetId].documents[bookCode]));
+            // // console.log(config2.validationErrors);
         } catch (err) {
+            t.error(err);
             console.log(err);
         }
     },

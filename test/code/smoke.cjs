@@ -20,7 +20,7 @@ test(
             t.plan(3);
             t.doesNotThrow(() => new Epitelete(pk, "DBL/eng_engWEBBE"));
             t.throws(() => new Epitelete(pk), "2 arguments");
-            t.throws(() => new Epitelete(pk, "eBible/fra_fraLSG"),"docSetId not found");
+            t.throws(() => new Epitelete(pk, "eBible/fra_fraLSG"),"docSetId is not present");
         } catch (err) {
             console.log(err);
         }
@@ -28,44 +28,36 @@ test(
 );
 
 test(
-    `Hello - REPLACE ASAP (${testGroup})`,
+    `Call fetchPerf (${testGroup})`,
     async function (t) {
-        try {
-            t.plan(1);
-            const config = {
-                selectedSequenceId: null,
-                allSequences: true,
-                output: {
-                    docSets: {},
-                }
-            };
-            const query = '{docSets { id documents {id bookCode: header(id:"bookCode")} } }';
-            const gqlResult = pk.gqlQuerySync(query);
-            const docSetId = gqlResult.data.docSets[0].id;
+        t.plan(8);
+        try{
+            const docSetId = "DBL/eng_engWEBBE";
             const bookCode = "LUK";
-            const documentId = gqlResult.data.docSets[0].documents.filter(d => d.bookCode === bookCode)[0].id;
-            const config2 = await doRender(
-                pk,
-                config,
-                [docSetId],
-                [documentId],
-            );
-            // console.log(config2.output.docSets[docSetId].documents[bookCode].sequences);
-            t.equal(config2.validationErrors, null);
+            const epitelete = new Epitelete(pk, docSetId);
+            const output = await epitelete.fetchPerf(bookCode);
+            t.ok("docSets" in output);
+            t.ok(docSetId in output.docSets);
+            t.ok("documents" in output.docSets[docSetId]);
+            t.ok(bookCode in output.docSets[docSetId].documents);
+            const doc = output.docSets[docSetId].documents[bookCode];
+            for (const k of ['headers', 'tags', 'sequences', 'mainSequence']) {
+                t.ok(k in doc);
+            }
+
+            // Make HTML - move to subclass!
             const ret = {
-                docSetId,
-                documentId,
-                mainSequenceId: config2.output.docSets[docSetId].documents[bookCode].mainSequence,
-                headers: config2.output.docSets[docSetId].documents[bookCode].headers,
-                sequenceHtml: {},
-            };
-            Object.keys(config2.output.docSets[docSetId].documents[bookCode].sequences)
-                .forEach(seqId => {ret.sequenceHtml[seqId] = perf2html(config2.output, seqId)});
+                     docSetId,
+                     mainSequenceId: output.docSets[docSetId].documents[bookCode].mainSequence,
+                     headers: output.docSets[docSetId].documents[bookCode].headers,
+                     sequenceHtml: {},
+                 };
+            Object.keys(output.docSets[docSetId].documents[bookCode].sequences)
+                .forEach(seqId => {ret.sequenceHtml[seqId] = perf2html(output, seqId)});
             // console.log(JSON.stringify(ret, null, 2));
-            // console.log(perf2html(config2.output));
-            // console.log(JSON.stringify(config2.output.docSets[docSetId].documents[bookCode]));
-            // console.log(config2.validationErrors);
+            
         } catch (err) {
+            t.error(err);
             console.log(err);
         }
     },

@@ -13,8 +13,6 @@ const pk = new UWProskomma();
 const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, '..', 'test_data', 'eng_engWEBBE_succinct.json')));
 pk.loadSuccinctDocSet(succinctJson);
 
-const epitelete = new Epitelete(pk, "DBL/eng_engWEBBE");
-
 test(
     `Instantiate Epitelete (${testGroup})`,
     async function (t) {
@@ -32,23 +30,32 @@ test(
 test(
     `Call fetchPerf (${testGroup})`,
     async function (t) {
-        t.plan(1);
+        t.plan(8);
         try{
-            const output = await epitelete.fetchPerf("LUK");
-            t.ok(output);
-            // const ret = {
-            //     docSetId,
-            //     documentId,
-            //     mainSequenceId: config2.output.docSets[docSetId].documents[bookCode].mainSequence,
-            //     headers: config2.output.docSets[docSetId].documents[bookCode].headers,
-            //     sequenceHtml: {},
-            // };
-            // Object.keys(config2.output.docSets[docSetId].documents[bookCode].sequences)
-            //     .forEach(seqId => {ret.sequenceHtml[seqId] = perf2html(config2.output, seqId)});
-            // // console.log(JSON.stringify(ret, null, 2));
-            // // console.log(perf2html(config2.output));
-            // // console.log(JSON.stringify(config2.output.docSets[docSetId].documents[bookCode]));
-            // // console.log(config2.validationErrors);
+            const docSetId = "DBL/eng_engWEBBE";
+            const bookCode = "LUK";
+            const epitelete = new Epitelete(pk, docSetId);
+            const output = await epitelete.fetchPerf(bookCode);
+            t.ok("docSets" in output);
+            t.ok(docSetId in output.docSets);
+            t.ok("documents" in output.docSets[docSetId]);
+            t.ok(bookCode in output.docSets[docSetId].documents);
+            const doc = output.docSets[docSetId].documents[bookCode];
+            for (const k of ['headers', 'tags', 'sequences', 'mainSequence']) {
+                t.ok(k in doc);
+            }
+
+            // Make HTML - move to subclass!
+            const ret = {
+                     docSetId,
+                     mainSequenceId: output.docSets[docSetId].documents[bookCode].mainSequence,
+                     headers: output.docSets[docSetId].documents[bookCode].headers,
+                     sequenceHtml: {},
+                 };
+            Object.keys(output.docSets[docSetId].documents[bookCode].sequences)
+                .forEach(seqId => {ret.sequenceHtml[seqId] = perf2html(output, seqId)});
+            // console.log(JSON.stringify(ret, null, 2));
+            
         } catch (err) {
             t.error(err);
             console.log(err);

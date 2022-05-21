@@ -49,7 +49,6 @@ class Epitelete {
         if (config2.validationErrors) {
             throw new Error(`doRender validation error`);
         }
-
         return config2.output;
     }
 }

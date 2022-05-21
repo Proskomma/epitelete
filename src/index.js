@@ -1,4 +1,5 @@
-const {doRender} = require('proskomma-render-perf');
+const { doRender } = require('proskomma-render-perf');
+
 class Epitelete {
 
     constructor(pk, docSetId) {

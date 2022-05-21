@@ -32,25 +32,9 @@ test(
 test(
     `Run fetchPerf (${testGroup})`,
     async function (t) {
-        try {
-            t.plan(3);
-            t.doesNotThrow(() => epitelete.fetchPerf("LUK"));
-            t.throws(() => epitelete.fetchPerf(), "1 argument");
-            t.throws(() => epitelete.fetchPerf("DNE"), "No document");
-
-            // const ret = {
-            //     docSetId,
-            //     documentId,
-            //     mainSequenceId: config2.output.docSets[docSetId].documents[bookCode].mainSequence,
-            //     headers: config2.output.docSets[docSetId].documents[bookCode].headers,
-            //     sequenceHtml: {},
-            // };
-            // Object.keys(config2.output.docSets[docSetId].documents[bookCode].sequences)
-            //     .forEach(seqId => {ret.sequenceHtml[seqId] = perf2html(config2.output, seqId)});
-            // // console.log(JSON.stringify(ret, null, 2));
-            // // console.log(perf2html(config2.output));
-            // // console.log(JSON.stringify(config2.output.docSets[docSetId].documents[bookCode]));
-            // // console.log(config2.validationErrors);
+        try{
+            t.plan(1);
+            t.ok(await epitelete.fetchPerf("LUK"));
         } catch (err) {
             console.log(err);
         }

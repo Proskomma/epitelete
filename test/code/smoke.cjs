@@ -43,7 +43,21 @@ test(
                 t.end();
             }
         )
-            
+
+        t.test(
+            `fetchPerf should not fetch wrong bookCode`,
+            async t => {
+                t.plan(1);
+                try {
+                    const bookCode = "LU";
+                    await epitelete.fetchPerf(bookCode).then(data => data);
+                    t.fail('Should not succeed');
+                } catch (err) {
+                    t.throws(() => {throw new Error(err)});
+                }
+            }
+        )
+
         t.test(
             `fetchPerf() returns config output`,
             async t => {
@@ -104,7 +118,21 @@ test(
                 t.end();
             }
         )
-            
+
+        t.test(
+            `readPerf should not read wrong bookCode`,
+            async t => {
+                t.plan(1);
+                try {
+                    const bookCode = "LU";
+                    await epitelete.readPerf(bookCode).then(data => data);
+                    t.fail('Should not succeed');
+                } catch (err) {
+                    t.throws(() => {throw new Error(err)});
+                }
+            }
+        )
+
         t.test(
             `readPerf returns config output`,
             async t => {

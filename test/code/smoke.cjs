@@ -50,7 +50,7 @@ test(
                 t.plan(1);
                 try {
                     const bookCode = "LU";
-                    await epitelete.fetchPerf(bookCode).then(data => data);
+                    await epitelete.fetchPerf(bookCode);
                     t.fail('Should not succeed');
                 } catch (err) {
                     t.throws(() => {throw new Error(err)});
@@ -125,7 +125,7 @@ test(
                 t.plan(1);
                 try {
                     const bookCode = "LU";
-                    await epitelete.readPerf(bookCode).then(data => data);
+                    await epitelete.readPerf(bookCode);
                     t.fail('Should not succeed');
                 } catch (err) {
                     t.throws(() => {throw new Error(err)});

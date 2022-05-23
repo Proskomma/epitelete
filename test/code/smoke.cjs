@@ -35,7 +35,7 @@ test(
 
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete(pk, docSetId);
-        
+
         t.test(
             "fetchPerf() is defined",
             async t => {
@@ -73,6 +73,7 @@ test(
                         t.ok(k in doc);
                     }
                     // Make HTML - move to subclass!
+                    /*
                     const ret = {
                         docSetId,
                         mainSequenceId: output.docSets[docSetId].documents[bookCode].mainSequence,
@@ -81,8 +82,8 @@ test(
                     };
                     Object.keys(output.docSets[docSetId].documents[bookCode].sequences)
                         .forEach(seqId => { ret.sequenceHtml[seqId] = perf2html(output, seqId) });
+                        */
                     // console.log(JSON.stringify(ret, null, 2));
-                    
                 } catch (err) {
                     t.error(err)
                     console.log(err);
@@ -110,7 +111,7 @@ test(
 
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete(pk, docSetId);
-        
+
         t.test(
             "readPerf() is defined",
             async t => {
@@ -156,7 +157,7 @@ test(
 
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete(pk, docSetId);
-        
+
         t.test(
             "localBookCodes() is defined",
             async t => {
@@ -164,7 +165,7 @@ test(
                 t.end();
             }
         )
-            
+
         t.test(
             `localBookCodes returns list of document keys`,
             async t => {
@@ -192,7 +193,7 @@ test(
 
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete(pk, docSetId);
-        
+
         t.test(
             "clearPerf() is defined",
             async t => {
@@ -200,7 +201,7 @@ test(
                 t.end();
             }
         )
-            
+
         t.test(
             `clearPerf clears list of document keys`,
             async t => {

@@ -198,7 +198,8 @@ test(
             t.equal(bookCount, expectedBookCount, 'expected ' + expectedBookCount + ' books');
             for (const bookCode of bookCodes) {
                 const headers = bookHeaders[bookCode];
-                t.ok(headers.length >= expectedMinHeaderCount, bookCode + ' expected at least ' + expectedMinHeaderCount + ' fields');
+                const headerCount = Object.keys(headers).length;
+                t.ok(headerCount >= expectedMinHeaderCount, bookCode + ' expected at least ' + expectedMinHeaderCount + ' fields');
             }
         } catch (err) {
             t.error(err);

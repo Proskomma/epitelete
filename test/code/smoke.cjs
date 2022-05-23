@@ -179,6 +179,28 @@ test(
 )
 
 test(
+    `availableBookCodes returns list of available book codes (${testGroup})`,
+    async t => {
+        debugger;
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+
+            const availableBookCodes = epitelete.availableBookCodes();
+            console.log('available book codes:', availableBookCodes);
+            console.log('number of books:', availableBookCodes.length);
+
+            t.ok(availableBookCodes)
+            t.equal(availableBookCodes.length, 81, 'expected at least 66 books');
+        } catch (err) {
+            t.error(err);
+            console.log(err);
+        }
+        t.end()
+    }
+)
+
+test(
     `clearPerf() is defined (${testGroup})`,
     async t => {
         const docSetId = "DBL/eng_engWEBBE";

@@ -68,6 +68,25 @@ class Epitelete {
         return Object.keys(this.documents);
     }
 
+    availableBookCodes() {
+        const bookCodes = [];
+        const docSets = this.pk?.docSets || {};
+        const docSetKeys = Object.keys(docSets);
+        for (const docSetKey of docSetKeys) {
+            const docSet = docSets[docSetKey];
+            const documents = docSet?.processor?.documents || {};
+            const documentKeys = Object.keys(documents);
+            for (const documentKey of documentKeys) {
+                const firstDocument = documents[documentKey];
+                const bookCode = firstDocument?.headers?.bookCode;
+                if (bookCode) {
+                    bookCodes.push(bookCode);
+                }
+            }
+        }
+        return bookCodes;
+    }
+
     clearPerf() {
         this.documents = {};
     }

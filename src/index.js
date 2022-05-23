@@ -16,6 +16,7 @@ class Epitelete {
 
         this.pk = pk;
         this.docSetId = docSetId;
+        this.documents = {}
     }
 
     async fetchPerf(bookCode) {
@@ -49,7 +50,26 @@ class Epitelete {
         if (config2.validationErrors) {
             throw new Error(`doRender validation error`);
         }
-        return config2.output;
+
+        const output = config2.output;
+        //const doc = output.docSets[this.docSetId].documents[bookCode];
+
+        this.documents[bookCode] = output; //doc;
+
+        return output; //doc;
+    }
+
+    async readPerf(bookCode) {
+        const doc = this.documents[bookCode] || await this.fetchPerf(bookCode);
+        return doc;
+    }
+
+    localBookCodes() {
+        return Object.keys(this.documents);
+    }
+
+    clearPerf() {
+        this.documents = {};
     }
 }
 

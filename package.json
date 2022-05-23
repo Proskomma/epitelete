@@ -10,7 +10,6 @@
     "test": "bash -c \"babel-tape-runner test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "babel-tape-runner test/code/*.cjs",
     "oneTest": "babel-tape-runner test/code/$TESTSCRIPT.cjs",
-    "coverage": "node_modules/nyc/bin/nyc.js babel-tape-runner test/code/*.cjs",
     "build": "babel src -d dist",
     "prepublishOnly": "rm -fr dist && npm run build"
   },

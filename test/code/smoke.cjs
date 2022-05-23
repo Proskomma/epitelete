@@ -179,7 +179,7 @@ test(
 )
 
 test(
-    `bookHeaders returns list of available book codes (${testGroup})`,
+    `bookHeaders returns object of available book codes (${testGroup})`,
     async t => {
         debugger;
         try {

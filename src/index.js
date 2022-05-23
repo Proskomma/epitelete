@@ -68,23 +68,26 @@ class Epitelete {
         return Object.keys(this.documents);
     }
 
-    availableBookCodes() {
-        const bookCodes = [];
-        const docSets = this.pk?.docSets || {};
-        const docSetKeys = Object.keys(docSets);
-        for (const docSetKey of docSetKeys) {
-            const docSet = docSets[docSetKey];
-            const documents = docSet?.processor?.documents || {};
-            const documentKeys = Object.keys(documents);
-            for (const documentKey of documentKeys) {
-                const firstDocument = documents[documentKey];
-                const bookCode = firstDocument?.headers?.bookCode;
-                if (bookCode) {
-                    bookCodes.push(bookCode);
+    bookHeaders() {
+        const bookCodes = {};
+        const query = `{ docSet(id: "${this.docSetId}") { documents { headers { key value } } } }`;
+        const { data: gqlResult } = this.pk.gqlQuerySync(query);
+        const documents = gqlResult?.docSet?.documents || [];
+        for (const document of documents) {
+            let key = null;
+            const headers = [];
+            for (const header of document.headers) {
+                if (header.key === 'bookCode') {
+                    key = header.value;
+                } else {
+                    headers.push(header);
                 }
             }
+            if (key) {
+                bookCodes[key] = headers;
+            }
         }
-        return bookCodes;
+       return bookCodes;
     }
 
     clearPerf() {

@@ -179,19 +179,27 @@ test(
 )
 
 test(
-    `availableBookCodes returns list of available book codes (${testGroup})`,
+    `bookHeaders returns list of available book codes (${testGroup})`,
     async t => {
         debugger;
         try {
+            const expectedMinHeaderCount = `5`;
+            const expectedBookCount = 81;
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete(pk, docSetId);
 
-            const availableBookCodes = epitelete.availableBookCodes();
-            console.log('available book codes:', availableBookCodes);
-            console.log('number of books:', availableBookCodes.length);
+            const bookHeaders = epitelete.bookHeaders();
+            const bookCodes = Object.keys(bookHeaders);
+            console.log('available book codes:', bookCodes);
+            const bookCount = bookCodes.length;
+            console.log('number of books:', bookCount);
 
-            t.ok(availableBookCodes)
-            t.equal(availableBookCodes.length, 81, 'expected at least 66 books');
+            t.ok(bookCodes)
+            t.equal(bookCount, expectedBookCount, 'expected ' + expectedBookCount + ' books');
+            for (const bookCode of bookCodes) {
+                const headers = bookHeaders[bookCode];
+                t.ok(headers.length >= expectedMinHeaderCount, bookCode + ' expected at least ' + expectedMinHeaderCount + ' fields');
+            }
         } catch (err) {
             t.error(err);
             console.log(err);

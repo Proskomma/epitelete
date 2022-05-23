@@ -51,9 +51,9 @@ test(
                 try {
                     const bookCode = "LU";
                     await epitelete.fetchPerf(bookCode);
-                    t.fail('Should not succeed');
+                    t.fail("fetchPerf with bad bookCode should throw but didn't");
                 } catch (err) {
-                    t.throws(() => {throw new Error(err)});
+                    t.pass("fetchPerf throws on bad bookCode");
                 }
             }
         )
@@ -127,9 +127,9 @@ test(
                 try {
                     const bookCode = "LU";
                     await epitelete.readPerf(bookCode);
-                    t.fail('Should not succeed');
+                    t.fail("readPerf with bad bookCode should throw but didn't");
                 } catch (err) {
-                    t.throws(() => {throw new Error(err)});
+                    t.pass("readPerf throws on bad bookCode");
                 }
             }
         )

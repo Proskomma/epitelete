@@ -68,6 +68,33 @@ class Epitelete {
         return Object.keys(this.documents);
     }
 
+    /**
+     * gets the available books for current docSet. Returns an object with book codes as keys, and values
+     *   contain book header data
+     * @returns {{}}
+     */
+    bookHeaders() {
+        const bookCodes = {};
+        const query = `{ docSet(id: "${this.docSetId}") { documents { headers { key value } } } }`;
+        const { data: gqlResult } = this.pk.gqlQuerySync(query);
+        const documents = gqlResult?.docSet?.documents || [];
+        for (const document of documents) {
+            let key = null;
+            const headers = {};
+            for (const header of document.headers) {
+                if (header.key === 'bookCode') {
+                    key = header.value;
+                } else {
+                    headers[header.key] = header.value;
+                }
+            }
+            if (key) {
+                bookCodes[key] = headers;
+            }
+        }
+       return bookCodes;
+    }
+
     clearPerf() {
         this.documents = {};
     }

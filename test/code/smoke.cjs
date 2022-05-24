@@ -179,6 +179,37 @@ test(
 )
 
 test(
+    `bookHeaders returns object of available book codes (${testGroup})`,
+    async t => {
+        debugger;
+        try {
+            const expectedMinHeaderCount = `5`;
+            const expectedBookCount = 81;
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+
+            const bookHeaders = epitelete.bookHeaders();
+            const bookCodes = Object.keys(bookHeaders);
+            console.log('available book codes:', bookCodes);
+            const bookCount = bookCodes.length;
+            console.log('number of books:', bookCount);
+
+            t.ok(bookCodes)
+            t.equal(bookCount, expectedBookCount, 'expected ' + expectedBookCount + ' books');
+            for (const bookCode of bookCodes) {
+                const headers = bookHeaders[bookCode];
+                const headerCount = Object.keys(headers).length;
+                t.ok(headerCount >= expectedMinHeaderCount, bookCode + ' expected at least ' + expectedMinHeaderCount + ' fields');
+            }
+        } catch (err) {
+            t.error(err);
+            console.log(err);
+        }
+        t.end()
+    }
+)
+
+test(
     `clearPerf() is defined (${testGroup})`,
     async t => {
         const docSetId = "DBL/eng_engWEBBE";

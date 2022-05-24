@@ -179,7 +179,7 @@ test(
 )
 
 test(
-    `bookHeaders returns object of available book codes (${testGroup})`,
+    `bookHeaders returns USFM headers for available book codes (${testGroup})`,
     async t => {
         debugger;
         try {

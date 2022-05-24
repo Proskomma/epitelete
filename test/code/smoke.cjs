@@ -61,27 +61,10 @@ test(
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete(pk, docSetId);
             const bookCode = "LUK";
-            const output = await epitelete.fetchPerf(bookCode);
-            t.ok("docSets" in output);
-            t.ok(docSetId in output.docSets);
-            t.ok("documents" in output.docSets[docSetId]);
-            t.ok(bookCode in output.docSets[docSetId].documents);
-            const doc = output.docSets[docSetId].documents[bookCode];
+            const doc = await epitelete.fetchPerf(bookCode);
             for (const k of ["headers", "tags", "sequences", "mainSequence"]) {
                 t.ok(k in doc);
             }
-            // Make HTML - move to subclass!
-            /*
-            const ret = {
-                docSetId,
-                mainSequenceId: output.docSets[docSetId].documents[bookCode].mainSequence,
-                headers: output.docSets[docSetId].documents[bookCode].headers,
-                sequenceHtml: {},
-            };
-            Object.keys(output.docSets[docSetId].documents[bookCode].sequences)
-                .forEach(seqId => { ret.sequenceHtml[seqId] = perf2html(output, seqId) });
-                */
-            // console.log(JSON.stringify(ret, null, 2));
         } catch (err) {
             t.error(err)
             console.log(err);

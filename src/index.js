@@ -64,7 +64,7 @@ class Epitelete {
         return doc;
     }
 
-    async perfWrite(bookCode, perfSequence) {
+    async perfWrite(bookCode, sequenceId, perfSequence) {
         console.log('someone needs to write this!');
         return null;
     }

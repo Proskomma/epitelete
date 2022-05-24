@@ -139,6 +139,20 @@ test(
             const bookCode = "LUK";
             const readOutput = await epitelete.readPerf(bookCode);
             const fetchedOutput = await epitelete.fetchPerf(bookCode);
+            console.log('fetchedOutput',fetchedOutput);
+            const docSets = fetchedOutput?.docSets;
+            console.log('docSets',docSets);
+            const docSetKeys = Object.keys(docSets);
+            const docSet0 = docSets[docSetKeys[0]];
+            const documents = docSet0?.documents;
+            console.log('documents:',documents);
+            const documentKeys = Object.keys(documents);
+            const document0 = documents[documentKeys[0]];
+            console.log('document0:',document0);
+            const sequences = document0.sequences;
+            const sequencesKeys = Object.keys(sequences);
+            const sequences
+            console.log('document0:',document0);
             t.deepEqual(readOutput,fetchedOutput);
         } catch (err) {
             t.error(err);
@@ -189,10 +203,11 @@ test(
             const epitelete = new Epitelete(pk, docSetId);
 
             const bookHeaders = epitelete.bookHeaders();
+            // console.log('bookHeaders returns:', JSON.stringify(bookHeaders, null,2));
             const bookCodes = Object.keys(bookHeaders);
-            console.log('available book codes:', bookCodes);
+            // console.log('available book codes:', bookCodes);
             const bookCount = bookCodes.length;
-            console.log('number of books:', bookCount);
+            // console.log('number of books:', bookCount);
 
             t.ok(bookCodes)
             t.equal(bookCount, expectedBookCount, 'expected ' + expectedBookCount + ' books');

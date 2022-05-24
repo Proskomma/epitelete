@@ -2,7 +2,6 @@ const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
-const {doRender} = require("proskomma-render-perf");
 const perf2html = require("../../src/perf2html").default;
 const Epitelete = require("../../src/index").default;
 
@@ -62,27 +61,10 @@ test(
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete(pk, docSetId);
             const bookCode = "LUK";
-            const output = await epitelete.fetchPerf(bookCode);
-            t.ok("docSets" in output);
-            t.ok(docSetId in output.docSets);
-            t.ok("documents" in output.docSets[docSetId]);
-            t.ok(bookCode in output.docSets[docSetId].documents);
-            const doc = output.docSets[docSetId].documents[bookCode];
+            const doc = await epitelete.fetchPerf(bookCode);
             for (const k of ["headers", "tags", "sequences", "mainSequence"]) {
                 t.ok(k in doc);
             }
-            // Make HTML - move to subclass!
-            /*
-            const ret = {
-                docSetId,
-                mainSequenceId: output.docSets[docSetId].documents[bookCode].mainSequence,
-                headers: output.docSets[docSetId].documents[bookCode].headers,
-                sequenceHtml: {},
-            };
-            Object.keys(output.docSets[docSetId].documents[bookCode].sequences)
-                .forEach(seqId => { ret.sequenceHtml[seqId] = perf2html(output, seqId) });
-                */
-            // console.log(JSON.stringify(ret, null, 2));
         } catch (err) {
             t.error(err)
             console.log(err);
@@ -199,7 +181,7 @@ test(
 )
 
 test(
-    `bookHeaders returns object of available book codes (${testGroup})`,
+    `bookHeaders returns USFM headers for available book codes (${testGroup})`,
     async t => {
         debugger;
         try {

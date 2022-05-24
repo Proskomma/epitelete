@@ -74,7 +74,7 @@ class Epitelete {
      * @returns {{}}
      */
     bookHeaders() {
-        const bookCodes = {};
+        const documentHeaders = {};
         const query = `{ docSet(id: "${this.docSetId}") { documents { headers { key value } } } }`;
         const { data: gqlResult } = this.pk.gqlQuerySync(query);
         const documents = gqlResult?.docSet?.documents || [];
@@ -89,10 +89,10 @@ class Epitelete {
                 }
             }
             if (key) {
-                bookCodes[key] = headers;
+                documentHeaders[key] = headers;
             }
         }
-       return bookCodes;
+       return documentHeaders;
     }
 
     clearPerf() {

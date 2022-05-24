@@ -190,9 +190,9 @@ test(
 
             const bookHeaders = epitelete.bookHeaders();
             const bookCodes = Object.keys(bookHeaders);
-            console.log('available book codes:', bookCodes);
+            // console.log('available book codes:', bookCodes);
             const bookCount = bookCodes.length;
-            console.log('number of books:', bookCount);
+            // console.log('number of books:', bookCount);
 
             t.ok(bookCodes)
             t.equal(bookCount, expectedBookCount, 'expected ' + expectedBookCount + ' books');

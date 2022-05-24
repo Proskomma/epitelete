@@ -64,6 +64,11 @@ class Epitelete {
         return doc;
     }
 
+    async perfWrite(bookCode, perfSequence) {
+        console.log('someone needs to write this!');
+        return null;
+    }
+
     localBookCodes() {
         return Object.keys(this.documents);
     }

@@ -154,6 +154,11 @@ test(
             const sequencesKeys = Object.keys(sequences);
             const sequence0 = sequences[sequencesKeys[0]];
             console.log('sequence0:',sequence0);
+            const blocks = sequence0?.blocks;
+            const block1 = blocks[1];
+            console.log('block1:',block1);
+            const content = block1?.content;
+            console.log('content:',content);
             t.deepEqual(readOutput,fetchedOutput);
         } catch (err) {
             t.error(err);

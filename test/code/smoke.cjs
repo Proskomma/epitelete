@@ -240,3 +240,28 @@ test(
         t.end()
     }
 )
+
+test(
+    `test perfWrite (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode);
+            const documents = epitelete.documents;
+            const lukeDoc = documents[bookCode];
+            const sequences = lukeDoc?.sequences;
+            // console.log('sequences',sequences);
+            const sequenceId3 = Object.keys(sequences)[3];
+            // console.log('sequenceId3',sequenceId3);
+            const sequence3 = sequences[sequenceId3];
+            // console.log('sequence3',sequence3);
+            const newDoc = await epitelete.perfWrite(bookCode, sequenceId3, sequence3);
+        } catch (err) {
+            t.error(err);
+            console.log(err);
+        }
+        t.end()
+    }
+)

@@ -64,6 +64,13 @@ class Epitelete {
 
     async perfWrite(bookCode, sequenceId, perfSequence) {
         console.log('someone needs to write this!');
+        // find sequenceId in existing this.documents
+        // create modified document
+        // validate modified document
+        // if not valid throw error
+        // if valid
+            // update this.documents with modified document
+            // return modified document
         return null;
     }
 

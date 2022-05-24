@@ -51,12 +51,10 @@ class Epitelete {
             throw new Error(`doRender validation error`);
         }
 
-        const output = config2.output;
-        //const doc = output.docSets[this.docSetId].documents[bookCode];
+        const doc = config2.output.docSets[this.docSetId].documents[bookCode];
 
-        this.documents[bookCode] = output; //doc;
-
-        return output; //doc;
+        this.documents[bookCode] = doc;
+        return doc;
     }
 
     async readPerf(bookCode) {

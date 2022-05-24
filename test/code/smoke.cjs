@@ -150,9 +150,10 @@ test(
             const document0 = documents[documentKeys[0]];
             console.log('document0:',document0);
             const sequences = document0.sequences;
+            console.log('sequences:',sequences);
             const sequencesKeys = Object.keys(sequences);
-            const sequences
-            console.log('document0:',document0);
+            const sequence0 = sequences[sequencesKeys[0]];
+            console.log('sequence0:',sequence0);
             t.deepEqual(readOutput,fetchedOutput);
         } catch (err) {
             t.error(err);

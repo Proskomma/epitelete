@@ -1,6 +1,6 @@
 {
   "name": "epitelete",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "PERF Middleware for Editors in the Proskomma Ecosystem",
   "main": "dist/index.js",
   "directories": {

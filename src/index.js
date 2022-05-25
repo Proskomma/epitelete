@@ -19,6 +19,7 @@ class Epitelete {
         this.pk = pk;
         this.docSetId = docSetId;
         this.documents = {}
+        this.validator = new ProskommaJsonValidator();
     }
 
     async fetchPerf(bookCode) {
@@ -86,8 +87,7 @@ class Epitelete {
         }
 
         // validate new perf sequence
-        const validator = new ProskommaJsonValidator();
-        const validatorResult = validator.validate('sequencePerf', perfSequence);
+        const validatorResult = this.validator.validate('sequencePerf', perfSequence);
         // if not valid throw error
         if (!validatorResult.isValid) {
             throw `prefSequence is not valid for ${bookCode}, ${sequenceId}`;

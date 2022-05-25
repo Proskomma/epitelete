@@ -3,7 +3,7 @@ PERF Middleware for Editors in the Proskomma Ecosystem
 
 ## Installation
 ```
-npm install Proskomma/epitelete
+npm install epitelete
 ```
 ## Usage
 ```

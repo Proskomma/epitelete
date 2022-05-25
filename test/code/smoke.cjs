@@ -2,7 +2,6 @@ const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
-const perf2html = require("../../src/perf2html").default;
 const Epitelete = require("../../src/index").default;
 
 const testGroup = "Smoke";

@@ -1,3 +1,5 @@
+import {default as ProskommaJsonValidator} from "proskomma-json-validator";
+
 const { doRender } = require('proskomma-render-perf');
 
 class Epitelete {
@@ -17,6 +19,7 @@ class Epitelete {
         this.pk = pk;
         this.docSetId = docSetId;
         this.documents = {}
+        this.validator = new ProskommaJsonValidator();
     }
 
     async fetchPerf(bookCode) {
@@ -60,6 +63,41 @@ class Epitelete {
     async readPerf(bookCode) {
         const doc = this.documents[bookCode] || await this.fetchPerf(bookCode);
         return doc;
+    }
+
+    async perfWrite(bookCode, sequenceId, perfSequence) {
+        // find sequenceId in existing this.documents
+        const currentDoc = this.documents?.[bookCode];
+        if (!currentDoc) {
+            throw `document not found: ${bookCode}`;
+        }
+        const sequences = currentDoc?.sequences;
+        const previousPerfSequence = sequences?.[sequenceId];
+        // if not found throw error
+        if (!previousPerfSequence) {
+            throw `prefSequence not found: ${bookCode}, ${sequenceId}`;
+        }
+        // validate new perf sequence
+        const validatorResult = this.validator.validate('sequencePerf', perfSequence);
+        // if not valid throw error
+        if (!validatorResult.isValid) {
+            throw `prefSequence is not valid for ${bookCode}, ${sequenceId}`;
+        }
+
+        // if valid
+        // create modified document
+        const newSequences = {...currentDoc.sequences};
+        newSequences[sequenceId] = perfSequence;
+        const newDocument = currentDoc;
+        newDocument.sequences = newSequences;
+        const newDocuments = {...this.documents};
+
+        // update this.documents with modified document
+        newDocuments[bookCode] = newDocument;
+        this.documents = newDocuments;
+
+        // return modified document
+        return newDocument;
     }
 
     localBookCodes() {

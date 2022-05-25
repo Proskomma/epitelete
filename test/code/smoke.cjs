@@ -260,24 +260,22 @@ test(
             const documents = epitelete.documents;
             const _doc = _.cloneDeep(documents[bookCode]);
             const lukeDoc = _.cloneDeep(_doc);
+            console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = lukeDoc?.sequences;
             // console.log('sequences',sequences);
             const sequenceId3 = Object.keys(sequences)[3];
             // console.log('sequenceId3',sequenceId3);
             const sequence3 = sequences[sequenceId3];
             let newBlocks = [];
-            console.log('before sequence3',sequence3);
             sequence3.blocks = newBlocks;
-            console.log('after sequence3',sequence3);
             const newDoc = await epitelete.perfWrite(bookCode, 
                 sequenceId3, 
                 sequence3
             );
-            console.log("newDoc sequence=", newDoc.sequences[sequenceId3])
             t.notDeepEqual(newDoc,_doc, "expect to be changed");
-            t.equal(newDoc.sequences[sequenceId3].blocks.length,
-                newBlocks.length, 
-                "expected new blocks to be one less than orginal"
+            t.deepEqual(newDoc.sequences[sequenceId3].blocks,
+                newBlocks, 
+                "expected new blocks to be one less than original"
             );
         } catch (err) {
             t.error(err);

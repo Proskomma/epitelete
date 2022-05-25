@@ -65,7 +65,7 @@ class Epitelete {
     }
 
     async perfWrite(bookCode, sequenceId, perfSequence) {
-        console.log('params', {bookCode, sequenceId, perfSequence});
+        // console.log('params', {bookCode, sequenceId, perfSequence});
         // find sequenceId in existing this.documents
         // console.log('this.documents', this.documents);
         const currentDoc = this.documents?.[bookCode];
@@ -76,7 +76,7 @@ class Epitelete {
         // console.log('currentDoc', currentDoc);
         const sequences = currentDoc?.sequences;
         const previousPerfSequence = sequences?.[sequenceId];
-        console.log('previousPerfSequence', previousPerfSequence);
+        // console.log('previousPerfSequence', previousPerfSequence);
         // const matches = perfSequence === previousPerfSequence;
         // console.log('matches', matches);
 
@@ -94,10 +94,19 @@ class Epitelete {
         }
 
         // if valid
-            // create modified document
-            // update this.documents with modified document
-            // return modified document
-        return null;
+        // create modified document
+        const newSequences = {...currentDoc.sequences};
+        newSequences[sequenceId] = perfSequence;
+        const newDocument = currentDoc;
+        newDocument.sequences = newSequences;
+        const newDocuments = {...this.documents};
+
+        // update this.documents with modified document
+        newDocuments[bookCode] = newDocument;
+        this.documents = newDocuments;
+
+        // return modified document
+        return newDocument;
     }
 
     localBookCodes() {

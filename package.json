@@ -38,6 +38,7 @@
     "path": "^0.12.7",
     "tap-summary": "^4.0.0",
     "tape": "^5.5.3",
-    "uw-proskomma": "^0.7.0"
+    "uw-proskomma": "^0.7.0",
+    "lodash": "4.17.21"
   }
 }

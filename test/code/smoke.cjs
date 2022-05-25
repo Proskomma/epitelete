@@ -4,6 +4,8 @@ const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
 const perf2html = require("../../src/perf2html").default;
 const Epitelete = require("../../src/index").default;
+const _ = require("lodash");
+
 
 const testGroup = "Smoke";
 
@@ -121,26 +123,6 @@ test(
             const bookCode = "LUK";
             const readOutput = await epitelete.readPerf(bookCode);
             const fetchedOutput = await epitelete.fetchPerf(bookCode);
-            console.log('fetchedOutput',fetchedOutput);
-            const docSets = fetchedOutput?.docSets;
-            console.log('docSets',docSets);
-            const docSetKeys = Object.keys(docSets);
-            const docSet0 = docSets[docSetKeys[0]];
-            const documents = docSet0?.documents;
-            console.log('documents:',documents);
-            const documentKeys = Object.keys(documents);
-            const document0 = documents[documentKeys[0]];
-            console.log('document0:',document0);
-            const sequences = document0.sequences;
-            console.log('sequences:',sequences);
-            const sequencesKeys = Object.keys(sequences);
-            const sequence0 = sequences[sequencesKeys[0]];
-            console.log('sequence0:',sequence0);
-            const blocks = sequence0?.blocks;
-            const block1 = blocks[1];
-            console.log('block1:',block1);
-            const content = block1?.content;
-            console.log('content:',content);
             t.deepEqual(readOutput,fetchedOutput);
         } catch (err) {
             t.error(err);
@@ -242,7 +224,7 @@ test(
 )
 
 test(
-    `test perfWrite (${testGroup})`,
+    `test the unchanged PERF (round trip) perfWrite (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -258,6 +240,45 @@ test(
             const sequence3 = sequences[sequenceId3];
             // console.log('sequence3',sequence3);
             const newDoc = await epitelete.perfWrite(bookCode, sequenceId3, sequence3);
+            t.deepEqual(newDoc,lukeDoc, "expect to be unchanged");
+        } catch (err) {
+            t.error(err);
+            console.log(err);
+        }
+        t.end()
+    }
+)
+
+test(
+    `test the changed PERF (round trip) perfWrite (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode);
+            const documents = epitelete.documents;
+            const _doc = _.cloneDeep(documents[bookCode]);
+            const lukeDoc = _.cloneDeep(_doc);
+            const sequences = lukeDoc?.sequences;
+            // console.log('sequences',sequences);
+            const sequenceId3 = Object.keys(sequences)[3];
+            // console.log('sequenceId3',sequenceId3);
+            const sequence3 = sequences[sequenceId3];
+            let newBlocks = [];
+            console.log('before sequence3',sequence3);
+            sequence3.blocks = newBlocks;
+            console.log('after sequence3',sequence3);
+            const newDoc = await epitelete.perfWrite(bookCode, 
+                sequenceId3, 
+                sequence3
+            );
+            console.log("newDoc sequence=", newDoc.sequences[sequenceId3])
+            t.notDeepEqual(newDoc,_doc, "expect to be changed");
+            t.equal(newDoc.sequences[sequenceId3].blocks.length,
+                newBlocks.length, 
+                "expected new blocks to be one less than orginal"
+            );
         } catch (err) {
             t.error(err);
             console.log(err);

@@ -66,26 +66,17 @@ class Epitelete {
     }
 
     async perfWrite(bookCode, sequenceId, perfSequence) {
-        // console.log('params', {bookCode, sequenceId, perfSequence});
         // find sequenceId in existing this.documents
-        // console.log('this.documents', this.documents);
         const currentDoc = this.documents?.[bookCode];
         if (!currentDoc) {
             throw `document not found: ${bookCode}`;
         }
-
-        // console.log('currentDoc', currentDoc);
         const sequences = currentDoc?.sequences;
         const previousPerfSequence = sequences?.[sequenceId];
-        // console.log('previousPerfSequence', previousPerfSequence);
-        // const matches = perfSequence === previousPerfSequence;
-        // console.log('matches', matches);
-
         // if not found throw error
         if (!previousPerfSequence) {
             throw `prefSequence not found: ${bookCode}, ${sequenceId}`;
         }
-
         // validate new perf sequence
         const validatorResult = this.validator.validate('sequencePerf', perfSequence);
         // if not valid throw error

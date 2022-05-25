@@ -23,7 +23,7 @@ test(
             t.throws(() => new Epitelete(pk), "2 arguments");
             t.throws(() => new Epitelete(pk, "eBible/fra_fraLSG"),"docSetId is not present");
         } catch (err) {
-            console.log(err);
+            t.error(err)
         }
     },
 );
@@ -69,7 +69,6 @@ test(
             }
         } catch (err) {
             t.error(err)
-            console.log(err);
         }
         t.end()
     }
@@ -156,7 +155,6 @@ test(
             t.deepEqual(localBookCodes, bookCodes);
         } catch (err) {
             t.error(err);
-            console.log(err);
         }
         t.end()
     }
@@ -173,11 +171,8 @@ test(
             const epitelete = new Epitelete(pk, docSetId);
 
             const bookHeaders = epitelete.bookHeaders();
-            // console.log('bookHeaders returns:', JSON.stringify(bookHeaders, null,2));
             const bookCodes = Object.keys(bookHeaders);
-            // console.log('available book codes:', bookCodes);
             const bookCount = bookCodes.length;
-            // console.log('number of books:', bookCount);
 
             t.ok(bookCodes)
             t.equal(bookCount, expectedBookCount, 'expected ' + expectedBookCount + ' books');
@@ -188,7 +183,6 @@ test(
             }
         } catch (err) {
             t.error(err);
-            console.log(err);
         }
         t.end()
     }
@@ -217,7 +211,6 @@ test(
             t.same(epitelete.documents, {});
         } catch (err) {
             t.error(err);
-            console.log(err);
         }
         t.end()
     }
@@ -234,11 +227,8 @@ test(
             const documents = epitelete.documents;
             const lukeDoc = documents[bookCode];
             const sequences = lukeDoc?.sequences;
-            // console.log('sequences',sequences);
             const sequenceId3 = Object.keys(sequences)[3];
-            // console.log('sequenceId3',sequenceId3);
             const sequence3 = sequences[sequenceId3];
-            // console.log('sequence3',sequence3);
             const newDoc = await epitelete.perfWrite(bookCode, sequenceId3, sequence3);
             t.deepEqual(newDoc,lukeDoc, "expect to be unchanged");
         } catch (err) {
@@ -260,11 +250,9 @@ test(
             const documents = epitelete.documents;
             const _doc = _.cloneDeep(documents[bookCode]);
             const lukeDoc = _.cloneDeep(_doc);
-            console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
+            // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = lukeDoc?.sequences;
-            // console.log('sequences',sequences);
             const sequenceId3 = Object.keys(sequences)[3];
-            // console.log('sequenceId3',sequenceId3);
             const sequence3 = sequences[sequenceId3];
             let newBlocks = [];
             sequence3.blocks = newBlocks;
@@ -279,7 +267,90 @@ test(
             );
         } catch (err) {
             t.error(err);
-            console.log(err);
+        }
+        t.end()
+    }
+)
+
+
+test(
+    `test perfWrite with wrong bookCode (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            const bookCode1 = "LK"
+            await epitelete.readPerf(bookCode);
+            const documents = epitelete.documents;
+            const lukeDoc = documents[bookCode];
+            const sequences = lukeDoc?.sequences;
+            const sequenceId3 = Object.keys(sequences)[3];
+            const sequence3 = sequences[sequenceId3];
+            const newDoc = await epitelete.perfWrite(bookCode1, sequenceId3, sequence3);
+            t.fail('Expected error')
+        } catch (err) {
+            if(err.toString() !== 'document not found: LK'){
+                t.fail('unexpected error')
+            }
+            else{
+                t.pass('Success')
+            }
+        }
+        t.end()
+    }
+)
+
+test(
+    `test perfWrite with wrong sequenceId (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode);
+            const documents = epitelete.documents;
+            const lukeDoc = documents[bookCode];
+            const sequences = lukeDoc?.sequences;
+            const sequenceId3 = Object.keys(sequences)[3];
+            const sequence3 = sequences[sequenceId3];
+            const newDoc = await epitelete.perfWrite(bookCode, sequenceId3+'12', sequence3);
+            t.fail('Expected error')
+        } catch (err) {
+            if(err.toString() !== 'prefSequence not found: LUK, OTNhZmFhZDIt12'){
+                t.fail('unexpected error')
+            }
+            else{
+                t.pass('Success')
+            }
+        }
+        t.end()
+    }
+)
+
+
+test(
+    `test perfWrite for ProskommaJsonValidator with wrong sequence (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode);
+            const documents = epitelete.documents;
+            const lukeDoc = documents[bookCode];
+            const sequences = lukeDoc?.sequences;
+            const sequenceId3 = Object.keys(sequences)[3];
+            const sequence3 = sequences[sequenceId3];
+            const newDoc = await epitelete.perfWrite(bookCode, sequenceId3, sequence3+'12');
+            t.fail('Expected error')
+        } catch (err) {
+            if(err.toString() !== 'prefSequence is not valid for LUK, OTNhZmFhZDIt'){
+                t.fail('unexpected error')
+            }
+            else{
+                t.pass('Success')
+            }
         }
         t.end()
     }

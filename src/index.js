@@ -65,7 +65,7 @@ class Epitelete {
         return doc;
     }
 
-    async perfWrite(bookCode, sequenceId, perfSequence) {
+    async writePerf(bookCode, sequenceId, perfSequence) {
         // find sequenceId in existing this.documents
         const currentDoc = this.documents?.[bookCode];
         if (!currentDoc) {

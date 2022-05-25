@@ -216,7 +216,7 @@ test(
 )
 
 test(
-    `test the unchanged PERF (round trip) perfWrite (${testGroup})`,
+    `test the unchanged PERF (round trip) writePerf (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -228,7 +228,7 @@ test(
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
             const sequence3 = sequences[sequenceId3];
-            const newDoc = await epitelete.perfWrite(bookCode, sequenceId3, sequence3);
+            const newDoc = await epitelete.writePerf(bookCode, sequenceId3, sequence3);
             t.deepEqual(newDoc,lukeDoc, "expect to be unchanged");
         } catch (err) {
             t.error(err);
@@ -239,7 +239,7 @@ test(
 )
 
 test(
-    `test the changed PERF (round trip) perfWrite (${testGroup})`,
+    `test the changed PERF (round trip) writePerf (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -255,13 +255,13 @@ test(
             const sequence3 = sequences[sequenceId3];
             let newBlocks = [];
             sequence3.blocks = newBlocks;
-            const newDoc = await epitelete.perfWrite(bookCode, 
-                sequenceId3, 
+            const newDoc = await epitelete.writePerf(bookCode,
+                sequenceId3,
                 sequence3
             );
             t.notDeepEqual(newDoc,_doc, "expect to be changed");
             t.deepEqual(newDoc.sequences[sequenceId3].blocks,
-                newBlocks, 
+                newBlocks,
                 "expected new blocks to be one less than original"
             );
         } catch (err) {
@@ -273,7 +273,7 @@ test(
 
 
 test(
-    `test perfWrite with wrong bookCode (${testGroup})`,
+    `test writePerf with wrong bookCode (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -286,7 +286,7 @@ test(
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
             const sequence3 = sequences[sequenceId3];
-            const newDoc = await epitelete.perfWrite(bookCode1, sequenceId3, sequence3);
+            const newDoc = await epitelete.writePerf(bookCode1, sequenceId3, sequence3);
             t.fail('Expected error')
         } catch (err) {
             if(err.toString() !== 'document not found: LK'){
@@ -301,7 +301,7 @@ test(
 )
 
 test(
-    `test perfWrite with wrong sequenceId (${testGroup})`,
+    `test writePerf with wrong sequenceId (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -313,7 +313,7 @@ test(
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
             const sequence3 = sequences[sequenceId3];
-            const newDoc = await epitelete.perfWrite(bookCode, sequenceId3+'12', sequence3);
+            const newDoc = await epitelete.writePerf(bookCode, sequenceId3+'12', sequence3);
             t.fail('Expected error')
         } catch (err) {
             if(err.toString() !== 'prefSequence not found: LUK, OTNhZmFhZDIt12'){
@@ -329,7 +329,7 @@ test(
 
 
 test(
-    `test perfWrite for ProskommaJsonValidator with wrong sequence (${testGroup})`,
+    `test writePerf for ProskommaJsonValidator with wrong sequence (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -341,7 +341,7 @@ test(
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
             const sequence3 = sequences[sequenceId3];
-            const newDoc = await epitelete.perfWrite(bookCode, sequenceId3, sequence3+'12');
+            const newDoc = await epitelete.writePerf(bookCode, sequenceId3, sequence3+'12');
             t.fail('Expected error')
         } catch (err) {
             if(err.toString() !== 'prefSequence is not valid for LUK, OTNhZmFhZDIt'){

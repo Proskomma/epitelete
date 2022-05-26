@@ -65,6 +65,8 @@ class Epitelete {
 
         const doc = config2.output.docSets[this.docSetId].documents[bookCode];
         this.documents[bookCode] = doc;
+        this.undo[bookCode] = [_.cloneDeep(doc)];
+        this.undoCurrentPointer[bookCode] = 0;
 
         return doc;
     }
@@ -77,11 +79,7 @@ class Epitelete {
             throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
         }
 
-        const doc = this.documents[bookCode];
-        this.undo[bookCode] = [_.cloneDeep(doc)];
-        this.undoCurrentPointer[bookCode] = 0;
-
-        return doc;
+        return this.documents[bookCode];
     }
 
     async writePerf(bookCode, sequenceId, perfSequence) {
@@ -220,6 +218,8 @@ class Epitelete {
         }
 
         this.documents[bookCode] = perfJSON;
+        this.undo[bookCode] = [_.cloneDeep(perfJSON)];
+        this.undoCurrentPointer[bookCode] = 0;
 
         return perfJSON;
     }

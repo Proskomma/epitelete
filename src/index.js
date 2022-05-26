@@ -21,10 +21,12 @@ class Epitelete {
         this.pk = pk;
         this.docSetId = docSetId;
         this.documents = {};
-        this.undo = {};
-        this.undoCurrentPointer = {};
+        this.history = {
+            stack: {},
+            cursor: {}
+        };
         this.validator = new ProskommaJsonValidator();
-        this.MAX_UNDO = 3;
+        this.STACK_LIMIT = 3;
         this.backend = pk ? 'proskomma' : 'standalone';
     }
 
@@ -64,10 +66,10 @@ class Epitelete {
         }
 
         const doc = config2.output.docSets[this.docSetId].documents[bookCode];
-
         this.documents[bookCode] = doc;
-        this.undo[bookCode] = [_.cloneDeep(doc)];
-        this.undoCurrentPointer[bookCode] = 0;
+        this.history.stack[bookCode] = [_.cloneDeep(doc)];
+        this.history.cursor[bookCode] = 0;
+
         return doc;
     }
 
@@ -75,7 +77,13 @@ class Epitelete {
         if (!this.documents[bookCode] && this.backend === "proskomma") {
             await this.fetchPerf(bookCode);
         }
-        return this.documents[bookCode];
+        if (!this.documents[bookCode] && this.backend === "standalone") {
+            throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
+        }
+
+        //get the document from undo stack, to continue previous session if exists.
+        const cursorPosition = this.history.cursor[bookCode];
+        return this.history.stack[bookCode][cursorPosition];
     }
 
     async writePerf(bookCode, sequenceId, perfSequence) {
@@ -108,18 +116,18 @@ class Epitelete {
         // update this.documents with modified document
         newDocuments[bookCode] = newDocument;
         this.documents = newDocuments;
-        let undoCurrentPointer = ++this.undoCurrentPointer[bookCode]
+        let cursor = ++this.history.cursor[bookCode]
         
-        // limit undo stack to MAX_UNDO  
-        this.undo[bookCode][undoCurrentPointer] = _.cloneDeep(newDocument);
-        while(this.undo[bookCode].length > this.MAX_UNDO){
-            this.undo[bookCode].shift();
-            undoCurrentPointer--
+        // limit history.stack to STACK_LIMIT   
+        this.history.stack[bookCode][cursor] = _.cloneDeep(newDocument);
+        while(this.history.stack[bookCode].length > this.STACK_LIMIT ){
+            this.history.stack[bookCode].shift();
+            cursor--
         }
-        this.undoCurrentPointer[bookCode] = undoCurrentPointer;
+        this.history.cursor[bookCode] = cursor;
         
         // remove any old redo's 
-        this.undo[bookCode] = this.undo[bookCode].slice(0, undoCurrentPointer+1)
+        this.history.stack[bookCode] = this.history.stack[bookCode].slice(0, cursor+1)
 
         // return modified document
         return newDocument;
@@ -158,13 +166,13 @@ class Epitelete {
 
     clearPerf() {
         this.documents = {};
-        this.undo = {};
-        this.undoCurrentPointer = {};
+        this.history.stack = {};
+        this.history.cursor = {};
     }
 
     canUndo(bookCode){
         if(this.documents[bookCode]){
-            if(this.undoCurrentPointer[bookCode] > 0){
+            if(this.history.cursor[bookCode] > 0){
                 return true
             };
         }
@@ -173,8 +181,8 @@ class Epitelete {
 
     canRedo(bookCode){
         if(this.documents[bookCode]){
-            const undoLength = this.undo[bookCode].length
-            if(this.undoCurrentPointer[bookCode]+1 < undoLength){
+            const historyLenght = this.history.stack[bookCode].length
+            if(this.history.cursor[bookCode]+1 < historyLenght){
                 return true
             };
         }
@@ -183,8 +191,8 @@ class Epitelete {
 
     undoPerf(bookCode){
         if(this.canUndo(bookCode)){
-            let undoCurrentPointer = --this.undoCurrentPointer[bookCode];
-            const doc = this.undo[bookCode][undoCurrentPointer];
+            let cursor = --this.history.cursor[bookCode];
+            const doc = this.history.stack[bookCode][cursor];
             return _.cloneDeep(doc)
         }
         return null;
@@ -192,8 +200,8 @@ class Epitelete {
 
     redoPerf(bookCode){
         if(this.canRedo(bookCode)){
-            let undoCurrentPointer = ++this.undoCurrentPointer[bookCode];
-            const doc = this.undo[bookCode][undoCurrentPointer];
+            let cursor = ++this.history.cursor[bookCode];
+            const doc = this.history.stack[bookCode][cursor];
             return _.cloneDeep(doc)
         }
         return null;
@@ -214,8 +222,9 @@ class Epitelete {
         }
 
         this.documents[bookCode] = perfJSON;
-        this.undo = {};
-        this.undoCurrentPointer = {};
+        this.history.stack[bookCode] = [_.cloneDeep(perfJSON)];
+        this.history.cursor[bookCode] = 0;
+
         return perfJSON;
     }
 }

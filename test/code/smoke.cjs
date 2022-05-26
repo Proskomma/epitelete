@@ -208,8 +208,8 @@ test(
             t.ok("LUK" in epitelete.documents, "Can not clearPerf because no document was added.");
             epitelete.clearPerf()
             t.same(epitelete.documents, {});
-            t.same(epitelete.undo, {});
-            t.same(epitelete.undoCurrentPointer, {});
+            t.same(epitelete.history.stack, {});
+            t.same(epitelete.history.cursor, {});
         } catch (err) {
             t.error(err);
         }
@@ -290,13 +290,13 @@ test(
             const sequence3 = sequences[sequenceId3];
             let newBlocks = [];
             sequence3.blocks = newBlocks;
-            for(let i=0; i<epitelete.MAX_UNDO+1; i++){
+            for(let i=0; i<epitelete.STACK_LIMIT+1; i++){
                 const newDoc = await epitelete.writePerf(bookCode,
                     sequenceId3,
                     sequence3
                 );
             }
-            t.equal(epitelete.undo[bookCode].length, epitelete.MAX_UNDO, 'should be equal to MAX_UNDO')
+            t.equal(epitelete.history.stack[bookCode].length, epitelete.STACK_LIMIT, 'should be equal to STACK_LIMIT')
         } catch (err) {
             t.error(err);
         }
@@ -447,7 +447,7 @@ test(
             );
             const canUndo = epitelete.canUndo(bookCode);
             t.ok(canUndo);
-            t.equal(epitelete.undoCurrentPointer[bookCode], 1, 'expected the undoCurrentPointer is 1')
+            t.equal(epitelete.history.cursor[bookCode], 1, 'expected the history.cursor to be 1')
         }catch (err){
             t.error(err);
         }
@@ -752,7 +752,7 @@ test(
             const perfJSON = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "fra_lsg_jon_document.json")));
             await epitelete.sideloadPerf(bookCode, perfJSON);
             const savedDoc = await epitelete.readPerf(bookCode);
-            t.equal(savedDoc, perfJSON, "perfJSON is saved in memory");
+            t.deepEqual(savedDoc, perfJSON, "perfJSON is saved in memory");
         } catch (err) {
             t.fail(err);
         }

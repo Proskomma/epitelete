@@ -79,7 +79,9 @@ class Epitelete {
             throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
         }
 
-        return this.documents[bookCode];
+        //get the document from undo stack, to continue previous session if exists.
+        const cursorPosition = this.undoCurrentPointer[bookCode];
+        return this.undo[bookCode][cursorPosition];
     }
 
     async writePerf(bookCode, sequenceId, perfSequence) {

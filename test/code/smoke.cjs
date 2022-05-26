@@ -752,7 +752,7 @@ test(
             const perfJSON = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "fra_lsg_jon_document.json")));
             await epitelete.sideloadPerf(bookCode, perfJSON);
             const savedDoc = await epitelete.readPerf(bookCode);
-            t.equal(savedDoc, perfJSON, "perfJSON is saved in memory");
+            t.deepEqual(savedDoc, perfJSON, "perfJSON is saved in memory");
         } catch (err) {
             t.fail(err);
         }

@@ -18,9 +18,9 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            t.doesNotThrow(() => new Epitelete(pk, "DBL/eng_engWEBBE"));
-            t.throws(() => new Epitelete(pk), "2 arguments");
-            t.throws(() => new Epitelete(pk, "eBible/fra_fraLSG"),"docSetId is not present");
+            t.doesNotThrow(() => new Epitelete({pk, docSetId:"DBL/eng_engWEBBE"}));
+            t.throws(() => new Epitelete({}), "2 arguments");
+            t.throws(() => new Epitelete({ pk, docSetId:"eBible/fra_fraLSG"}),"docSetId is not present");
         } catch (err) {
             t.error(err)
         }
@@ -33,7 +33,7 @@ test(
     `fetchPerf() is defined (${testGroup})`,
     async t => {
         const docSetId = "DBL/eng_engWEBBE";
-        const epitelete = new Epitelete(pk, docSetId);
+        const epitelete = new Epitelete({ pk, docSetId });
         t.ok(typeof epitelete.fetchPerf === "function");
         t.end();
     }
@@ -45,7 +45,7 @@ test(
         t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
             const bookCode = "LU";
             await epitelete.fetchPerf(bookCode);
             t.fail("fetchPerf with bad bookCode should throw but didn't");
@@ -60,7 +60,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
             const bookCode = "LUK";
             const doc = await epitelete.fetchPerf(bookCode);
             for (const k of ["headers", "tags", "sequences", "mainSequence"]) {
@@ -78,7 +78,7 @@ test(
     async t => {
         t.plan(2);
         const docSetId = "DBL/eng_engWEBBE";
-        const epitelete = new Epitelete(pk, docSetId);
+        const epitelete = new Epitelete({ pk, docSetId });
         const bookCode = "MRK";
         t.notOk(bookCode in epitelete.documents);
         await epitelete.fetchPerf(bookCode);
@@ -90,7 +90,7 @@ test(
     `readPerf() is defined (${testGroup})`,
     async t => {
         const docSetId = "DBL/eng_engWEBBE";
-        const epitelete = new Epitelete(pk, docSetId);
+        const epitelete = new Epitelete({ pk, docSetId });
         t.ok(typeof epitelete.readPerf === "function");
         t.end();
     }
@@ -102,7 +102,7 @@ test(
         t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
             const bookCode = "LU";
             await epitelete.readPerf(bookCode);
             t.fail("readPerf with bad bookCode should throw but didn't");
@@ -117,7 +117,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
             const bookCode = "LUK";
             const readOutput = await epitelete.readPerf(bookCode);
             const fetchedOutput = await epitelete.fetchPerf(bookCode);
@@ -133,7 +133,7 @@ test(
     `localBookCodes() is defined (${testGroup})`,
     async t => {
         const docSetId = "DBL/eng_engWEBBE";
-        const epitelete = new Epitelete(pk, docSetId);
+        const epitelete = new Epitelete({ pk, docSetId });
         t.ok(typeof epitelete.localBookCodes === "function");
         t.end();
     }
@@ -144,7 +144,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
             const bookCodes = ["LUK", "MRK", "3JN", "GEN"];
             for (const bookCode of bookCodes) {
                 await epitelete.readPerf(bookCode);
@@ -167,7 +167,7 @@ test(
             const expectedMinHeaderCount = `5`;
             const expectedBookCount = 81;
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
 
             const bookHeaders = epitelete.bookHeaders();
             const bookCodes = Object.keys(bookHeaders);
@@ -191,7 +191,7 @@ test(
     `clearPerf() is defined (${testGroup})`,
     async t => {
         const docSetId = "DBL/eng_engWEBBE";
-        const epitelete = new Epitelete(pk, docSetId);
+        const epitelete = new Epitelete({ pk, docSetId });
         t.ok(typeof epitelete.clearPerf === "function");
         t.end();
     }
@@ -202,7 +202,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode);
             t.ok("LUK" in epitelete.documents, "Can not clearPerf because no document was added.");
@@ -222,7 +222,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.documents;
@@ -245,7 +245,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.documents;
@@ -278,7 +278,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.documents;
@@ -304,27 +304,26 @@ test(
     }
 )
 
-
-
 test(
     `test writePerf with wrong bookCode (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
             const bookCode = "LUK";
             const bookCode1 = "LK"
             await epitelete.readPerf(bookCode);
             const documents = epitelete.documents;
             const lukeDoc = documents[bookCode];
             const sequences = lukeDoc?.sequences;
+            t.ok(sequences);
             const sequenceId3 = Object.keys(sequences)[3];
             const sequence3 = sequences[sequenceId3];
             const newDoc = await epitelete.writePerf(bookCode1, sequenceId3, sequence3);
-            t.fail('Expected error')
+            t.fail('Did not throw!');
         } catch (err) {
             if(err.toString() !== 'document not found: LK'){
-                t.fail('unexpected error')
+                t.fail(err)
             }
             else{
                 t.pass('Success')
@@ -339,7 +338,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.documents;
@@ -353,7 +352,7 @@ test(
             if(!err.toString().includes('not found')) {
                 t.fail('unexpected error')
             }
-            else {
+            else{
                 t.pass('Success')
             }
         }
@@ -361,13 +360,12 @@ test(
     }
 )
 
-
 test(
     `test writePerf for ProskommaJsonValidator with wrong sequence (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({ pk, docSetId });
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.documents;
@@ -381,7 +379,7 @@ test(
             if (!err.toString().includes('is not valid')) {
                 t.fail('unexpected error')
             }
-            else {
+            else{
                 t.pass('Success')
             }
         }
@@ -389,13 +387,12 @@ test(
     }
 )
 
-
 test(
     `test can't Undo with empty document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             const canUndo = epitelete.canUndo(bookCode);
             t.notOk(canUndo);
@@ -413,7 +410,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const canUndo = epitelete.canUndo(bookCode);
@@ -432,7 +429,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.documents;
@@ -466,7 +463,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             const canRedo = epitelete.canRedo(bookCode);
             t.notOk(canRedo);
@@ -484,7 +481,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const canRedo = epitelete.canRedo(bookCode);
@@ -505,7 +502,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.documents;
@@ -538,7 +535,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.documents;
@@ -570,7 +567,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.documents;
@@ -604,7 +601,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const undoPerf = epitelete.undoPerf(bookCode);
@@ -624,7 +621,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.documents;
@@ -657,7 +654,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const redoPerf = epitelete.redoPerf(bookCode);
@@ -677,7 +674,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.documents;
@@ -711,7 +708,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.documents;
@@ -736,4 +733,29 @@ test(
         t.end();
     }
 
+)
+
+test(
+    `test instantiate Epitelete in standalonte mode (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eBible/fra_fraLSG";
+            const epitelete = new Epitelete({ docSetId });
+            const bookCode = "JON";
+            t.ok(epitelete.backend === "standalone");
+            try {
+                await epitelete.fetchPerf(bookCode);
+                t.fail("standalone instance should not fetchPerf");
+            } catch (err) {
+                t.pass("standalone instance fails at readPerf");
+            }
+            const perfJSON = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "fra_lsg_jon_document.json")));
+            await epitelete.sideloadPerf(bookCode, perfJSON);
+            const savedDoc = await epitelete.readPerf(bookCode);
+            t.equal(savedDoc, perfJSON, "perfJSON is saved in memory");
+        } catch (err) {
+            t.fail(err);
+        }
+        t.end()
+    }
 )

@@ -4,18 +4,17 @@ const { doRender } = require('proskomma-render-perf');
 const _ = require("lodash");
 
 
-
 class Epitelete {
 
-    constructor(pk, docSetId) {
-        if (!docSetId || !pk) {
-            throw new Error("Epitelete constructor requires 2 arguments (pk, docSetId)");
+    constructor({ pk = null, docSetId }) {
+        if (!docSetId) {
+            throw new Error("docSetId is required");
         }
 
         const query = `{ docSet(id: "${docSetId}") { id } }`;
-        const { data: gqlResult } = pk.gqlQuerySync(query);
+        const { data: gqlResult } = pk?.gqlQuerySync(query) || {};
 
-        if (!gqlResult.docSet) {
+        if (pk && !gqlResult?.docSet) {
             throw new Error("Provided docSetId is not present in the Proskomma instance.");
         }
 
@@ -26,9 +25,13 @@ class Epitelete {
         this.undoCurrentPointer = {};
         this.validator = new ProskommaJsonValidator();
         this.MAX_UNDO = 3;
+        this.backend = pk ? 'proskomma' : 'standalone';
     }
 
     async fetchPerf(bookCode) {
+        if (this.backend === "standalone") {
+            throw "Can't call sideloadPerf in standalone mode";
+        }
 
         if (!bookCode) {
             throw new Error("fetchPerf requires 1 argument (bookCode)");
@@ -69,13 +72,15 @@ class Epitelete {
     }
 
     async readPerf(bookCode) {
-        const doc = this.documents[bookCode] || await this.fetchPerf(bookCode);
-        return doc;
+        if (!this.documents[bookCode] && this.backend === "proskomma") {
+            await this.fetchPerf(bookCode);
+        }
+        return this.documents[bookCode];
     }
 
     async writePerf(bookCode, sequenceId, perfSequence) {
         // find sequenceId in existing this.documents
-        const currentDoc = this.documents?.[bookCode];
+        const currentDoc = this.documents[bookCode];
         if (!currentDoc) {
             throw `document not found: ${bookCode}`;
         }
@@ -132,8 +137,8 @@ class Epitelete {
     bookHeaders() {
         const documentHeaders = {};
         const query = `{ docSet(id: "${this.docSetId}") { documents { headers { key value } } } }`;
-        const { data: gqlResult } = this.pk.gqlQuerySync(query);
-        const documents = gqlResult?.docSet?.documents || [];
+        const { data: gqlResult } = this.pk?.gqlQuerySync(query) || {};
+        const documents = gqlResult?.docSet?.documents || this.documents;
         for (const document of documents) {
             let key = null;
             const headers = {};
@@ -148,7 +153,7 @@ class Epitelete {
                 documentHeaders[key] = headers;
             }
         }
-       return documentHeaders;
+        return documentHeaders;
     }
 
     clearPerf() {
@@ -194,6 +199,25 @@ class Epitelete {
         return null;
     }
 
+    sideloadPerf(bookCode, perfJSON) {
+        if (this.backend === "proskomma") {
+            throw "Can't call sideloadPerf in proskomma mode";
+        }
+
+        if (!bookCode || !perfJSON) {
+            throw "sideloadPerf requires 2 arguments (bookCode, perfJSON)";
+        }
+
+        const validatorResult = this.validator.validate('documentPerf', perfJSON);
+         if (!validatorResult.isValid) {
+            throw `prefJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
+        }
+
+        this.documents[bookCode] = perfJSON;
+        this.undo = {};
+        this.undoCurrentPointer = {};
+        return perfJSON;
+    }
 }
 
 export default Epitelete;

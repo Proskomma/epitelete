@@ -208,6 +208,8 @@ test(
             t.ok("LUK" in epitelete.documents, "Can not clearPerf because no document was added.");
             epitelete.clearPerf()
             t.same(epitelete.documents, {});
+            t.same(epitelete.undo, {});
+            t.same(epitelete.undoCurrentPointer, {});
         } catch (err) {
             t.error(err);
         }
@@ -270,6 +272,38 @@ test(
         t.end()
     }
 )
+
+test(
+    `test the undoStack with writePerf dose not exceed MAX_UNDO (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode);
+            const documents = epitelete.documents;
+            const _doc = _.cloneDeep(documents[bookCode]);
+            const lukeDoc = _.cloneDeep(_doc);
+            // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
+            const sequences = lukeDoc?.sequences;
+            const sequenceId3 = Object.keys(sequences)[3];
+            const sequence3 = sequences[sequenceId3];
+            let newBlocks = [];
+            sequence3.blocks = newBlocks;
+            for(let i=0; i<epitelete.MAX_UNDO+1; i++){
+                const newDoc = await epitelete.writePerf(bookCode,
+                    sequenceId3,
+                    sequence3
+                );
+            }
+            t.equal(epitelete.undo[bookCode].length, epitelete.MAX_UNDO, 'should be equal to MAX_UNDO')
+        } catch (err) {
+            t.error(err);
+        }
+        t.end()
+    }
+)
+
 
 
 test(
@@ -353,4 +387,353 @@ test(
         }
         t.end()
     }
+)
+
+
+test(
+    `test can't Undo with empty document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            const canUndo = epitelete.canUndo(bookCode);
+            t.notOk(canUndo);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+test(
+    `test can't Undo with unchanged document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode)
+            const canUndo = epitelete.canUndo(bookCode);
+            t.notOk(canUndo);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+test(
+    `test can Undo with changed document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode)
+            const documents = epitelete.documents;
+            const _doc = _.cloneDeep(documents[bookCode]);
+            const lukeDoc = _.cloneDeep(_doc);
+            // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
+            const sequences = lukeDoc?.sequences;
+            const sequenceId3 = Object.keys(sequences)[3];
+            const sequence3 = sequences[sequenceId3];
+            let newBlocks = [];
+            sequence3.blocks = newBlocks;
+            const newDoc = await epitelete.writePerf(bookCode,
+                sequenceId3,
+                sequence3
+            );
+            const canUndo = epitelete.canUndo(bookCode);
+            t.ok(canUndo);
+            t.equal(epitelete.undoCurrentPointer[bookCode], 1, 'expected the undoCurrentPointer is 1')
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+
+test(
+    `test can't redo with empty document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            const canRedo = epitelete.canRedo(bookCode);
+            t.notOk(canRedo);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+test(
+    `test can't redo with unchanged document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode)
+            const canRedo = epitelete.canRedo(bookCode);
+            t.notOk(canRedo);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+
+
+test(
+    `test can't redo with changed document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode)
+            const documents = epitelete.documents;
+            const _doc = _.cloneDeep(documents[bookCode]);
+            const lukeDoc = _.cloneDeep(_doc);
+            // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
+            const sequences = lukeDoc?.sequences;
+            const sequenceId3 = Object.keys(sequences)[3];
+            const sequence3 = sequences[sequenceId3];
+            let newBlocks = [];
+            sequence3.blocks = newBlocks;
+            const newDoc = await epitelete.writePerf(bookCode,
+                sequenceId3,
+                sequence3
+            );
+            const canRedo = epitelete.canRedo(bookCode);
+            t.notOk(canRedo);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+
+test(
+    `test can redo with changed document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode)
+            const documents = epitelete.documents;
+            const _doc = _.cloneDeep(documents[bookCode]);
+            const lukeDoc = _.cloneDeep(_doc);
+            // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
+            const sequences = lukeDoc?.sequences;
+            const sequenceId3 = Object.keys(sequences)[3];
+            const sequence3 = sequences[sequenceId3];
+            let newBlocks = [];
+            sequence3.blocks = newBlocks;
+            const newDoc = await epitelete.writePerf(bookCode,
+                sequenceId3,
+                sequence3
+            );
+            const canRedo = epitelete.canRedo(bookCode);
+            t.notOk(canRedo);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+test(
+    `test can redo after undo (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode)
+            const documents = epitelete.documents;
+            const _doc = _.cloneDeep(documents[bookCode]);
+            const lukeDoc = _.cloneDeep(_doc);
+            // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
+            const sequences = lukeDoc?.sequences;
+            const sequenceId3 = Object.keys(sequences)[3];
+            const sequence3 = sequences[sequenceId3];
+            let newBlocks = [];
+            sequence3.blocks = newBlocks;
+            const newDoc = await epitelete.writePerf(bookCode,
+                sequenceId3,
+                sequence3
+            );
+            epitelete.undoPerf(bookCode);
+            const canRedo = epitelete.canRedo(bookCode);
+            t.ok(canRedo);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+
+test(
+    `test shouldn't be undoPerf with unchanged document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode)
+            const undoPerf = epitelete.undoPerf(bookCode);
+            t.notOk(undoPerf);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+
+test(
+    `test can undoPerf with changed document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode)
+            const documents = epitelete.documents;
+            const _doc = _.cloneDeep(documents[bookCode]);
+            const lukeDoc = _.cloneDeep(_doc);
+            // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
+            const sequences = lukeDoc?.sequences;
+            const sequenceId3 = Object.keys(sequences)[3];
+            const sequence3 = sequences[sequenceId3];
+            let newBlocks = [];
+            sequence3.blocks = newBlocks;
+            const newDoc = await epitelete.writePerf(bookCode,
+                sequenceId3,
+                sequence3
+            );
+            const undoPerf = epitelete.undoPerf(bookCode);
+            t.ok(undoPerf);
+            t.deepEqual(undoPerf, _doc, 'expect undoPerf should return the original doc')
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+test(
+    `test shouldn't be redoPerf with unchanged document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode)
+            const redoPerf = epitelete.redoPerf(bookCode);
+            t.notOk(redoPerf);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+
+test(
+    `test can't redoPerf with changed document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode)
+            const documents = epitelete.documents;
+            const _doc = _.cloneDeep(documents[bookCode]);
+            const lukeDoc = _.cloneDeep(_doc);
+            // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
+            const sequences = lukeDoc?.sequences;
+            const sequenceId3 = Object.keys(sequences)[3];
+            const sequence3 = sequences[sequenceId3];
+            let newBlocks = [];
+            sequence3.blocks = newBlocks;
+            const newDoc = await epitelete.writePerf(bookCode,
+                sequenceId3,
+                sequence3
+            );
+            const redoPerf = epitelete.redoPerf(bookCode);
+            t.notOk(redoPerf);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
+)
+
+
+
+
+test(
+    `test can redoPerf after undoPerf (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete(pk, docSetId);
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode)
+            const documents = epitelete.documents;
+            const _doc = _.cloneDeep(documents[bookCode]);
+            const lukeDoc = _.cloneDeep(_doc);
+            // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
+            const sequences = lukeDoc?.sequences;
+            const sequenceId3 = Object.keys(sequences)[3];
+            const sequence3 = sequences[sequenceId3];
+            let newBlocks = [];
+            sequence3.blocks = newBlocks;
+            const newDoc = await epitelete.writePerf(bookCode,
+                sequenceId3,
+                sequence3
+            );
+            epitelete.undoPerf(bookCode);
+            const redoPerf = epitelete.redoPerf(bookCode);
+            t.ok(redoPerf);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
 )

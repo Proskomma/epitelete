@@ -1,6 +1,9 @@
 import {default as ProskommaJsonValidator} from "proskomma-json-validator";
 
 const { doRender } = require('proskomma-render-perf');
+const _ = require("lodash");
+
+
 
 class Epitelete {
 
@@ -18,8 +21,11 @@ class Epitelete {
 
         this.pk = pk;
         this.docSetId = docSetId;
-        this.documents = {}
+        this.documents = {};
+        this.undo = {};
+        this.undoCurrentPointer = {};
         this.validator = new ProskommaJsonValidator();
+        this.MAX_UNDO = 3;
     }
 
     async fetchPerf(bookCode) {
@@ -57,6 +63,8 @@ class Epitelete {
         const doc = config2.output.docSets[this.docSetId].documents[bookCode];
 
         this.documents[bookCode] = doc;
+        this.undo[bookCode] = [_.cloneDeep(doc)];
+        this.undoCurrentPointer[bookCode] = 0;
         return doc;
     }
 
@@ -95,6 +103,18 @@ class Epitelete {
         // update this.documents with modified document
         newDocuments[bookCode] = newDocument;
         this.documents = newDocuments;
+        let undoCurrentPointer = ++this.undoCurrentPointer[bookCode]
+        
+        // limit undo stack to MAX_UNDO  
+        this.undo[bookCode][undoCurrentPointer] = _.cloneDeep(newDocument);
+        while(this.undo[bookCode].length > this.MAX_UNDO){
+            this.undo[bookCode].shift();
+            undoCurrentPointer--
+        }
+        this.undoCurrentPointer[bookCode] = undoCurrentPointer;
+        
+        // remove any old redo's 
+        this.undo[bookCode] = this.undo[bookCode].slice(0, undoCurrentPointer+1)
 
         // return modified document
         return newDocument;
@@ -133,7 +153,47 @@ class Epitelete {
 
     clearPerf() {
         this.documents = {};
+        this.undo = {};
+        this.undoCurrentPointer = {};
     }
+
+    canUndo(bookCode){
+        if(this.documents[bookCode]){
+            if(this.undoCurrentPointer[bookCode] > 0){
+                return true
+            };
+        }
+        return false
+    }
+
+    canRedo(bookCode){
+        if(this.documents[bookCode]){
+            const undoLength = this.undo[bookCode].length
+            if(this.undoCurrentPointer[bookCode]+1 < undoLength){
+                return true
+            };
+        }
+        return false
+    }
+
+    undoPerf(bookCode){
+        if(this.canUndo(bookCode)){
+            let undoCurrentPointer = --this.undoCurrentPointer[bookCode];
+            const doc = this.undo[bookCode][undoCurrentPointer];
+            return _.cloneDeep(doc)
+        }
+        return null;
+    }
+
+    redoPerf(bookCode){
+        if(this.canRedo(bookCode)){
+            let undoCurrentPointer = ++this.undoCurrentPointer[bookCode];
+            const doc = this.undo[bookCode][undoCurrentPointer];
+            return _.cloneDeep(doc)
+        }
+        return null;
+    }
+
 }
 
 export default Epitelete;

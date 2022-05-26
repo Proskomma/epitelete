@@ -316,10 +316,10 @@ test(
             const newDoc = await epitelete.writePerf(bookCode, sequenceId3+'12', sequence3);
             t.fail('Expected error')
         } catch (err) {
-            if(err.toString() !== 'prefSequence not found: LUK, OTNhZmFhZDIt12'){
+            if(!err.toString().includes('not found')) {
                 t.fail('unexpected error')
             }
-            else{
+            else {
                 t.pass('Success')
             }
         }
@@ -344,10 +344,10 @@ test(
             const newDoc = await epitelete.writePerf(bookCode, sequenceId3, sequence3+'12');
             t.fail('Expected error')
         } catch (err) {
-            if(err.toString() !== 'prefSequence is not valid for LUK, OTNhZmFhZDIt'){
+            if (!err.toString().includes('is not valid')) {
                 t.fail('unexpected error')
             }
-            else{
+            else {
                 t.pass('Success')
             }
         }

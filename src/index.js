@@ -75,13 +75,13 @@ class Epitelete {
         const previousPerfSequence = sequences?.[sequenceId];
         // if not found throw error
         if (!previousPerfSequence) {
-            throw `prefSequence not found: ${bookCode}, ${sequenceId}`;
+            throw `PERF sequence not found: ${bookCode}, ${sequenceId}`;
         }
         // validate new perf sequence
         const validatorResult = this.validator.validate('sequencePerf', perfSequence);
         // if not valid throw error
         if (!validatorResult.isValid) {
-            throw `prefSequence is not valid for ${bookCode}, ${sequenceId}`;
+            throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult.errors)}`;
         }
 
         // if valid

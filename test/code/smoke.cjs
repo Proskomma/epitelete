@@ -744,7 +744,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.documents;
@@ -767,7 +767,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete(pk, docSetId);
+            const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.documents;

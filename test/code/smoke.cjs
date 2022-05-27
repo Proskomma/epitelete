@@ -428,7 +428,7 @@ test(
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({pk, docSetId});
             const bookCode = "LUK";
-            await epitelete.readPerf(bookCode)
+            await epitelete.readPerf(bookCode);
             const documents = epitelete.documents;
             const _doc = _.cloneDeep(documents[bookCode]);
             const lukeDoc = _.cloneDeep(_doc);

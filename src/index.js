@@ -143,10 +143,10 @@ class Epitelete {
     async checkPerfSequence(perfSequence) {
         let currentChapter = 0;
         let currentVerse = 0;
-        const warnings = [];
         for (const block of perfSequence.blocks) {
             if( Array.isArray(block.content) ) {
                 for (const contentBlock of block.content) {
+                    const warnings = contentBlock.warnings || [];
                     if ('verses' === contentBlock.type) {
                         currentVerse++;
                         if (currentVerse.toString() !== contentBlock.number) {
@@ -162,10 +162,13 @@ class Epitelete {
                         }
                         currentVerse = 0;
                     }
+                    if ( warnings.length > 0 ) {
+                        contentBlock.warnings = warnings;
+                    }
                 }
             }
         }
-        return warnings;
+        return perfSequence;
     }
 
     localBookCodes() {

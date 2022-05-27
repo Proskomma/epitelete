@@ -6,28 +6,44 @@ const _ = require("lodash");
 
 class Epitelete {
 
-    constructor({ pk = null, docSetId }) {
+    constructor({ proskomma = null, docSetId }) {
         if (!docSetId) {
             throw new Error("docSetId is required");
         }
 
         const query = `{ docSet(id: "${docSetId}") { id } }`;
-        const { data: gqlResult } = pk?.gqlQuerySync(query) || {};
+        const { data: gqlResult } = proskomma?.gqlQuerySync(query) || {};
 
-        if (pk && !gqlResult?.docSet) {
+        if (proskomma && !gqlResult?.docSet) {
             throw new Error("Provided docSetId is not present in the Proskomma instance.");
         }
 
-        this.pk = pk;
+        this.proskomma = proskomma;
         this.docSetId = docSetId;
-        this.documents = {};
         this.history = {
             stack: {},
             cursor: {}
         };
         this.validator = new ProskommaJsonValidator();
         this.STACK_LIMIT = 3;
-        this.backend = pk ? 'proskomma' : 'standalone';
+        this.backend = proskomma ? 'proskomma' : 'standalone';
+    }
+
+    getCurrentDocument(bookCode) {
+        const cursor = this.history.cursor[bookCode];
+        return (cursor !== undefined) && this.history.stack[bookCode][cursor];
+    }
+
+    getDocuments() {
+        return Object.keys(this.history.stack).reduce((documents, bookCode) => {
+            documents[bookCode] = this.getCurrentDocument(bookCode);
+            return documents;
+        }, {});
+    }
+
+    setNewDocument(bookCode, doc) {
+        this.history.stack[bookCode] = [_.cloneDeep(doc)];
+        this.history.cursor[bookCode] = 0;
     }
 
     async fetchPerf(bookCode) {
@@ -47,7 +63,7 @@ class Epitelete {
             }
         };
         const query = `{docSet(id: "${this.docSetId}") { id document(bookCode: "${bookCode}") {id bookCode: header(id:"bookCode")} } }`;
-        const { data: { docSet } } = this.pk.gqlQuerySync(query);
+        const { data: { docSet } } = this.proskomma.gqlQuerySync(query);
         const documentId = docSet.document?.id;
 
         if (!documentId) {
@@ -55,7 +71,7 @@ class Epitelete {
         }
 
         const config2 = await doRender(
-            this.pk,
+            this.proskomma,
             config,
             [this.docSetId],
             [documentId],
@@ -66,37 +82,31 @@ class Epitelete {
         }
 
         const doc = config2.output.docSets[this.docSetId].documents[bookCode];
-        this.documents[bookCode] = doc;
-        this.history.stack[bookCode] = [_.cloneDeep(doc)];
-        this.history.cursor[bookCode] = 0;
+        this.setNewDocument(bookCode, doc);
 
         return doc;
     }
 
     async readPerf(bookCode) {
-        if (!this.documents[bookCode] && this.backend === "proskomma") {
+        if (!this.history.stack[bookCode] && this.backend === "proskomma") {
             await this.fetchPerf(bookCode);
         }
-        if (!this.documents[bookCode] && this.backend === "standalone") {
+        if (!this.history.stack[bookCode] && this.backend === "standalone") {
             throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
         }
 
-        //get the document from undo stack, to continue previous session if exists.
-        const cursorPosition = this.history.cursor[bookCode];
-        return this.history.stack[bookCode][cursorPosition];
+        return this.getCurrentDocument(bookCode);
     }
 
     async writePerf(bookCode, sequenceId, perfSequence) {
-        // find sequenceId in existing this.documents
-        const currentDoc = this.documents[bookCode];
+        // find sequenceId in existing documents
+        const currentDoc = this.getCurrentDocument(bookCode);
         if (!currentDoc) {
             throw `document not found: ${bookCode}`;
         }
-        const sequences = currentDoc?.sequences;
-        const previousPerfSequence = sequences?.[sequenceId];
         // if not found throw error
-        if (!previousPerfSequence) {
-            throw `PERF sequence not found: ${bookCode}, ${sequenceId}`;
+        if (!currentDoc?.sequences[sequenceId]) {
+            throw `PERF sequence id not found: ${bookCode}, ${sequenceId}`;
         }
         // validate new perf sequence
         const validatorResult = this.validator.validate('sequencePerf', perfSequence);
@@ -109,23 +119,20 @@ class Epitelete {
         // create modified document
         const newSequences = {...currentDoc.sequences};
         newSequences[sequenceId] = perfSequence;
-        const newDocument = currentDoc;
+        const newDocument = _.cloneDeep(currentDoc);
         newDocument.sequences = newSequences;
-        const newDocuments = {...this.documents};
 
-        // update this.documents with modified document
-        newDocuments[bookCode] = newDocument;
-        this.documents = newDocuments;
+        // update documents with modified document
         let cursor = ++this.history.cursor[bookCode]
-        
+        this.history.stack[bookCode].push(newDocument);
+
         // limit history.stack to STACK_LIMIT   
         this.history.stack[bookCode][cursor] = _.cloneDeep(newDocument);
         while(this.history.stack[bookCode].length > this.STACK_LIMIT ){
-            this.history.stack[bookCode].shift();
+            this.history.stack[bookCode].pop();
             cursor--
         }
         this.history.cursor[bookCode] = cursor;
-        
         // remove any old redo's 
         this.history.stack[bookCode] = this.history.stack[bookCode].slice(0, cursor+1)
 
@@ -134,7 +141,7 @@ class Epitelete {
     }
 
     localBookCodes() {
-        return Object.keys(this.documents);
+        return Object.keys(this.history.stack);
     }
 
     /**
@@ -145,8 +152,8 @@ class Epitelete {
     bookHeaders() {
         const documentHeaders = {};
         const query = `{ docSet(id: "${this.docSetId}") { documents { headers { key value } } } }`;
-        const { data: gqlResult } = this.pk?.gqlQuerySync(query) || {};
-        const documents = gqlResult?.docSet?.documents || this.documents;
+        const { data: gqlResult } = this.proskomma?.gqlQuerySync(query) || {};
+        const documents = gqlResult?.docSet?.documents || this.getDocuments();
         for (const document of documents) {
             let key = null;
             const headers = {};
@@ -165,13 +172,12 @@ class Epitelete {
     }
 
     clearPerf() {
-        this.documents = {};
         this.history.stack = {};
         this.history.cursor = {};
     }
 
     canUndo(bookCode){
-        if(this.documents[bookCode]){
+        if(this.history.cursor[bookCode]){
             if(this.history.cursor[bookCode] > 0){
                 return true
             };
@@ -180,7 +186,7 @@ class Epitelete {
     }
 
     canRedo(bookCode){
-        if(this.documents[bookCode]){
+        if(this.history.stack[bookCode]){
             const historyLenght = this.history.stack[bookCode].length
             if(this.history.cursor[bookCode]+1 < historyLenght){
                 return true
@@ -190,7 +196,7 @@ class Epitelete {
     }
 
     undoPerf(bookCode){
-        if(this.canUndo(bookCode)){
+        if (this.canUndo(bookCode)) {
             let cursor = --this.history.cursor[bookCode];
             const doc = this.history.stack[bookCode][cursor];
             return _.cloneDeep(doc)
@@ -221,9 +227,7 @@ class Epitelete {
             throw `prefJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
         }
 
-        this.documents[bookCode] = perfJSON;
-        this.history.stack[bookCode] = [_.cloneDeep(perfJSON)];
-        this.history.cursor[bookCode] = 0;
+        this.setNewDocument(bookCode, perfJSON);
 
         return perfJSON;
     }

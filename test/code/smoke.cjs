@@ -401,9 +401,7 @@ test(
         }
         t.end();
     }
-
 )
-
 
 test(
     `test can't Undo with unchanged document (${testGroup})`,
@@ -422,7 +420,6 @@ test(
     }
 
 )
-
 
 test(
     `test can Undo with changed document (${testGroup})`,
@@ -456,8 +453,6 @@ test(
 
 )
 
-
-
 test(
     `test can't redo with empty document (${testGroup})`,
     async t => {
@@ -474,7 +469,6 @@ test(
     }
 
 )
-
 
 test(
     `test can't redo with unchanged document (${testGroup})`,
@@ -493,9 +487,6 @@ test(
     }
 
 )
-
-
-
 
 test(
     `test can't redo with changed document (${testGroup})`,
@@ -528,8 +519,6 @@ test(
 
 )
 
-
-
 test(
     `test can redo with changed document (${testGroup})`,
     async t => {
@@ -560,7 +549,6 @@ test(
     }
 
 )
-
 
 test(
     `test can redo after undo (${testGroup})`,
@@ -594,8 +582,6 @@ test(
 
 )
 
-
-
 test(
     `test shouldn't be undoPerf with unchanged document (${testGroup})`,
     async t => {
@@ -613,8 +599,6 @@ test(
     }
 
 )
-
-
 
 test(
     `test can undoPerf with changed document (${testGroup})`,
@@ -667,8 +651,6 @@ test(
 
 )
 
-
-
 test(
     `test can't redoPerf with changed document (${testGroup})`,
     async t => {
@@ -699,9 +681,6 @@ test(
     }
 
 )
-
-
-
 
 test(
     `test can redoPerf after undoPerf (${testGroup})`,
@@ -757,5 +736,55 @@ test(
             t.fail(err);
         }
         t.end()
+    }
+)
+
+test(
+    `test checkPERF shows no warnings (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete({pk, docSetId});
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode);
+            const documents = epitelete.documents;
+            const sequences = documents[bookCode]?.sequences;
+            const mainSequenceId = Object.keys(sequences)[0];
+            const mainSequence = sequences[mainSequenceId];
+            const warnings = await epitelete.checkPerfSequence(mainSequence);
+            console.log(warnings);
+            t.deepEqual(warnings, [])
+        } catch (err) {
+            t.error(err);
+        }
+        t.end()
+    }
+)
+
+
+test(
+    `test checkPERF shows some warnings (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete({pk, docSetId});
+            const bookCode = "LUK";
+            await epitelete.readPerf(bookCode);
+            const documents = epitelete.documents;
+            const sequences = documents[bookCode]?.sequences;
+            const mainSequenceId = Object.keys(sequences)[0];
+            const mainSequence = sequences[mainSequenceId];
+            // console.log("Luke:",JSON.stringify(mainSequence, null, 4));
+            // Insert an out of order verse marker.
+            mainSequence.blocks[3].content.push({
+                type: 'verses',
+                number: 2,
+            })
+            const warnings = await epitelete.checkPerfSequence(mainSequence);
+            console.log(warnings);
+            t.deepEqual(warnings, [ 'Verse 2 is out of order, expected 11', 'Verse 11 is out of order, expected 3' ])
+        } catch (err) {
+            t.error(err);
+        }
     }
 )

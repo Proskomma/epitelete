@@ -133,6 +133,34 @@ class Epitelete {
         return newDocument;
     }
 
+    async checkPerfSequence(perfSequence) {
+        let currentChapter = 0;
+        let currentVerse = 0;
+        const warnings = [];
+        for (const block of perfSequence.blocks) {
+            if( Array.isArray(block.content) ) {
+                for (const contentBlock of block.content) {
+                    if ('verses' === contentBlock.type) {
+                        currentVerse++;
+                        if (currentVerse.toString() !== contentBlock.number) {
+                            warnings.push(`Verse ${contentBlock.number} is out of order, expected ${currentVerse}`);
+                            currentVerse = Number(contentBlock.number);
+                        }
+                    }
+                    if ('chapter' === contentBlock.type) {
+                        currentChapter++;
+                        if (currentChapter.toString() !== contentBlock.number) {
+                            warnings.push(`Chapter ${contentBlock.number} is out of order, expected ${currentChapter}`);
+                            currentChapter = Number(contentBlock.number);
+                        }
+                        currentVerse = 0;
+                    }
+                }
+            }
+        }
+        return warnings;
+    }
+
     localBookCodes() {
         return Object.keys(this.documents);
     }

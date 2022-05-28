@@ -14,7 +14,7 @@ proskomma.loadSuccinctDocSet(succinctJson);
 
 
 test(
-    `test checkPERF shows no warnings (${testGroup})`,
+    `checkPERF showing no warnings (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -26,7 +26,6 @@ test(
             const mainSequenceId = Object.keys(sequences)[0];
             const mainSequence = sequences[mainSequenceId];
             const warnings = await epitelete.checkPerfSequence(mainSequence);
-            // console.log(warnings);
             t.deepEqual(warnings, [])
         } catch (err) {
             t.error(err);
@@ -36,7 +35,7 @@ test(
 )
 
 test(
-    `test checkPERF shows some warnings (${testGroup})`,
+    `checkPERF showing CV warnings (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -54,7 +53,6 @@ test(
                 number: 2,
             })
             const warnings = await epitelete.checkPerfSequence(mainSequence);
-            // console.log(warnings);
             t.deepEqual(warnings, [ 'Verse 2 is out of order, expected 11', 'Verse 11 is out of order, expected 3' ])
         } catch (err) {
             t.error(err);

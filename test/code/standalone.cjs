@@ -12,7 +12,7 @@ const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "t
 proskomma.loadSuccinctDocSet(succinctJson);
 
 test(
-    `test instantiate Epitelete in standalone mode (${testGroup})`,
+    `Instantiate Epitelete in standalone mode (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eBible/fra_fraLSG";

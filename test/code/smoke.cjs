@@ -15,10 +15,25 @@ test(
     `Instantiate Epitelete (${testGroup})`,
     async function (t) {
         try {
+            t.plan(4);
+            t.doesNotThrow(() => new Epitelete({proskomma, docSetId: "DBL/eng_engWEBBE"}));
+            t.throws(() => new Epitelete({proskomma}), /docSetId is required/);
+            t.throws(() => new Epitelete({}), /docSetId is required/);
+            t.throws(() => new Epitelete({ proskomma, docSetId: "eBible/fra_fraLSG"}),/docSetId is not present/)
+        } catch (err) {
+            t.error(err)
+        }
+    },
+);
+
+test(
+    `Instantiate Epitelete with options (${testGroup})`,
+    async function (t) {
+        try {
             t.plan(3);
-            t.doesNotThrow(() => new Epitelete({proskomma, docSetId:"DBL/eng_engWEBBE"}));
-            t.throws(() => new Epitelete({}), "2 arguments");
-            t.throws(() => new Epitelete({ proskomma, docSetId:"eBible/fra_fraLSG"}),"docSetId is not present");
+            t.doesNotThrow(() => new Epitelete({proskomma, docSetId:"DBL/eng_engWEBBE", options: {}}));
+            t.doesNotThrow(() => new Epitelete({proskomma, docSetId:"DBL/eng_engWEBBE", options: {historySize: 10}}));
+            t.throws(() => new Epitelete({banana: "split"}), /docSetId is required/);
         } catch (err) {
             t.error(err)
         }

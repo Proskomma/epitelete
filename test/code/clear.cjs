@@ -32,8 +32,7 @@ test(
             t.ok("LUK" in epitelete.getDocuments(), "Can not clearPerf because no document was added.");
             epitelete.clearPerf()
             t.same(epitelete.getDocuments(), {});
-            t.same(epitelete.history.stack, {});
-            t.same(epitelete.history.cursor, {});
+            t.same(epitelete.history, {});
         } catch (err) {
             t.error(err);
         }

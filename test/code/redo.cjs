@@ -14,7 +14,7 @@ const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "t
 proskomma.loadSuccinctDocSet(succinctJson);
 
 test(
-    `test can't redo with empty document (${testGroup})`,
+    `canRedo false with empty document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -31,7 +31,7 @@ test(
 )
 
 test(
-    `test can't redo with unchanged document (${testGroup})`,
+    `canRedo false with unchanged document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -48,7 +48,7 @@ test(
 )
 
 test(
-    `test can't redo with changed document (${testGroup})`,
+    `canRedo false with changed document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -79,7 +79,7 @@ test(
 )
 
 test(
-    `test can redo with changed document (${testGroup})`,
+    `canRedo false with changed document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -110,7 +110,7 @@ test(
 )
 
 test(
-    `test can redo after undo (${testGroup})`,
+    `canRedo true after undo (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -149,7 +149,7 @@ test(
 )
 
 test(
-    `test shouldn't be redoPerf with unchanged document (${testGroup})`,
+    `cannot redoPerf with unchanged document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -167,7 +167,7 @@ test(
 )
 
 test(
-    `test can't redoPerf with changed document (${testGroup})`,
+    `cannot redoPerf with changed document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -198,7 +198,7 @@ test(
 )
 
 test(
-    `test can redoPerf after undoPerf (${testGroup})`,
+    `can redoPerf after undoPerf (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -234,4 +234,21 @@ test(
         }
         t.end();
     }
+)
+
+test(
+    `canRedo false with empty document (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const epitelete = new Epitelete({proskomma, docSetId});
+            const bookCode = "LUK";
+            const canRedo = epitelete.canRedo(bookCode);
+            t.notOk(canRedo);
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
+
 )

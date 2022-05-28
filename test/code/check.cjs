@@ -14,7 +14,7 @@ proskomma.loadSuccinctDocSet(succinctJson);
 
 
 test(
-    `test checkPERF shows no warnings (${testGroup})`,
+    `checkPERF showing no warnings (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -35,7 +35,7 @@ test(
 )
 
 test(
-    `test checkPERF shows some warnings (${testGroup})`,
+    `checkPERF showing CV warnings (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";

@@ -14,7 +14,7 @@ const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "t
 proskomma.loadSuccinctDocSet(succinctJson);
 
 test(
-    `test the undoStack with writePerf dose not exceed historySize (${testGroup})`,
+    `undo stack length with writePerf does not exceed historySize (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -45,7 +45,7 @@ test(
 )
 
 test(
-    `test can't Undo with empty document (${testGroup})`,
+    `canUndo false with empty document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -62,7 +62,7 @@ test(
 )
 
 test(
-    `test can't Undo with unchanged document (${testGroup})`,
+    `canUndo false with unchanged document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -80,7 +80,7 @@ test(
 )
 
 test(
-    `test can Undo with changed document (${testGroup})`,
+    `canUndo true with changed document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -109,24 +109,7 @@ test(
 )
 
 test(
-    `test can't redo with empty document (${testGroup})`,
-    async t => {
-        try {
-            const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
-            const canRedo = epitelete.canRedo(bookCode);
-            t.notOk(canRedo);
-        }catch (err){
-            t.error(err);
-        }
-        t.end();
-    }
-
-)
-
-test(
-    `test shouldn't be undoPerf with unchanged document (${testGroup})`,
+    `cannot undoPerf with unchanged document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -144,7 +127,7 @@ test(
 )
 
 test(
-    `test can undoPerf with changed document (${testGroup})`,
+    `can undoPerf with changed document (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -175,7 +158,7 @@ test(
 )
 
 test(
-    `works as expected after multiple changes (${testGroup})`,
+    `multiple undo/redo (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -191,7 +174,7 @@ test(
             const n = historySize;
             t.ok(n <= initialBlocksCount, "");
             let auxDoc = doc1;
-            
+
             //Write to history n times
             for (let index = 1; index < n; index++) {
                 const auxSequence = auxDoc.sequences[sequenceId];

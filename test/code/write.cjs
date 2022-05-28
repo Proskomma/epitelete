@@ -13,7 +13,7 @@ const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "t
 proskomma.loadSuccinctDocSet(succinctJson);
 
 test(
-    `test the unchanged PERF (round trip) writePerf (${testGroup})`,
+    `roundtrip unchanged PERF (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -36,7 +36,7 @@ test(
 )
 
 test(
-    `test the changed PERF (round trip) writePerf (${testGroup})`,
+    `roundtrip changed PERF (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -62,7 +62,7 @@ test(
 )
 
 test(
-    `test writePerf with wrong bookCode (${testGroup})`,
+    `Fail on wrong bookCode (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -89,7 +89,7 @@ test(
 )
 
 test(
-    `test writePerf with wrong sequenceId (${testGroup})`,
+    `Fail on wrong sequenceId (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -129,10 +129,10 @@ test(
             const sequenceId3 = Object.keys(sequences)[3];
             const sequence3 = sequences[sequenceId3];
             const newDoc = await epitelete.writePerf(bookCode, sequenceId3, sequence3+'12');
-            t.fail('Expected error')
+            t.fail('Expected validation error but writePerf did not throw')
         } catch (err) {
             if (!err.toString().includes('is not valid')) {
-                t.fail('unexpected error')
+                t.fail(`Expected validation error, not ${err.toString()}`)
             }
             else{
                 t.pass('Success')

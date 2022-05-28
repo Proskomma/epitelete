@@ -5,7 +5,6 @@ const {UWProskomma} = require("uw-proskomma");
 const Epitelete = require("../../src/index").default;
 const _ = require("lodash");
 
-
 const testGroup = "Write";
 
 const proskomma = new UWProskomma();
@@ -43,23 +42,16 @@ test(
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
             const bookCode = "LUK";
-            await epitelete.readPerf(bookCode);
-            const documents = epitelete.getDocuments();
-            const _doc = _.cloneDeep(documents[bookCode]);
-            const lukeDoc = _.cloneDeep(_doc);
+            const doc = await epitelete.readPerf(bookCode);
+            const oldDoc = _.cloneDeep(doc);
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
-            const sequences = lukeDoc?.sequences;
+            const sequences = doc.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
-            const sequence3 = sequences[sequenceId3];
-            let newBlocks = [];
-            sequence3.blocks = newBlocks;
-            const newDoc = await epitelete.writePerf(bookCode,
-                sequenceId3,
-                sequence3
-            );
-            t.notDeepEqual(newDoc,_doc, "expect to be changed");
-            t.deepEqual(newDoc.sequences[sequenceId3].blocks,
-                newBlocks,
+            doc.sequences[sequenceId3].blocks = [];
+            const sequence3 = doc.sequences[sequenceId3];
+            const newDoc = await epitelete.writePerf(bookCode,sequenceId3,sequence3);
+            t.notDeepEqual(newDoc,oldDoc, "expect to be changed");
+            t.deepEqual(newDoc.sequences[sequenceId3].blocks,[],
                 "expected new blocks to be one less than original"
             );
         } catch (err) {
@@ -77,10 +69,8 @@ test(
             const epitelete = new Epitelete({ proskomma, docSetId });
             const bookCode = "LUK";
             const bookCode1 = "LK"
-            await epitelete.readPerf(bookCode);
-            const documents = epitelete.getDocuments();
-            const lukeDoc = documents[bookCode];
-            const sequences = lukeDoc?.sequences;
+            const doc = await epitelete.readPerf(bookCode);
+            const sequences = doc.sequences;
             t.ok(sequences);
             const sequenceId3 = Object.keys(sequences)[3];
             const sequence3 = sequences[sequenceId3];

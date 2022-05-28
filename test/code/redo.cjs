@@ -30,7 +30,6 @@ test(
 
 )
 
-
 test(
     `test can't redo with unchanged document (${testGroup})`,
     async t => {
@@ -38,7 +37,7 @@ test(
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
             const bookCode = "LUK";
-            await epitelete.readPerf(bookCode)
+            await epitelete.readPerf(bookCode);
             const canRedo = epitelete.canRedo(bookCode);
             t.notOk(canRedo);
         }catch (err){
@@ -46,11 +45,7 @@ test(
         }
         t.end();
     }
-
 )
-
-
-
 
 test(
     `test can't redo with changed document (${testGroup})`,
@@ -83,8 +78,6 @@ test(
 
 )
 
-
-
 test(
     `test can redo with changed document (${testGroup})`,
     async t => {
@@ -116,31 +109,37 @@ test(
 
 )
 
-
 test(
     `test can redo after undo (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete({proskomma, docSetId});
+            const epitelete = new Epitelete({ proskomma, docSetId });
             const bookCode = "LUK";
-            await epitelete.readPerf(bookCode)
-            const documents = epitelete.getDocuments();
-            const _doc = _.cloneDeep(documents[bookCode]);
-            const lukeDoc = _.cloneDeep(_doc);
+            t.same(epitelete.history,{});
+            const doc = await epitelete.readPerf(bookCode);
+            const history = epitelete.history[bookCode];
+            t.ok(history);
+            t.same(history.stack[0], doc);
+            t.ok(history.cursor === 0);
+
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
-            const sequences = lukeDoc?.sequences;
+            const sequences = doc.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
             const sequence3 = sequences[sequenceId3];
-            let newBlocks = [];
-            sequence3.blocks = newBlocks;
+            sequence3.blocks = [];
             const newDoc = await epitelete.writePerf(bookCode,
                 sequenceId3,
                 sequence3
             );
-            epitelete.undoPerf(bookCode);
-            const canRedo = epitelete.canRedo(bookCode);
-            t.ok(canRedo);
+            t.equal(history.cursor, 0);
+            t.same(history.stack[0], newDoc);
+            t.ok(epitelete.canUndo(bookCode));
+            const undonePerf = epitelete.undoPerf(bookCode);
+            t.equal(history.cursor, 1);
+            t.same(history.stack[1], undonePerf);
+            t.same(history.stack[0], doc);
+            t.ok(epitelete.canRedo(bookCode));
         }catch (err){
             t.error(err);
         }
@@ -235,5 +234,4 @@ test(
         }
         t.end();
     }
-
 )

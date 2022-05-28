@@ -14,7 +14,7 @@ const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "t
 proskomma.loadSuccinctDocSet(succinctJson);
 
 test(
-    `test the undoStack with writePerf dose not exceed MAX_UNDO (${testGroup})`,
+    `test the undoStack with writePerf dose not exceed historySize (${testGroup})`,
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
@@ -30,13 +30,13 @@ test(
             const sequence3 = sequences[sequenceId3];
             let newBlocks = [];
             sequence3.blocks = newBlocks;
-            for (let i = 0; i < epitelete.STACK_LIMIT + 1; i++){
+            for (let i = 0; i < epitelete.options.historySize + 1; i++){
                 const newDoc = await epitelete.writePerf(bookCode,
                     sequenceId3,
                     sequence3
                 );
             }
-            t.equal(epitelete.history.stack[bookCode].length, epitelete.STACK_LIMIT, 'should be equal to STACK_LIMIT')
+            t.equal(epitelete.history[bookCode].stack.length, epitelete.options.historySize, 'should be equal to epitelete.options.historySize')
         } catch (err) {
             t.error(err);
         }
@@ -86,23 +86,20 @@ test(
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
             const bookCode = "LUK";
-            await epitelete.readPerf(bookCode);
-            const documents = epitelete.getDocuments();
-            const _doc = _.cloneDeep(documents[bookCode]);
-            const lukeDoc = _.cloneDeep(_doc);
+            const doc = await epitelete.readPerf(bookCode);
+            const lukeDoc = doc;
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
             const sequence3 = sequences[sequenceId3];
-            let newBlocks = [];
-            sequence3.blocks = newBlocks;
+            sequence3.blocks = [];
             const newDoc = await epitelete.writePerf(bookCode,
                 sequenceId3,
                 sequence3
             );
             const canUndo = epitelete.canUndo(bookCode);
             t.ok(canUndo);
-            t.equal(epitelete.history.cursor[bookCode], 1, 'expected the history.cursor to be 1')
+            t.equal(epitelete.history[bookCode].cursor, 0, 'expected the history.cursor to be 0')
         }catch (err){
             t.error(err);
         }
@@ -175,5 +172,68 @@ test(
         }
         t.end();
     }
+)
 
+test(
+    `works as expected after multiple changes (${testGroup})`,
+    async t => {
+        try {
+            const docSetId = "DBL/eng_engWEBBE";
+            const historySize = 5;
+            const epitelete = new Epitelete({proskomma, docSetId, options:{historySize}});
+            const bookCode = "3JN";
+            const doc1 = await epitelete.readPerf(bookCode);
+            const history = epitelete.history[bookCode];
+            const sequenceId = doc1.mainSequence;
+            const sequence = doc1.sequences[sequenceId]
+            const initialBlocksCount = sequence.blocks.length;
+
+            const n = historySize;
+            t.ok(n <= initialBlocksCount, "");
+            let auxDoc = doc1;
+            
+            //Write to history n times
+            for (let index = 1; index < n; index++) {
+                const auxSequence = auxDoc.sequences[sequenceId];
+                auxSequence.blocks.shift();
+                auxDoc = await epitelete.writePerf(bookCode, sequenceId, auxSequence);
+                t.equal(history.stack.length, index+1);
+            }
+            const newBlocksCount = auxDoc.sequences[sequenceId].blocks.length;
+            t.equal(newBlocksCount, initialBlocksCount - n + 1);
+
+            //Undo n times
+            for (let index = 1; index < n; index++) {
+                auxDoc = epitelete.undoPerf(bookCode);
+                const expectedBlockCount = newBlocksCount + index;
+                t.equal(auxDoc.sequences[sequenceId].blocks.length, expectedBlockCount);
+            }
+            t.equal(auxDoc.sequences[sequenceId].blocks.length, initialBlocksCount);
+
+            //Redo n times
+            for (let index = 1; index < n; index++) {
+                auxDoc = epitelete.redoPerf(bookCode);
+                const expectedBlockCount = initialBlocksCount - index;
+                t.equal(auxDoc.sequences[sequenceId].blocks.length, expectedBlockCount);
+            }
+            t.equal(auxDoc.sequences[sequenceId].blocks.length, newBlocksCount);
+
+            //Undo n times to then test stack slicing
+            for (let index = 1; index < n; index++) {
+                auxDoc = epitelete.undoPerf(bookCode);
+            }
+
+            //Write one more time to check stack slicing
+            const auxSequence = auxDoc.sequences[sequenceId];
+            auxSequence.blocks.shift();
+            auxDoc = await epitelete.writePerf(bookCode, sequenceId, auxSequence);
+
+            t.equal(history.stack.length, 2);
+            t.equal(history.cursor, 0);
+
+        }catch (err){
+            t.error(err);
+        }
+        t.end();
+    }
 )

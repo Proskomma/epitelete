@@ -3,10 +3,9 @@ import {default as ProskommaJsonValidator} from "proskomma-json-validator";
 const { doRender } = require('proskomma-render-perf');
 const _ = require("lodash");
 
-
 class Epitelete {
 
-    constructor({ proskomma = null, docSetId }) {
+    constructor({ proskomma = null, docSetId, options = {} }) {
         if (!docSetId) {
             throw new Error("docSetId is required");
         }
@@ -17,33 +16,34 @@ class Epitelete {
         if (proskomma && !gqlResult?.docSet) {
             throw new Error("Provided docSetId is not present in the Proskomma instance.");
         }
-
+        this.options = {
+            historySize:3,
+            ...options
+        };
         this.proskomma = proskomma;
         this.docSetId = docSetId;
-        this.history = {
-            stack: {},
-            cursor: {}
-        };
+        this.history = {};
         this.validator = new ProskommaJsonValidator();
-        this.STACK_LIMIT = 3;
         this.backend = proskomma ? 'proskomma' : 'standalone';
     }
 
     getCurrentDocument(bookCode) {
-        const cursor = this.history.cursor[bookCode];
-        return (cursor !== undefined) && this.history.stack[bookCode][cursor];
+        return this.history[bookCode]?.stack[this.history[bookCode].cursor];
     }
 
     getDocuments() {
-        return Object.keys(this.history.stack).reduce((documents, bookCode) => {
+        return Object.keys(this.history).reduce((documents, bookCode) => {
             documents[bookCode] = this.getCurrentDocument(bookCode);
             return documents;
         }, {});
     }
 
     setNewDocument(bookCode, doc) {
-        this.history.stack[bookCode] = [_.cloneDeep(doc)];
-        this.history.cursor[bookCode] = 0;
+        this.history[bookCode] = {
+            stack: [_.cloneDeep(doc)], //save a copy of the given doc in memory
+            cursor: 0
+        }
+        return doc
     }
 
     async fetchPerf(bookCode) {
@@ -82,30 +82,30 @@ class Epitelete {
         }
 
         const doc = config2.output.docSets[this.docSetId].documents[bookCode];
-        this.setNewDocument(bookCode, doc);
 
-        return doc;
+        return this.setNewDocument(bookCode, doc);
     }
 
     async readPerf(bookCode) {
-        if (!this.history.stack[bookCode] && this.backend === "proskomma") {
+        if (!this.history[bookCode] && this.backend === "proskomma") {
             await this.fetchPerf(bookCode);
         }
-        if (!this.history.stack[bookCode] && this.backend === "standalone") {
+        if (!this.history[bookCode] && this.backend === "standalone") {
             throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
         }
 
-        return this.getCurrentDocument(bookCode);
+        //Give the user a copy of the perf in memory
+        return _.cloneDeep(this.getCurrentDocument(bookCode));
     }
 
     async writePerf(bookCode, sequenceId, perfSequence) {
-        // find sequenceId in existing documents
-        const currentDoc = this.getCurrentDocument(bookCode);
-        if (!currentDoc) {
+        // Get copy of last doc from memory
+        const doc = _.cloneDeep(this.getCurrentDocument(bookCode));
+        if (!doc) {
             throw `document not found: ${bookCode}`;
         }
         // if not found throw error
-        if (!currentDoc?.sequences[sequenceId]) {
+        if (!doc.sequences[sequenceId]) {
             throw `PERF sequence id not found: ${bookCode}, ${sequenceId}`;
         }
         // validate new perf sequence
@@ -116,28 +116,24 @@ class Epitelete {
         }
 
         // if valid
-        // create modified document
-        const newSequences = {...currentDoc.sequences};
-        newSequences[sequenceId] = perfSequence;
-        const newDocument = _.cloneDeep(currentDoc);
-        newDocument.sequences = newSequences;
+        // modify the copy to add new sequence
+        doc.sequences[sequenceId] = _.cloneDeep(perfSequence);
 
-        // update documents with modified document
-        let cursor = ++this.history.cursor[bookCode]
-        this.history.stack[bookCode].push(newDocument);
+        const history = this.history[bookCode];
 
-        // limit history.stack to STACK_LIMIT   
-        this.history.stack[bookCode][cursor] = _.cloneDeep(newDocument);
-        while(this.history.stack[bookCode].length > this.STACK_LIMIT ){
-            this.history.stack[bookCode].pop();
-            cursor--
-        }
-        this.history.cursor[bookCode] = cursor;
-        // remove any old redo's 
-        this.history.stack[bookCode] = this.history.stack[bookCode].slice(0, cursor+1)
+        // remove any old redo's from stack
+        history.stack = history.stack.slice(history.cursor);
 
-        // return modified document
-        return newDocument;
+        // add modified copy to stack
+        history.stack.unshift(doc);
+        history.cursor = 0;
+
+        // limit history.stack to options.historySize
+        if (history.stack.length > this.options.historySize)
+            history.stack.pop();
+
+        // return copy of modified document
+        return _.cloneDeep(doc);
     }
 
     async checkPerfSequence(perfSequence) {
@@ -169,7 +165,7 @@ class Epitelete {
     }
 
     localBookCodes() {
-        return Object.keys(this.history.stack);
+        return Object.keys(this.history);
     }
 
     /**
@@ -200,43 +196,39 @@ class Epitelete {
     }
 
     clearPerf() {
-        this.history.stack = {};
-        this.history.cursor = {};
+        this.history = {};
     }
 
-    canUndo(bookCode){
-        if(this.history.cursor[bookCode]){
-            if(this.history.cursor[bookCode] > 0){
-                return true
-            };
-        }
-        return false
+    canUndo(bookCode) {
+        const history = this.history[bookCode];
+        if (!history) return false;
+        if ((history.cursor + 1) === history.stack.length) return false;
+        return true;
     }
 
-    canRedo(bookCode){
-        if(this.history.stack[bookCode]){
-            const historyLenght = this.history.stack[bookCode].length
-            if(this.history.cursor[bookCode]+1 < historyLenght){
-                return true
-            };
-        }
-        return false
+    canRedo(bookCode) {
+        const history = this.history[bookCode];
+        if (!history) return false;
+        if (history.cursor === 0) return false;
+        return true;
     }
 
-    undoPerf(bookCode){
+    undoPerf(bookCode) {
         if (this.canUndo(bookCode)) {
-            let cursor = --this.history.cursor[bookCode];
-            const doc = this.history.stack[bookCode][cursor];
-            return _.cloneDeep(doc)
+            const history = this.history[bookCode];
+            let cursor = ++history.cursor;
+            const doc = history.stack[cursor];
+            return _.cloneDeep(doc);
         }
         return null;
     }
 
     redoPerf(bookCode){
-        if(this.canRedo(bookCode)){
-            let cursor = ++this.history.cursor[bookCode];
-            const doc = this.history.stack[bookCode][cursor];
-            return _.cloneDeep(doc)
+        if (this.canRedo(bookCode)) {
+            const history = this.history[bookCode];
+            let cursor = --history.cursor;
+            const doc = history.stack[cursor];
+            return _.cloneDeep(doc);
         }
         return null;
     }
@@ -255,9 +247,7 @@ class Epitelete {
             throw `prefJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
         }
 
-        this.setNewDocument(bookCode, perfJSON);
-
-        return perfJSON;
+        return this.setNewDocument(bookCode, perfJSON);
     }
 }
 

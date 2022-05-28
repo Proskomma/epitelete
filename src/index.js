@@ -6,8 +6,10 @@ const _ = require("lodash");
 
 /**
  * @typedef {Object<string,Object>} documentPerf
+ */
+
+/**
  * @typedef {Object<string,Object>} sequencePerf
- * @typedef {({[bookCode:string]:{stack:Array.<documentPerf>,cursor:integer}}|{})} history
  */
 
 
@@ -47,14 +49,10 @@ class Epitelete {
             historySize: 3,
             ...options
         };
-        /**  @type {UWProskomma} */
         this.proskomma = proskomma;
-        /**  @type {integer} */
         this.docSetId = docSetId;
-        /** @type {history} */
         this.history = {};
         this.validator = new ProskommaJsonValidator();
-        /** @type {('proskomma'|'standalone')} */
         this.backend = proskomma ? 'proskomma' : 'standalone';
     }
 
@@ -70,7 +68,7 @@ class Epitelete {
 
     /**
      * Gets object containing documents copies from history
-     * @return {{[bookCode]:{...documentPerf}}}
+     * @return {}
      */
     getDocuments() {
         return Object.keys(this.history).reduce((documents, bookCode) => {

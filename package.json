@@ -8,6 +8,7 @@
   },
   "scripts": {
     "doc": "jsdoc -c jsdoc.json",
+    "apiGen": "npx run-func ./api.generate.js insertApiDocs",
     "test": "bash -c \"babel-tape-runner test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "babel-tape-runner test/code/*.cjs",
     "oneTest": "babel-tape-runner test/code/$TESTSCRIPT.cjs",
@@ -38,6 +39,7 @@
     "eslint": "^8.15.0",
     "fs-extra": "^10.1.0",
     "jsdoc": "^3.6.10",
+    "jsdoc-to-markdown": "^7.1.1",
     "path": "^0.12.7",
     "tap-summary": "^4.0.0",
     "tape": "^5.5.3",

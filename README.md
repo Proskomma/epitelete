@@ -15,25 +15,29 @@ npm install epitelete
 ### Proskomma mode
 
 Uses a [proskomma](https://github.com/mvahowe/proskomma-js) instance to handle [PERF documents](https://github.com/Proskomma/proskomma-json-validator/blob/main/test/test_data/fra_lsg_jon_document.json).
-#### Steps
-* Install proskomma:
+
+#### How to...
+
+1. Install proskomma:
 
   ```
   npm install uw-proskomma
   ```
 
-* Instantiate and set proskomma:
+2. Instantiate and set Proskomma:
   ```js
   import UWProskomma from "uw-proskomma";
 
   const proskomma = new UWProskomma();
 
-  proskomma.loadSuccinctDocSet(someSuccintJson);
+  proskomma.loadSuccinctDocSet(succintJson);
 
   ...
   ```
+  
+  * `succintJson`: ...
 
-* Instantiate epitelete:
+3. Instantiate Epitelete:
 
   ```js
   import Epitelete from "epitelete"
@@ -46,24 +50,103 @@ Uses a [proskomma](https://github.com/mvahowe/proskomma-js) instance to handle [
   ...
   ```
 
-* Get a document:
+4. Get a document:
 
   ```js
   ...
 
   const bookCode = "GEN";
 
-  const docPerf = epitelete.readPerf(bookCode);
+  let docPerf = epitelete.readPerf(bookCode);
 
   ...
   ```
-  `docPerf` is a copy of that document that has been saved in cache.
 
-* 
+  * `.readPerf()`: gets a document from cache or by fetching from the proskomma instance.
+  * `docPerf`: copy of the document that has been saved in cache. [example docPerf content](https://github.com/Proskomma/proskomma-json-validator/blob/main/test/test_data/fra_lsg_jon_document.json)
+
+5. Make changes to some `docPerf` sequence:
+
+  ```js
+  ...
+
+  const sequenceId = docPerf.mainSequence;
+
+  const sequence = docPerf.sequences[sequenceId];
+
+  //...make changes in sequence
+
+  ...
+  ```
+
+6. Persist changes to epitelete s history:
+
+  ```js
+  ...
+
+  docPerf = epitelete.writePerf(bookCode,sequenceId,sequence);
+
+  ...
+  ```
+
+  * `.writePerf()`: creates a copy of last saved document, updates it with the changed sequence and saves it in memory.
+
+7. Undo/Redo your changes to docPerf:
+  ```js
+  ...
+
+  docPerf = epitelete.undoPerf(bookCode);
+
+  docPerf = epitelete.redoPerf(bookCode);
+
+  ...
+  ```
+
+  * `.undoPerf()`: retrieves the previous changed document from history.
+  * `.redoPerf()`: retrieves the next changed document from history.
+  * History size can be set at instantiation with the `options` argument: 
+    ```js
+    const options = { historySize: 5 }
+    const epitelete = new Epitelete({ proskomma, docSetId, options });
+    ```
+
+### Standalone mode
+
+Uses only given [PERF documents](https://github.com/Proskomma/proskomma-json-validator/blob/main/test/test_data/fra_lsg_jon_document.json).
+
+#### How to...
+
+1. Instatiate Epilete:
+  ```js
+  import Epitelete from "epitelete"
+  ...
+
+  const docSetId = "doc_set_id";
+
+  const epitelete = new Epitelete({ docSetId [,options] });
+
+  ...
+  ```
+  
+  * Optionally could set `historySize` in the `options` arg.
+
+2. Load a document into memory:
+
+  ```js
+  ...
+
+  docPerf = epitelete.sideloadPerf(bookCode, perfJSON);
+
+  ...
+  ```
+
+  * `perfJSON`: externally loaded and parsed documentPerf.
+
+3. Use `writePerf`,`readPerf`,`undoPerf`,`redoPerf` as shown before.
 
 ## API
 
-[api](/docs/API.md)
+[Complete Epitelete API](/docs/API.md)
 
 ## License
 

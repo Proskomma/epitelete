@@ -11,7 +11,7 @@ import Epitelete from 'epitelete';
 
 // Instantiate Proskomma and load some content into it
 
-const epi = new Epitelete(proskommaInstance, "doc_set_id");
+const epi = new Epitelete({proskomma: proskommaInstance, docSetId: "doc_set_id"});
 
 epi.localBookCodes()   // => Array of 3-character book codes cached in Epitelete
 epi.bookHeaders()      // => Object containing titles and other headers for each bookCode in Proskomma

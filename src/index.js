@@ -16,8 +16,15 @@ class Epitelete {
         if (proskomma && !gqlResult?.docSet) {
             throw new Error("Provided docSetId is not present in the Proskomma instance.");
         }
+        const knownOptions = new Set([
+            'historySize',
+        ]);
+        const unknownOptions = Object.keys(options).filter(o => !knownOptions.has(o));
+        if (unknownOptions.length > 0) {
+            throw new Error(`Unknown options in constructor: ${unknownOptions.join(', ')}`);
+        }
         this.options = {
-            historySize:3,
+            historySize: 3,
             ...options
         };
         this.proskomma = proskomma;

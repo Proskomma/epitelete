@@ -1,10 +1,29 @@
-import {default as ProskommaJsonValidator} from "proskomma-json-validator";
+import { default as ProskommaJsonValidator } from "proskomma-json-validator";
+const {UWProskomma} = require("uw-proskomma");
 
 const { doRender } = require('proskomma-render-perf');
 const _ = require("lodash");
 
-class Epitelete {
+/**
+ * @typedef {Object<string,Object>} documentPerf
+ * @typedef {Object<string,Object>} sequencePerf
+ * @typedef {({[bookCode:string]:{stack:Array.<documentPerf>,cursor:integer}}|{})} history
+ */
 
+
+/**
+ * PERF Middleware for Editors in the Proskomma Ecosystem
+ * @class
+ */
+class Epitelete {
+    /**
+     * @param {Object} args - constructor args
+     * @param {UWProskomma} [args.proskomma] - a proskomma instance.
+     * @param {integer} args.docSetId - a docSetId.
+     * @param {Object} [args.options] - setting params.
+     * @param {integer} [args.options.historySize] - size of history buffer.
+     * @return {Epitelete} Epitelete instance.
+     */
     constructor({ proskomma = null, docSetId, options = {} }) {
         if (!docSetId) {
             throw new Error("docSetId is required");
@@ -23,29 +42,49 @@ class Epitelete {
         if (unknownOptions.length > 0) {
             throw new Error(`Unknown options in constructor: ${unknownOptions.join(', ')}`);
         }
+
         this.options = {
             historySize: 3,
             ...options
         };
+        /**  @type {UWProskomma} */
         this.proskomma = proskomma;
+        /**  @type {integer} */
         this.docSetId = docSetId;
+        /** @type {history} */
         this.history = {};
         this.validator = new ProskommaJsonValidator();
+        /** @type {('proskomma'|'standalone')} */
         this.backend = proskomma ? 'proskomma' : 'standalone';
     }
 
-    getCurrentDocument(bookCode) {
-        return this.history[bookCode]?.stack[this.history[bookCode].cursor];
+    /**
+     * Gets a copy of a document from history
+     * @param {string} bookCode
+     * @return {documentPerf}
+     */
+    getDocument(bookCode) {
+        const history = this.history[bookCode];
+        return _.cloneDeep(history?.stack[history.cursor]);
     }
 
+    /**
+     * Gets object containing documents copies from history
+     * @return {{[bookCode]:{...documentPerf}}}
+     */
     getDocuments() {
         return Object.keys(this.history).reduce((documents, bookCode) => {
-            documents[bookCode] = this.getCurrentDocument(bookCode);
+            documents[bookCode] = this.getDocument(bookCode);
             return documents;
         }, {});
     }
 
-    setNewDocument(bookCode, doc) {
+    /**
+     * Adds new document to history (replaces any doc with same bookCode already in history)
+     * @param {string} bookCode
+     * @param {documentPerf} doc
+     */
+    addDocument(bookCode, doc) {
         this.history[bookCode] = {
             stack: [_.cloneDeep(doc)], //save a copy of the given doc in memory
             cursor: 0
@@ -53,6 +92,10 @@ class Epitelete {
         return doc
     }
 
+    /**
+     * Fetches document from proskomma instance
+     * @param {string} bookCode
+     */
     async fetchPerf(bookCode) {
         if (this.backend === "standalone") {
             throw "Can't call sideloadPerf in standalone mode";
@@ -90,24 +133,34 @@ class Epitelete {
 
         const doc = config2.output.docSets[this.docSetId].documents[bookCode];
 
-        return this.setNewDocument(bookCode, doc);
+        return this.addDocument(bookCode, doc);
     }
 
+    /**
+     * Gets document from memory or fetches it if proskomma is set.
+     * @param {string} bookCode
+     */
     async readPerf(bookCode) {
         if (!this.history[bookCode] && this.backend === "proskomma") {
-            await this.fetchPerf(bookCode);
+            return await this.fetchPerf(bookCode);
         }
         if (!this.history[bookCode] && this.backend === "standalone") {
             throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
         }
 
-        //Give the user a copy of the perf in memory
-        return _.cloneDeep(this.getCurrentDocument(bookCode));
+        return this.getDocument(bookCode);
     }
 
-    async writePerf(bookCode, sequenceId, perfSequence) {
+    /**
+     * Merges a sequence with the document and saves the new modified document.
+     * @param {string} bookCode
+     * @param {integer} sequenceId
+     * @param {sequencePerf} perfSequence
+     * @return {sequencePerf}
+     */
+    writePerf(bookCode, sequenceId, perfSequence) {
         // Get copy of last doc from memory
-        const doc = _.cloneDeep(this.getCurrentDocument(bookCode));
+        const doc = this.getDocument(bookCode);
         if (!doc) {
             throw `document not found: ${bookCode}`;
         }
@@ -143,7 +196,11 @@ class Epitelete {
         return _.cloneDeep(doc);
     }
 
-    async checkPerfSequence(perfSequence) {
+    /**
+     * ?Checks Perf Sequence
+     * @param {sequencePerf} perfSequence
+     */
+    checkPerfSequence(perfSequence) {
         let currentChapter = 0;
         let currentVerse = 0;
         const warnings = [];
@@ -171,12 +228,15 @@ class Epitelete {
         return warnings;
     }
 
+    /**
+     * Get array of book codes from history
+     */
     localBookCodes() {
         return Object.keys(this.history);
     }
 
     /**
-     * gets the available books for current docSet. Returns an object with book codes as keys, and values
+     * Gets the available books for current docSet. Returns an object with book codes as keys, and values
      *   contain book header data
      * @returns {{}}
      */
@@ -202,10 +262,17 @@ class Epitelete {
         return documentHeaders;
     }
 
+    /**
+     * Clears docs history
+     */
     clearPerf() {
         this.history = {};
     }
 
+    /**
+     * Checks if able to undo from specific book history
+     * @param {string} bookCode
+     */
     canUndo(bookCode) {
         const history = this.history[bookCode];
         if (!history) return false;
@@ -213,6 +280,10 @@ class Epitelete {
         return true;
     }
 
+    /**
+     * Checks if able to redo from specific book history
+     * @param {string} bookCode
+     */
     canRedo(bookCode) {
         const history = this.history[bookCode];
         if (!history) return false;
@@ -220,6 +291,11 @@ class Epitelete {
         return true;
     }
 
+    /**
+     * Gets previous document from history
+     * @param {string} bookCode
+     * @return {?documentPerf}
+     */
     undoPerf(bookCode) {
         if (this.canUndo(bookCode)) {
             const history = this.history[bookCode];
@@ -230,6 +306,11 @@ class Epitelete {
         return null;
     }
 
+    /**
+     * Gets next document from history
+     * @param {string} bookCode
+     * @return {?documentPerf}
+     */
     redoPerf(bookCode){
         if (this.canRedo(bookCode)) {
             const history = this.history[bookCode];
@@ -240,6 +321,12 @@ class Epitelete {
         return null;
     }
 
+    /**
+     * Loads given perf into memory
+     * @param {string} bookCode
+     * @param {documentPerf} perfJSON
+     * @return {documentPerf}
+     */
     sideloadPerf(bookCode, perfJSON) {
         if (this.backend === "proskomma") {
             throw "Can't call sideloadPerf in proskomma mode";
@@ -254,7 +341,7 @@ class Epitelete {
             throw `prefJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
         }
 
-        return this.setNewDocument(bookCode, perfJSON);
+        return this.addDocument(bookCode, perfJSON);
     }
 }
 

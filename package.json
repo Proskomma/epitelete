@@ -1,6 +1,6 @@
 {
   "name": "epitelete",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "PERF Middleware for Editors in the Proskomma Ecosystem",
   "main": "dist/index.js",
   "directories": {
@@ -25,9 +25,9 @@
   "homepage": "https://github.com/Proskomma/epitelete#readme",
   "dependencies": {
     "@babel/core": "^7.17.10",
+    "lodash": "4.17.21",
     "proskomma-json-validator": "^0.0.5",
-    "proskomma-render-perf": "0.0.5",
-    "lodash": "4.17.21"
+    "proskomma-render-perf": "0.0.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",

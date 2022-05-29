@@ -28,8 +28,8 @@ PERF Middleware for Editors in the Proskomma Ecosystem
 
 * [Epitelete](#Epitelete)
     * [new Epitelete(args)](#new_Epitelete_new)
-    * [.fetchPerf(bookCode)](#Epitelete+fetchPerf) ⇒ [<code>documentPerf</code>](#documentPerf)
-    * [.readPerf(bookCode)](#Epitelete+readPerf) ⇒ [<code>documentPerf</code>](#documentPerf)
+    * [.fetchPerf(bookCode)](#Epitelete+fetchPerf) ⇒ [<code>Promise.&lt;documentPerf&gt;</code>](#documentPerf)
+    * [.readPerf(bookCode)](#Epitelete+readPerf) ⇒ [<code>Promise.&lt;documentPerf&gt;</code>](#documentPerf)
     * [.writePerf(bookCode, sequenceId, perfSequence)](#Epitelete+writePerf) ⇒ [<code>documentPerf</code>](#documentPerf)
     * [.checkPerfSequence(perfSequence)](#Epitelete+checkPerfSequence) ⇒ <code>Array.&lt;string&gt;</code>
     * [.localBookCodes()](#Epitelete+localBookCodes) ⇒ <code>Array.&lt;string&gt;</code>
@@ -62,11 +62,11 @@ PERF Middleware for Editors in the Proskomma Ecosystem
 
 <a name="Epitelete+fetchPerf"></a>
 
-## epitelete.fetchPerf(bookCode) ⇒ [<code>documentPerf</code>](#documentPerf)
+## epitelete.fetchPerf(bookCode) ⇒ [<code>Promise.&lt;documentPerf&gt;</code>](#documentPerf)
 Fetches document from proskomma instance
 
 **Kind**: instance method of [<code>Epitelete</code>](#Epitelete)  
-**Returns**: [<code>documentPerf</code>](#documentPerf) - fetched document PERF  
+**Returns**: [<code>Promise.&lt;documentPerf&gt;</code>](#documentPerf) - fetched document PERF  
 
 | Param | Type |
 | --- | --- |
@@ -77,11 +77,11 @@ Fetches document from proskomma instance
 
 <a name="Epitelete+readPerf"></a>
 
-## epitelete.readPerf(bookCode) ⇒ [<code>documentPerf</code>](#documentPerf)
+## epitelete.readPerf(bookCode) ⇒ [<code>Promise.&lt;documentPerf&gt;</code>](#documentPerf)
 Gets document from memory or fetches it if proskomma is set
 
 **Kind**: instance method of [<code>Epitelete</code>](#Epitelete)  
-**Returns**: [<code>documentPerf</code>](#documentPerf) - found or fetched document PERF  
+**Returns**: [<code>Promise.&lt;documentPerf&gt;</code>](#documentPerf) - found or fetched document PERF  
 
 | Param | Type |
 | --- | --- |

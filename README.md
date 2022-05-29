@@ -1,11 +1,6 @@
 # Epitelete
 
-  
-
 <p align="center"><img src="https://socialify.git.ci/Proskomma/epitelete/image?description=1&amp;font=Inter&amp;issues=1&amp;language=1&amp;owner=1&amp;pattern=Plus&amp;pulls=1&amp;theme=Light" alt="project-image"></p>
-
-  
-  
 
 ## Installation
 
@@ -21,11 +16,60 @@ npm install epitelete
 
 ## Usage
 
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#proskomma-mode">Proskomma mode</a>
+      <ul>
+        <li><a href="#pk-example">Example</a></li>
+        <li><a href="#pk-howto">How to</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#standalone-mode">Standalone mode</a>
+      <ul>
+        <li><a href="#ht-example">Example</a></li>
+        <li><a href="#ht-howto">How to</a></li>
+      </ul>
+    </li>
+  </ol>
+</details>
+
 ### Proskomma mode
 
 Uses a [proskomma](https://github.com/mvahowe/proskomma-js) instance to handle [PERF documents](https://github.com/Proskomma/proskomma-json-validator/blob/main/test/test_data/fra_lsg_jon_document.json).
 
-#### How to...
+<i id="pk-example"></i>
+#### Example
+
+```js
+import Epitelete from "epitelete"
+import UWProskomma from "uw-proskomma";
+
+const proskomma = new UWProskomma();
+proskomma.loadSuccinctDocSet(succintJson);
+
+const docSetId = "doc_set_id";
+const epitelete = new Epitelete({ proskomma, docSetId });
+
+const bookCode = "GEN";
+let docPerf = epitelete.readPerf(bookCode);
+
+const sequenceId = docPerf.mainSequence;
+const sequence = docPerf.sequences[sequenceId];
+
+//...make changes in sequence
+
+docPerf = epitelete.writePerf(bookCode,sequenceId,sequence);
+docPerf = epitelete.undoPerf(bookCode);
+docPerf = epitelete.redoPerf(bookCode);
+```
+
+[![Edit Button](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/olsc55)
+
+<i id="pk-howto"></i>
+#### How to
 
 **1. Install proskomma:**
 
@@ -133,7 +177,33 @@ const epitelete = new Epitelete({ proskomma, docSetId, options });
 
 Uses only given [PERF documents](https://github.com/Proskomma/proskomma-json-validator/blob/main/test/test_data/fra_lsg_jon_document.json).
 
-#### How to...
+<i id="ht-example"></i>
+#### Example
+
+```js
+import Epitelete from "epitelete"
+
+const docSetId = "doc_set_id";
+const options = { historySize: 5 };
+const epitelete = new Epitelete({ docSetId, options });
+
+const bookCode = "GEN";
+const perfJSON = {...}
+let docPerf = epitelete.sideloadPerf(bookCode,perfJSON);
+
+const sequenceId = docPerf.mainSequence;
+const sequence = docPerf.sequences[sequenceId];
+
+//...make changes in sequence
+
+docPerf = epitelete.writePerf(bookCode,sequenceId,sequence);
+docPerf = epitelete.undoPerf(bookCode);
+docPerf = epitelete.redoPerf(bookCode);
+```
+[![Edit Button](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/olsc55)
+
+<i id="ht-howto"></i>
+#### How to
 
 **1. Instatiate Epilete:**
 

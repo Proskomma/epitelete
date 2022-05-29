@@ -5,15 +5,6 @@ const { doRender } = require('proskomma-render-perf');
 const _ = require("lodash");
 
 /**
- * @typedef {Object<string,Object>} documentPerf
- */
-
-/**
- * @typedef {Object<string,Object>} sequencePerf
- */
-
-
-/**
  * PERF Middleware for Editors in the Proskomma Ecosystem
  * @class
  */
@@ -357,3 +348,42 @@ class Epitelete {
 }
 
 export default Epitelete;
+
+/**
+ * @typedef {object} contentElementPerf
+ * @property {string} type
+ * @property {string} [number]
+ * @property {"verses"|"xref"|"footnote"|"noteCaller"} [subType]
+ * @property {string} [target]
+ * @property {integer} [nBlocks]
+ * @property {string} [previewText]
+ */
+
+/**
+ * @typedef {object} blockOrGraftPerf
+ * @property {"block"|"graft"} type
+ * @property {string} subType
+ * @property {string} [target]
+ * @property {integer} [nBlocks]
+ * @property {string} [previewText]
+ * @property {string} [firstBlockScope]
+ * @property {Array<string|contentElementPerf>} [content]
+ */
+
+/**
+ * @typedef {object} sequencePerf
+ * @property {"main"|"introduction"|"introTitle"|"IntroEndTitle"|"title"|"endTitle"|"heading"|"remark"|"sidebar"|"table"|"tree"|"kv"|"footnote"|"noteCaller"|"xref"|"pubNumber"|"altNumber"|"esbCat"|"fig"|"temp"} type
+ * @property {integer} [nBlocks]
+ * @property {string} [firstBlockScope]
+ * @property {string} [previewText]
+ * @property {boolean} selected
+ * @property {blockOrGraftPerf[]} [blocks]
+ */
+
+/**
+ * @typedef {object} documentPerf
+ * @property {object} headers
+ * @property {array} tags
+ * @property {Object<string,sequencePerf>} sequences
+ * @property {string} mainSequence
+ */

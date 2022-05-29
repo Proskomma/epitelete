@@ -9,9 +9,13 @@
 # Typedefs
 
 <dl>
-<dt><a href="#documentPerf">documentPerf</a> : <code>Object.&lt;string, Object&gt;</code></dt>
+<dt><a href="#contentElementPerf">contentElementPerf</a> : <code>object</code></dt>
 <dd></dd>
-<dt><a href="#sequencePerf">sequencePerf</a> : <code>Object.&lt;string, Object&gt;</code></dt>
+<dt><a href="#blockOrGraftPerf">blockOrGraftPerf</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#sequencePerf">sequencePerf</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#documentPerf">documentPerf</a> : <code>object</code></dt>
 <dd></dd>
 </dl>
 
@@ -222,17 +226,74 @@ Loads given perf into memory
 
 * * *
 
-<a name="documentPerf"></a>
+<a name="contentElementPerf"></a>
 
-# documentPerf : <code>Object.&lt;string, Object&gt;</code>
+# contentElementPerf : <code>object</code>
 **Kind**: global typedef  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| type | <code>string</code> | 
+| [number] | <code>string</code> | 
+| [subType] | <code>&quot;verses&quot;</code> \| <code>&quot;xref&quot;</code> \| <code>&quot;footnote&quot;</code> \| <code>&quot;noteCaller&quot;</code> | 
+| [target] | <code>string</code> | 
+| [nBlocks] | <code>integer</code> | 
+| [previewText] | <code>string</code> | 
+
+
+* * *
+
+<a name="blockOrGraftPerf"></a>
+
+# blockOrGraftPerf : <code>object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| type | <code>&quot;block&quot;</code> \| <code>&quot;graft&quot;</code> | 
+| subType | <code>string</code> | 
+| [target] | <code>string</code> | 
+| [nBlocks] | <code>integer</code> | 
+| [previewText] | <code>string</code> | 
+| [firstBlockScope] | <code>string</code> | 
+| [content] | <code>Array.&lt;(string\|contentElementPerf)&gt;</code> | 
+
 
 * * *
 
 <a name="sequencePerf"></a>
 
-# sequencePerf : <code>Object.&lt;string, Object&gt;</code>
+# sequencePerf : <code>object</code>
 **Kind**: global typedef  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| type | <code>&quot;main&quot;</code> \| <code>&quot;introduction&quot;</code> \| <code>&quot;introTitle&quot;</code> \| <code>&quot;IntroEndTitle&quot;</code> \| <code>&quot;title&quot;</code> \| <code>&quot;endTitle&quot;</code> \| <code>&quot;heading&quot;</code> \| <code>&quot;remark&quot;</code> \| <code>&quot;sidebar&quot;</code> \| <code>&quot;table&quot;</code> \| <code>&quot;tree&quot;</code> \| <code>&quot;kv&quot;</code> \| <code>&quot;footnote&quot;</code> \| <code>&quot;noteCaller&quot;</code> \| <code>&quot;xref&quot;</code> \| <code>&quot;pubNumber&quot;</code> \| <code>&quot;altNumber&quot;</code> \| <code>&quot;esbCat&quot;</code> \| <code>&quot;fig&quot;</code> \| <code>&quot;temp&quot;</code> | 
+| [nBlocks] | <code>integer</code> | 
+| [firstBlockScope] | <code>string</code> | 
+| [previewText] | <code>string</code> | 
+| selected | <code>boolean</code> | 
+| [blocks] | [<code>Array.&lt;blockOrGraftPerf&gt;</code>](#blockOrGraftPerf) | 
+
+
+* * *
+
+<a name="documentPerf"></a>
+
+# documentPerf : <code>object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| headers | <code>object</code> | 
+| tags | <code>array</code> | 
+| sequences | <code>Object.&lt;string, sequencePerf&gt;</code> | 
+| mainSequence | <code>string</code> | 
+
 
 * * *
 

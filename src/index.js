@@ -20,11 +20,11 @@ const _ = require("lodash");
 class Epitelete {
     /**
      * @param {Object} args - constructor args
-     * @param {UWProskomma} [args.proskomma] - a proskomma instance.
-     * @param {integer} args.docSetId - a docSetId.
-     * @param {Object} [args.options] - setting params.
-     * @param {integer} [args.options.historySize] - size of history buffer.
-     * @return {Epitelete} Epitelete instance.
+     * @param {UWProskomma} [args.proskomma] - a proskomma instance
+     * @param {integer} args.docSetId - a docSetId
+     * @param {Object} [args.options] - setting params
+     * @param {integer} [args.options.historySize] - size of history buffer
+     * @return {Epitelete} Epitelete instance
      */
     constructor({ proskomma = null, docSetId, options = {} }) {
         if (!docSetId) {
@@ -58,8 +58,9 @@ class Epitelete {
 
     /**
      * Gets a copy of a document from history
+     * @private
      * @param {string} bookCode
-     * @return {documentPerf}
+     * @return {documentPerf} matching document PERF
      */
     getDocument(bookCode) {
         const history = this.history[bookCode];
@@ -67,8 +68,9 @@ class Epitelete {
     }
 
     /**
-     * Gets object containing documents copies from history
-     * @return {}
+     * Gets documents copies from history
+     * @private
+     * @return {Object<bookCode,documentPerf>} Object with book code as key and document PERF as value
      */
     getDocuments() {
         return Object.keys(this.history).reduce((documents, bookCode) => {
@@ -81,6 +83,8 @@ class Epitelete {
      * Adds new document to history (replaces any doc with same bookCode already in history)
      * @param {string} bookCode
      * @param {documentPerf} doc
+     * @return {documentPerf} same passed document PERF
+     * @private
      */
     addDocument(bookCode, doc) {
         this.history[bookCode] = {
@@ -92,7 +96,9 @@ class Epitelete {
 
     /**
      * Fetches document from proskomma instance
+     * @async
      * @param {string} bookCode
+     * @return {documentPerf} fetched document PERF
      */
     async fetchPerf(bookCode) {
         if (this.backend === "standalone") {
@@ -135,12 +141,14 @@ class Epitelete {
     }
 
     /**
-     * Gets document from memory or fetches it if proskomma is set.
+     * Gets document from memory or fetches it if proskomma is set
+     * @async
      * @param {string} bookCode
+     * @return {documentPerf} found or fetched document PERF
      */
     async readPerf(bookCode) {
         if (!this.history[bookCode] && this.backend === "proskomma") {
-            return await this.fetchPerf(bookCode);
+            return this.fetchPerf(bookCode);
         }
         if (!this.history[bookCode] && this.backend === "standalone") {
             throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
@@ -152,9 +160,9 @@ class Epitelete {
     /**
      * Merges a sequence with the document and saves the new modified document.
      * @param {string} bookCode
-     * @param {integer} sequenceId
-     * @param {sequencePerf} perfSequence
-     * @return {sequencePerf}
+     * @param {integer} sequenceId - id of modified sequence
+     * @param {sequencePerf} perfSequence - modified sequence
+     * @return {documentPerf} modified document PERF
      */
     writePerf(bookCode, sequenceId, perfSequence) {
         // Get copy of last doc from memory
@@ -197,6 +205,7 @@ class Epitelete {
     /**
      * ?Checks Perf Sequence
      * @param {sequencePerf} perfSequence
+     * @return {string[]} array of warnings
      */
     checkPerfSequence(perfSequence) {
         let currentChapter = 0;
@@ -228,15 +237,16 @@ class Epitelete {
 
     /**
      * Get array of book codes from history
+     * @return {string[]} array of bookCodes
      */
     localBookCodes() {
         return Object.keys(this.history);
     }
 
     /**
-     * Gets the available books for current docSet. Returns an object with book codes as keys, and values
-     *   contain book header data
-     * @returns {{}}
+     * Gets the available books for current docSet.
+     * @return {{}} an object with book codes as keys, and values
+     * contain book header data
      */
     bookHeaders() {
         const documentHeaders = {};
@@ -262,6 +272,7 @@ class Epitelete {
 
     /**
      * Clears docs history
+     * @return {void} void
      */
     clearPerf() {
         this.history = {};
@@ -270,6 +281,7 @@ class Epitelete {
     /**
      * Checks if able to undo from specific book history
      * @param {string} bookCode
+     * @return {boolean}
      */
     canUndo(bookCode) {
         const history = this.history[bookCode];
@@ -281,6 +293,7 @@ class Epitelete {
     /**
      * Checks if able to redo from specific book history
      * @param {string} bookCode
+     * @return {boolean}
      */
     canRedo(bookCode) {
         const history = this.history[bookCode];
@@ -292,7 +305,7 @@ class Epitelete {
     /**
      * Gets previous document from history
      * @param {string} bookCode
-     * @return {?documentPerf}
+     * @return {?documentPerf} document PERF or null if can not undo
      */
     undoPerf(bookCode) {
         if (this.canUndo(bookCode)) {
@@ -307,7 +320,7 @@ class Epitelete {
     /**
      * Gets next document from history
      * @param {string} bookCode
-     * @return {?documentPerf}
+     * @return {?documentPerf} document PERF or null if can not redo
      */
     redoPerf(bookCode){
         if (this.canRedo(bookCode)) {
@@ -322,8 +335,8 @@ class Epitelete {
     /**
      * Loads given perf into memory
      * @param {string} bookCode
-     * @param {documentPerf} perfJSON
-     * @return {documentPerf}
+     * @param {documentPerf} perfJSON - document PERF
+     * @return {documentPerf} same sideloaded document PERF
      */
     sideloadPerf(bookCode, perfJSON) {
         if (this.backend === "proskomma") {

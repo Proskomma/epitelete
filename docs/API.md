@@ -17,6 +17,9 @@
 <dd></dd>
 <dt><a href="#documentPerf">documentPerf</a> : <code>object</code></dt>
 <dd></dd>
+<dt><a href="#Proskomma">Proskomma</a></dt>
+<dd><p>Proskomma instance</p>
+</dd>
 </dl>
 
 <a name="Epitelete"></a>
@@ -49,13 +52,13 @@ PERF Middleware for Editors in the Proskomma Ecosystem
 ## new Epitelete(args)
 **Returns**: [<code>Epitelete</code>](#Epitelete) - Epitelete instance  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| args | <code>Object</code> | constructor args |
-| [args.proskomma] | <code>UWProskomma</code> | a proskomma instance |
-| args.docSetId | <code>integer</code> | a docSetId |
-| [args.options] | <code>Object</code> | setting params |
-| [args.options.historySize] | <code>integer</code> | size of history buffer |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| args | <code>Object</code> |  | constructor args |
+| [args.proskomma] | [<code>Proskomma</code>](#Proskomma) |  | a proskomma instance |
+| args.docSetId | <code>number</code> |  | a docSetId |
+| [args.options] | <code>object</code> | <code>{}</code> | setting params |
+| [args.options.historySize] | <code>number</code> | <code>3</code> | size of history buffer |
 
 
 * * *
@@ -101,7 +104,7 @@ Merges a sequence with the document and saves the new modified document.
 | Param | Type | Description |
 | --- | --- | --- |
 | bookCode | <code>string</code> |  |
-| sequenceId | <code>integer</code> | id of modified sequence |
+| sequenceId | <code>number</code> | id of modified sequence |
 | perfSequence | [<code>sequencePerf</code>](#sequencePerf) | modified sequence |
 
 
@@ -238,7 +241,7 @@ Loads given perf into memory
 | [number] | <code>string</code> | 
 | [subType] | <code>&quot;verses&quot;</code> \| <code>&quot;xref&quot;</code> \| <code>&quot;footnote&quot;</code> \| <code>&quot;noteCaller&quot;</code> | 
 | [target] | <code>string</code> | 
-| [nBlocks] | <code>integer</code> | 
+| [nBlocks] | <code>number</code> | 
 | [previewText] | <code>string</code> | 
 
 
@@ -255,7 +258,7 @@ Loads given perf into memory
 | type | <code>&quot;block&quot;</code> \| <code>&quot;graft&quot;</code> | 
 | subType | <code>string</code> | 
 | [target] | <code>string</code> | 
-| [nBlocks] | <code>integer</code> | 
+| [nBlocks] | <code>number</code> | 
 | [previewText] | <code>string</code> | 
 | [firstBlockScope] | <code>string</code> | 
 | [content] | <code>Array.&lt;(string\|contentElementPerf)&gt;</code> | 
@@ -272,7 +275,7 @@ Loads given perf into memory
 | Name | Type |
 | --- | --- |
 | type | <code>&quot;main&quot;</code> \| <code>&quot;introduction&quot;</code> \| <code>&quot;introTitle&quot;</code> \| <code>&quot;IntroEndTitle&quot;</code> \| <code>&quot;title&quot;</code> \| <code>&quot;endTitle&quot;</code> \| <code>&quot;heading&quot;</code> \| <code>&quot;remark&quot;</code> \| <code>&quot;sidebar&quot;</code> \| <code>&quot;table&quot;</code> \| <code>&quot;tree&quot;</code> \| <code>&quot;kv&quot;</code> \| <code>&quot;footnote&quot;</code> \| <code>&quot;noteCaller&quot;</code> \| <code>&quot;xref&quot;</code> \| <code>&quot;pubNumber&quot;</code> \| <code>&quot;altNumber&quot;</code> \| <code>&quot;esbCat&quot;</code> \| <code>&quot;fig&quot;</code> \| <code>&quot;temp&quot;</code> | 
-| [nBlocks] | <code>integer</code> | 
+| [nBlocks] | <code>number</code> | 
 | [firstBlockScope] | <code>string</code> | 
 | [previewText] | <code>string</code> | 
 | selected | <code>boolean</code> | 
@@ -294,6 +297,16 @@ Loads given perf into memory
 | sequences | <code>Object.&lt;string, sequencePerf&gt;</code> | 
 | mainSequence | <code>string</code> | 
 
+
+* * *
+
+<a name="Proskomma"></a>
+
+# Proskomma
+Proskomma instance
+
+**Kind**: global typedef  
+**See**: [https://github.com/mvahowe/proskomma-js](https://github.com/mvahowe/proskomma-js)  
 
 * * *
 

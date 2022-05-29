@@ -1,6 +1,4 @@
 import { default as ProskommaJsonValidator } from "proskomma-json-validator";
-const {UWProskomma} = require("uw-proskomma");
-
 const { doRender } = require('proskomma-render-perf');
 const _ = require("lodash");
 
@@ -11,10 +9,10 @@ const _ = require("lodash");
 class Epitelete {
     /**
      * @param {Object} args - constructor args
-     * @param {UWProskomma} [args.proskomma] - a proskomma instance
-     * @param {integer} args.docSetId - a docSetId
-     * @param {Object} [args.options] - setting params
-     * @param {integer} [args.options.historySize] - size of history buffer
+     * @param {Proskomma} [args.proskomma] - a proskomma instance
+     * @param {number} args.docSetId - a docSetId
+     * @param {object} [args.options={}] - setting params
+     * @param {number} [args.options.historySize=3] - size of history buffer
      * @return {Epitelete} Epitelete instance
      */
     constructor({ proskomma = null, docSetId, options = {} }) {
@@ -151,7 +149,7 @@ class Epitelete {
     /**
      * Merges a sequence with the document and saves the new modified document.
      * @param {string} bookCode
-     * @param {integer} sequenceId - id of modified sequence
+     * @param {number} sequenceId - id of modified sequence
      * @param {sequencePerf} perfSequence - modified sequence
      * @return {documentPerf} modified document PERF
      */
@@ -355,7 +353,7 @@ export default Epitelete;
  * @property {string} [number]
  * @property {"verses"|"xref"|"footnote"|"noteCaller"} [subType]
  * @property {string} [target]
- * @property {integer} [nBlocks]
+ * @property {number} [nBlocks]
  * @property {string} [previewText]
  */
 
@@ -364,7 +362,7 @@ export default Epitelete;
  * @property {"block"|"graft"} type
  * @property {string} subType
  * @property {string} [target]
- * @property {integer} [nBlocks]
+ * @property {number} [nBlocks]
  * @property {string} [previewText]
  * @property {string} [firstBlockScope]
  * @property {Array<string|contentElementPerf>} [content]
@@ -373,7 +371,7 @@ export default Epitelete;
 /**
  * @typedef {object} sequencePerf
  * @property {"main"|"introduction"|"introTitle"|"IntroEndTitle"|"title"|"endTitle"|"heading"|"remark"|"sidebar"|"table"|"tree"|"kv"|"footnote"|"noteCaller"|"xref"|"pubNumber"|"altNumber"|"esbCat"|"fig"|"temp"} type
- * @property {integer} [nBlocks]
+ * @property {number} [nBlocks]
  * @property {string} [firstBlockScope]
  * @property {string} [previewText]
  * @property {boolean} selected
@@ -386,4 +384,10 @@ export default Epitelete;
  * @property {array} tags
  * @property {Object<string,sequencePerf>} sequences
  * @property {string} mainSequence
+ */
+
+/**
+ * Proskomma instance
+ * @typedef Proskomma
+ * @see {@link https://github.com/mvahowe/proskomma-js}
  */

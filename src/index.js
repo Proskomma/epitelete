@@ -89,7 +89,7 @@ class Epitelete {
      * Fetches document from proskomma instance
      * @async
      * @param {string} bookCode
-     * @return {documentPerf} fetched document PERF
+     * @return {Promise<documentPerf>} fetched document PERF
      */
     async fetchPerf(bookCode) {
         if (this.backend === "standalone") {
@@ -135,7 +135,7 @@ class Epitelete {
      * Gets document from memory or fetches it if proskomma is set
      * @async
      * @param {string} bookCode
-     * @return {documentPerf} found or fetched document PERF
+     * @return {Promise<documentPerf>} found or fetched document PERF
      */
     async readPerf(bookCode) {
         if (!this.history[bookCode] && this.backend === "proskomma") {

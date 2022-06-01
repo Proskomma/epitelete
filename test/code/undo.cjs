@@ -18,7 +18,7 @@ test(
     async t => {
         try {
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete({proskomma, docSetId});
+            const epitelete = new Epitelete({proskomma, docSetId, options: {historySize:3}});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();

@@ -12,7 +12,7 @@ class Epitelete {
      * @param {Proskomma} [args.proskomma] - a proskomma instance
      * @param {number} args.docSetId - a docSetId
      * @param {object} [args.options={}] - setting params
-     * @param {number} [args.options.historySize=3] - size of history buffer
+     * @param {number} [args.options.historySize=10] - size of history buffer
      * @return {Epitelete} Epitelete instance
      */
     constructor({ proskomma = null, docSetId, options = {} }) {
@@ -34,10 +34,14 @@ class Epitelete {
             throw new Error(`Unknown options in constructor: ${unknownOptions.join(', ')}`);
         }
 
+        const { hs, ...opt } = options;
+        const historySize = hs ? hs + 1 : 11//add one to passed history size so it matches undos allowed.
+        
         this.options = {
-            historySize: 3,
-            ...options
+            historySize,
+            ...opt
         };
+
         this.proskomma = proskomma;
         this.docSetId = docSetId;
         this.history = {};

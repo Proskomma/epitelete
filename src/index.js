@@ -35,7 +35,7 @@ class Epitelete {
         }
 
         this.options = {
-            historySize: 3,
+            historySize: 11,
             ...options
         };
         this.proskomma = proskomma;

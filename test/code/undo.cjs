@@ -167,7 +167,7 @@ test(
             const bookCode = "3JN";
             const doc1 = await epitelete.readPerf(bookCode);
             const history = epitelete.history[bookCode];
-            const sequenceId = doc1.mainSequence;
+            const sequenceId = doc1.main_sequence_id;
             const sequence = doc1.sequences[sequenceId]
             const initialBlocksCount = sequence.blocks.length;
 

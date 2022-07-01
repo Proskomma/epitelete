@@ -47,7 +47,7 @@ test(
             const epitelete = new Epitelete({ proskomma, docSetId });
             const bookCode = "LUK";
             const doc = await epitelete.fetchPerf(bookCode);
-            for (const k of ["headers", "tags", "sequences", "mainSequence"]) {
+            for (const k of ["schema", "metadata", "sequences", "main_sequence_id"]) {
                 t.ok(k in doc);
             }
         } catch (err) {

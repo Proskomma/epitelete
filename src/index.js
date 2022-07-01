@@ -1,4 +1,5 @@
 import { default as ProskommaJsonValidator } from "proskomma-json-validator";
+import {Validator} from 'proskomma-json-tools';
 const { doRender } = require('proskomma-render-perf');
 const _ = require("lodash");
 
@@ -45,7 +46,7 @@ class Epitelete {
         this.proskomma = proskomma;
         this.docSetId = docSetId;
         this.history = {};
-        this.validator = new ProskommaJsonValidator();
+        this.validator = new Validator();
         this.backend = proskomma ? 'proskomma' : 'standalone';
     }
 
@@ -53,7 +54,7 @@ class Epitelete {
      * Gets a copy of a document from history
      * @private
      * @param {string} bookCode
-     * @return {documentPerf} matching document PERF
+     * @return {perfDocument} matching PERF document
      */
     getDocument(bookCode) {
         const history = this.history[bookCode];
@@ -63,7 +64,7 @@ class Epitelete {
     /**
      * Gets documents copies from history
      * @private
-     * @return {Object<bookCode,documentPerf>} Object with book code as key and document PERF as value
+     * @return {Object<bookCode,perfDocument>} Object with book code as key and PERF document as value
      */
     getDocuments() {
         return Object.keys(this.history).reduce((documents, bookCode) => {
@@ -75,8 +76,8 @@ class Epitelete {
     /**
      * Adds new document to history (replaces any doc with same bookCode already in history)
      * @param {string} bookCode
-     * @param {documentPerf} doc
-     * @return {documentPerf} same passed document PERF
+     * @param {perfDocument} doc
+     * @return {perfDocument} same passed PERF document
      * @private
      */
     addDocument(bookCode, doc) {
@@ -91,7 +92,7 @@ class Epitelete {
      * Fetches document from proskomma instance
      * @async
      * @param {string} bookCode
-     * @return {Promise<documentPerf>} fetched document PERF
+     * @return {Promise<perfDocument>} fetched PERF document
      */
     async fetchPerf(bookCode) {
         if (this.backend === "standalone") {
@@ -103,11 +104,7 @@ class Epitelete {
         }
 
         const config = {
-            selectedSequenceId: null,
-            allSequences: true,
-            output: {
-                docSets: {},
-            }
+            jsonType: ["perf", "0.2.0"],
         };
         const query = `{docSet(id: "${this.docSetId}") { id document(bookCode: "${bookCode}") {id bookCode: header(id:"bookCode")} } }`;
         const { data: { docSet } } = this.proskomma.gqlQuerySync(query);
@@ -128,7 +125,7 @@ class Epitelete {
             throw new Error(`doRender validation error`);
         }
 
-        const doc = config2.output.docSets[this.docSetId].documents[bookCode];
+        const doc = config2.documents[documentId];
 
         return this.addDocument(bookCode, doc);
     }
@@ -137,7 +134,7 @@ class Epitelete {
      * Gets document from memory or fetches it if proskomma is set
      * @async
      * @param {string} bookCode
-     * @return {Promise<documentPerf>} found or fetched document PERF
+     * @return {Promise<perfDocument>} found or fetched PERF document
      */
     async readPerf(bookCode) {
         if (!this.history[bookCode] && this.backend === "proskomma") {
@@ -154,8 +151,8 @@ class Epitelete {
      * Merges a sequence with the document and saves the new modified document.
      * @param {string} bookCode
      * @param {number} sequenceId - id of modified sequence
-     * @param {sequencePerf} perfSequence - modified sequence
-     * @return {documentPerf} modified document PERF
+     * @param {perfSequence} perfSequence - modified sequence
+     * @return {perfDocument} modified PERF document
      */
     writePerf(bookCode, sequenceId, perfSequence) {
         // Get copy of last doc from memory
@@ -168,10 +165,10 @@ class Epitelete {
             throw `PERF sequence id not found: ${bookCode}, ${sequenceId}`;
         }
         // validate new perf sequence
-        const validatorResult = this.validator.validate('sequencePerf', perfSequence);
+        const validatorResult = this.validator.validate('constraint','perfSequence','0.2.0',perfSequence);
         // if not valid throw error
         if (!validatorResult.isValid) {
-            throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult.errors)}`;
+            throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;
         }
 
         // if valid
@@ -197,34 +194,34 @@ class Epitelete {
 
     /**
      * ?Checks Perf Sequence
-     * @param {sequencePerf} perfSequence
+     * @param {perfSequence} perfSequence
      * @return {string[]} array of warnings
      */
     checkPerfSequence(perfSequence) {
         let currentChapter = 0;
         let currentVerse = 0;
-        const warnings = [];
-        for (const block of perfSequence.blocks) {
-            if( Array.isArray(block.content) ) {
-                for (const contentBlock of block.content) {
-                    if ('verses' === contentBlock.type) {
+        const warnings = perfSequence?.blocks.reduce((warnings, { content: blockContent }) => {
+            if( Array.isArray(blockContent) ) {
+                for (const contentBlock of blockContent) {
+                    if (contentBlock.type === 'mark' && contentBlock.sub_type === 'verses') {
                         currentVerse++;
-                        if (currentVerse.toString() !== contentBlock.number) {
-                            warnings.push(`Verse ${contentBlock.number} is out of order, expected ${currentVerse}`);
-                            currentVerse = Number(contentBlock.number);
+                        if (currentVerse.toString() !== contentBlock.atts.number) {
+                            warnings.push(`Verse ${contentBlock.atts.number} is out of order, expected ${currentVerse}`);
+                            currentVerse = Number(contentBlock.atts.number);
                         }
                     }
-                    if ('chapter' === contentBlock.type) {
+                    if (contentBlock.type === 'mark' && contentBlock.sub_type === 'chapter') {
                         currentChapter++;
-                        if (currentChapter.toString() !== contentBlock.number) {
-                            warnings.push(`Chapter ${contentBlock.number} is out of order, expected ${currentChapter}`);
-                            currentChapter = Number(contentBlock.number);
+                        if (currentChapter.toString() !== contentBlock.atts.number) {
+                            warnings.push(`Chapter ${contentBlock.atts.number} is out of order, expected ${currentChapter}`);
+                            currentChapter = Number(contentBlock.atts.number);
                         }
                         currentVerse = 0;
                     }
                 }
             }
-        }
+            return warnings;
+        }, []);
         return warnings;
     }
 
@@ -298,7 +295,7 @@ class Epitelete {
     /**
      * Gets previous document from history
      * @param {string} bookCode
-     * @return {?documentPerf} document PERF or null if can not undo
+     * @return {?perfDocument} PERF document or null if can not undo
      */
     undoPerf(bookCode) {
         if (this.canUndo(bookCode)) {
@@ -313,7 +310,7 @@ class Epitelete {
     /**
      * Gets next document from history
      * @param {string} bookCode
-     * @return {?documentPerf} document PERF or null if can not redo
+     * @return {?perfDocument} PERF document or null if can not redo
      */
     redoPerf(bookCode){
         if (this.canRedo(bookCode)) {
@@ -328,24 +325,24 @@ class Epitelete {
     /**
      * Loads given perf into memory
      * @param {string} bookCode
-     * @param {documentPerf} perfJSON - document PERF
-     * @return {documentPerf} same sideloaded document PERF
+     * @param {perfDocument} perfDocument - PERF document
+     * @return {perfDocument} same sideloaded PERF document
      */
-    sideloadPerf(bookCode, perfJSON) {
+    sideloadPerf(bookCode, perfDocument) {
         if (this.backend === "proskomma") {
             throw "Can't call sideloadPerf in proskomma mode";
         }
 
-        if (!bookCode || !perfJSON) {
-            throw "sideloadPerf requires 2 arguments (bookCode, perfJSON)";
+        if (!bookCode || !perfDocument) {
+            throw "sideloadPerf requires 2 arguments (bookCode, perfDocument)";
         }
 
-        const validatorResult = this.validator.validate('documentPerf', perfJSON);
+        const validatorResult = this.validator.validate('constraint','perfDocument','0.2.0', perfDocument);
          if (!validatorResult.isValid) {
             throw `prefJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
         }
 
-        return this.addDocument(bookCode, perfJSON);
+        return this.addDocument(bookCode, perfDocument);
     }
 }
 
@@ -373,7 +370,7 @@ export default Epitelete;
  */
 
 /**
- * @typedef {object} sequencePerf
+ * @typedef {object} perfSequence
  * @property {"main"|"introduction"|"introTitle"|"IntroEndTitle"|"title"|"endTitle"|"heading"|"remark"|"sidebar"|"table"|"tree"|"kv"|"footnote"|"noteCaller"|"xref"|"pubNumber"|"altNumber"|"esbCat"|"fig"|"temp"} type
  * @property {number} [nBlocks]
  * @property {string} [firstBlockScope]
@@ -383,10 +380,10 @@ export default Epitelete;
  */
 
 /**
- * @typedef {object} documentPerf
+ * @typedef {object} perfDocument
  * @property {object} headers
  * @property {array} tags
- * @property {Object<string,sequencePerf>} sequences
+ * @property {Object<string,perfSequence>} sequences
  * @property {string} mainSequence
  */
 

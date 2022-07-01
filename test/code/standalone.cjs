@@ -8,8 +8,7 @@ const testGroup = "Standalone";
 
 const proskomma = new UWProskomma();
 // const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "fra_lsg_succinct.json")));
-const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "eng_engWEBBE_succinct.json")));
-proskomma.loadSuccinctDocSet(succinctJson);
+const documentPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "perf_mrk.json")));
 
 test(
     `Instantiate Epitelete in standalone mode (${testGroup})`,
@@ -17,7 +16,7 @@ test(
         try {
             const docSetId = "DBL/eBible/fra_fraLSG";
             const epitelete = new Epitelete({ docSetId });
-            const bookCode = "JON";
+            const bookCode = "MRK";
             t.ok(epitelete.backend === "standalone");
             try {
                 await epitelete.fetchPerf(bookCode);
@@ -25,10 +24,12 @@ test(
             } catch (err) {
                 t.pass("standalone instance fails at readPerf");
             }
-            const perfJSON = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "fra_lsg_jon_document.json")));
-            await epitelete.sideloadPerf(bookCode, perfJSON);
+            const sideloaded = await epitelete.sideloadPerf(bookCode, documentPerf);
             const savedDoc = await epitelete.readPerf(bookCode);
-            t.deepEqual(savedDoc, perfJSON, "perfJSON is saved in memory");
+            t.deepEqual(savedDoc, documentPerf, "documentPerf is saved in memory");
+            const mainSequence = documentPerf.sequences[documentPerf.main_sequence_id];
+            t.ok(await epitelete.writePerf(bookCode, documentPerf.main_sequence_id, mainSequence));
+            
         } catch (err) {
             t.fail(err);
         }

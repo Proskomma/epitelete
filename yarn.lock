@@ -2873,6 +2873,14 @@ prop-types@^15.7.2:
     object-assign "^4.1.1"
     react-is "^16.13.1"
 
+proskomma-json-tools@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.1.0.tgz#977174d28c433c4484dfcac17aceaceeec948637"
+  integrity sha512-WvKp1DEIs9nGiA4zWAGHHEKLuY8f9RSsMg/HqKpDhDmOe7IqqKZIYdw0mt9a8C931NU6FNdzX0iQYEMBMNPMoA==
+  dependencies:
+    "@babel/core" "^7.17.10"
+    ajv "^8.11.0"
+
 proskomma-json-validator@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/proskomma-json-validator/-/proskomma-json-validator-0.0.5.tgz#ce71cbe9f18bdf6b9b4c63e5f5291d1cb50dbc4d"
@@ -2881,25 +2889,17 @@ proskomma-json-validator@^0.0.5:
     "@babel/core" "^7.17.10"
     ajv "^8.11.0"
 
-proskomma-render-json@0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/proskomma-render-json/-/proskomma-render-json-0.0.7.tgz#b66ab38ee043b523be29dda52a9afc79176f2fa5"
-  integrity sha512-vcMjn8Rge6MYtlSD5Ew9uEw40Qg7VmM61vA9wTt93+0JkxiM/1subMxM7AUdordtaCNUgf3FTyw9ioZPRAdMOw==
-  dependencies:
-    "@babel/core" "^7.17.10"
-    proskomma-render "^0.6.1"
-
-proskomma-render-perf@0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/proskomma-render-perf/-/proskomma-render-perf-0.0.6.tgz#f9d27a88f52fb70527f3d69fceba22b1c163c4cc"
-  integrity sha512-AUwap7IL4J7Qwj0iy93eiZHQGlQxDHJMsdDkketAm0dljTxhqJ8hqddgAzYRpxUXoOH7mZvUL16Yoc/V9Z2wcQ==
+proskomma-render-perf@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/proskomma-render-perf/-/proskomma-render-perf-0.2.0.tgz#9f8cea96c7c5c05e6483e4e739d7b2ba9a4afc90"
+  integrity sha512-75tn++fIIccHoxK6bZWAHGPJSGjNQpDu31sinadU0O38vdWIG38v/3vpd/qVu1C7R+zLTNJYjmfUHzHXKh7Gsg==
   dependencies:
     "@babel/core" "^7.17.10"
     ajv "^8.11.0"
+    proskomma-json-tools "^0.1.0"
     proskomma-render "^0.6.0"
-    proskomma-render-json "0.0.7"
 
-proskomma-render@^0.6.0, proskomma-render@^0.6.1:
+proskomma-render@^0.6.0:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/proskomma-render/-/proskomma-render-0.6.1.tgz#94a524d52cf79e8686e3169354d1afb2c76ce5e5"
   integrity sha512-mdZShaodxpL3xx+yDo29CmJzazp9jo9OwS5nC0kDtWroFc4EWXN0SUwosE7hRFv00H9Sav+Bon1CTJfRqo3wcA==

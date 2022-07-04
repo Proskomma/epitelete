@@ -16,9 +16,11 @@ proskomma.loadSuccinctDocSet(succinctJson);
 test(
     `undo stack length with writePerf does not exceed historySize (${testGroup})`,
     async t => {
+        t.plan(1)
         try {
+            const historySize = 3;
             const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete({proskomma, docSetId, options: {historySize:3}});
+            const epitelete = new Epitelete({proskomma, docSetId, options: {historySize}});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();
@@ -40,13 +42,13 @@ test(
         } catch (err) {
             t.error(err);
         }
-        t.end()
     }
 )
 
 test(
     `canUndo false with empty document (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -56,7 +58,6 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 
 )
@@ -64,6 +65,7 @@ test(
 test(
     `canUndo false with unchanged document (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -74,7 +76,6 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 
 )
@@ -82,6 +83,7 @@ test(
 test(
     `canUndo true with changed document (${testGroup})`,
     async t => {
+        t.plan(2);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -103,7 +105,6 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 
 )
@@ -111,6 +112,7 @@ test(
 test(
     `cannot undoPerf with unchanged document (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -121,7 +123,6 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 
 )
@@ -129,6 +130,7 @@ test(
 test(
     `can undoPerf with changed document (${testGroup})`,
     async t => {
+        t.plan(2);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -153,13 +155,13 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 )
 
 test(
     `multiple undo/redo (${testGroup})`,
     async t => {
+        t.plan(18);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const historySize = 5;
@@ -217,6 +219,5 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 )

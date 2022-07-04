@@ -16,6 +16,7 @@ proskomma.loadSuccinctDocSet(succinctJson);
 test(
     `canRedo false with empty document (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -25,7 +26,6 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 
 )
@@ -33,6 +33,7 @@ test(
 test(
     `canRedo false with unchanged document (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -43,13 +44,13 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 )
 
 test(
     `canRedo false with changed document (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -73,7 +74,6 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 
 )
@@ -81,6 +81,7 @@ test(
 test(
     `canRedo false with changed document (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -104,7 +105,6 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 
 )
@@ -112,6 +112,7 @@ test(
 test(
     `canRedo true after undo (${testGroup})`,
     async t => {
+        t.plan(11);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
@@ -143,7 +144,6 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 
 )
@@ -151,6 +151,7 @@ test(
 test(
     `cannot redoPerf with unchanged document (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -161,7 +162,6 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 
 )
@@ -169,6 +169,7 @@ test(
 test(
     `cannot redoPerf with changed document (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -192,7 +193,6 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 
 )
@@ -200,6 +200,7 @@ test(
 test(
     `can redoPerf after undoPerf (${testGroup})`,
     async t => {
+        t.plan(4);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -232,13 +233,13 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 )
 
 test(
     `canRedo false with empty document (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -248,7 +249,6 @@ test(
         }catch (err){
             t.error(err);
         }
-        t.end();
     }
 
 )

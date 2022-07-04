@@ -16,6 +16,7 @@ proskomma.loadSuccinctDocSet(succinctJson);
 test(
     `checkPERF showing no warnings (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
@@ -30,13 +31,13 @@ test(
         } catch (err) {
             t.error(err);
         }
-        t.end()
     }
 )
 
 test(
     `checkPERF showing CV warnings (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});

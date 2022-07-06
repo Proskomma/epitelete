@@ -16,14 +16,15 @@ test(
     async t => {
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({ proskomma, docSetId });
+        t.plan(1);
         t.ok(typeof epitelete.localBookCodes === "function");
-        t.end();
     }
 )
 
 test(
     `localBookCodes returns list of document keys (${testGroup})`,
     async t => {
+        t.plan(2)
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
@@ -37,7 +38,6 @@ test(
         } catch (err) {
             t.error(err);
         }
-        t.end()
     }
 )
 
@@ -54,7 +54,8 @@ test(
             const bookHeaders = epitelete.bookHeaders();
             const bookCodes = Object.keys(bookHeaders);
             const bookCount = bookCodes.length;
-
+            
+            t.plan(2 + bookCount);
             t.ok(bookCodes)
             t.equal(bookCount, expectedBookCount, 'expected ' + expectedBookCount + ' books');
             for (const bookCode of bookCodes) {
@@ -65,6 +66,5 @@ test(
         } catch (err) {
             t.error(err);
         }
-        t.end()
     }
 )

@@ -14,16 +14,17 @@ proskomma.loadSuccinctDocSet(succinctJson);
 test(
     `clearPerf() is defined (${testGroup})`,
     async t => {
+        t.plan(1);
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({ proskomma, docSetId });
         t.ok(typeof epitelete.clearPerf === "function");
-        t.end();
     }
 )
 
 test(
     `clearPerf clears list of document keys (${testGroup})`,
     async t => {
+        t.plan(3)
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
@@ -36,6 +37,5 @@ test(
         } catch (err) {
             t.error(err);
         }
-        t.end()
     }
 )

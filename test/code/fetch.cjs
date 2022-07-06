@@ -18,8 +18,8 @@ test(
     async t => {
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({ proskomma, docSetId });
+        t.plan(1);
         t.ok(typeof epitelete.fetchPerf === "function");
-        t.end();
     }
 )
 
@@ -42,6 +42,7 @@ test(
 test(
     `fetchPerf() returns config output (${testGroup})`,
     async t => {
+        t.plan(4)
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
@@ -53,7 +54,6 @@ test(
         } catch (err) {
             t.error(err)
         }
-        t.end()
     }
 )
 

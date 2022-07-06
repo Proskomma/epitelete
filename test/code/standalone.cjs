@@ -13,6 +13,7 @@ const documentPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "t
 test(
     `Instantiate Epitelete in standalone mode (${testGroup})`,
     async t => {
+        t.plan(4)
         try {
             const docSetId = "DBL/eBible/fra_fraLSG";
             const epitelete = new Epitelete({ docSetId });
@@ -33,6 +34,5 @@ test(
         } catch (err) {
             t.fail(err);
         }
-        t.end()
     }
 )

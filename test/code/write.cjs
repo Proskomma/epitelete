@@ -15,6 +15,7 @@ proskomma.loadSuccinctDocSet(succinctJson);
 test(
     `roundtrip unchanged PERF (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
@@ -31,13 +32,13 @@ test(
             t.error(err);
             console.log(err);
         }
-        t.end()
     }
 )
 
 test(
     `roundtrip changed PERF (${testGroup})`,
     async t => {
+        t.plan(2);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
@@ -57,13 +58,13 @@ test(
         } catch (err) {
             t.error(err);
         }
-        t.end()
     }
 )
 
 test(
     `Fail on wrong bookCode (${testGroup})`,
     async t => {
+        t.plan(2);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
@@ -84,13 +85,13 @@ test(
                 t.pass('Success')
             }
         }
-        t.end()
     }
 )
 
 test(
     `Fail on wrong sequenceId (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
@@ -111,13 +112,13 @@ test(
                 t.pass('Success')
             }
         }
-        t.end()
     }
 )
 
 test(
     `test writePerf for ProskommaJsonValidator with wrong sequence (${testGroup})`,
     async t => {
+        t.plan(1);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
@@ -138,6 +139,5 @@ test(
                 t.pass('Success')
             }
         }
-        t.end()
     }
 )

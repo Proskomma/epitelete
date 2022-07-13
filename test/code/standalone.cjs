@@ -8,7 +8,7 @@ const testGroup = "Standalone";
 
 const proskomma = new UWProskomma();
 // const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "fra_lsg_succinct.json")));
-const documentPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "perf_mrk.json")));
+const documentPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "MRK-eBible-fra_fraLSG-perf_v0.2.1.json")));
 
 test(
     `Instantiate Epitelete in standalone mode (${testGroup})`,

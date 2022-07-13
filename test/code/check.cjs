@@ -51,7 +51,7 @@ test(
             // console.log("Luke:",JSON.stringify(mainSequence, null, 4));
             // Insert an out of order verse marker.
             // console.log(mainSequence.blocks[3].content[0]);
-            mainSequence.blocks[3].content.push({ type: 'mark', sub_type: 'verses', atts: { number: 2 } })
+            mainSequence.blocks[3].content.push({ type: 'mark', subtype: 'verses', atts: { number: 2 } })
             const warnings = await epitelete.checkPerfSequence(mainSequence);
             t.deepEqual(warnings, [ 'Verse 2 is out of order, expected 11', 'Verse 11 is out of order, expected 3' ])
         } catch (err) {

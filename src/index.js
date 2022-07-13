@@ -1,6 +1,4 @@
-import { default as ProskommaJsonValidator } from "proskomma-json-validator";
 import {Validator} from 'proskomma-json-tools';
-const { doRender } = require('proskomma-render-perf');
 const _ = require("lodash");
 
 /**
@@ -103,31 +101,17 @@ class Epitelete {
             throw new Error("fetchPerf requires 1 argument (bookCode)");
         }
 
-        const config = {
-            jsonType: ["perf", "0.2.0"],
-        };
-        const query = `{docSet(id: "${this.docSetId}") { id document(bookCode: "${bookCode}") {id bookCode: header(id:"bookCode")} } }`;
-        const { data: { docSet } } = this.proskomma.gqlQuerySync(query);
-        const documentId = docSet.document?.id;
+        const query = `{docSet(id: "${this.docSetId}") { document(bookCode: "${bookCode}") { perf } } }`;
+        const { data } = this.proskomma.gqlQuerySync(query);
+        const queryResult = data.docSet.document.perf;
 
-        if (!documentId) {
+        if (!queryResult) {
             throw new Error(`No document with bookCode="${bookCode}" found.`);
         }
 
-        const config2 = await doRender(
-            this.proskomma,
-            config,
-            [this.docSetId],
-            [documentId],
-        );
+        const perfDocument = JSON.parse(queryResult);
 
-        if (config2.validationErrors) {
-            throw new Error(`doRender validation error`);
-        }
-
-        const doc = config2.documents[documentId];
-
-        return this.addDocument(bookCode, doc);
+        return this.addDocument(bookCode, perfDocument);
     }
 
     /**
@@ -165,7 +149,7 @@ class Epitelete {
             throw `PERF sequence id not found: ${bookCode}, ${sequenceId}`;
         }
         // validate new perf sequence
-        const validatorResult = this.validator.validate('constraint','perfSequence','0.2.0',perfSequence);
+        const validatorResult = this.validator.validate('constraint','perfSequence','0.2.1',perfSequence);
         // if not valid throw error
         if (!validatorResult.isValid) {
             throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;
@@ -203,14 +187,14 @@ class Epitelete {
         const warnings = perfSequence?.blocks.reduce((warnings, { content: blockContent }) => {
             if( Array.isArray(blockContent) ) {
                 for (const contentBlock of blockContent) {
-                    if (contentBlock.type === 'mark' && contentBlock.sub_type === 'verses') {
+                    if (contentBlock.type === 'mark' && contentBlock.subtype === 'verses') {
                         currentVerse++;
                         if (currentVerse.toString() !== contentBlock.atts.number) {
                             warnings.push(`Verse ${contentBlock.atts.number} is out of order, expected ${currentVerse}`);
                             currentVerse = Number(contentBlock.atts.number);
                         }
                     }
-                    if (contentBlock.type === 'mark' && contentBlock.sub_type === 'chapter') {
+                    if (contentBlock.type === 'mark' && contentBlock.subtype === 'chapter') {
                         currentChapter++;
                         if (currentChapter.toString() !== contentBlock.atts.number) {
                             warnings.push(`Chapter ${contentBlock.atts.number} is out of order, expected ${currentChapter}`);
@@ -337,9 +321,9 @@ class Epitelete {
             throw "sideloadPerf requires 2 arguments (bookCode, perfDocument)";
         }
 
-        const validatorResult = this.validator.validate('constraint','perfDocument','0.2.0', perfDocument);
+        const validatorResult = this.validator.validate('constraint','perfDocument','0.2.1', perfDocument);
          if (!validatorResult.isValid) {
-            throw `prefJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
+            throw `perfJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
         }
 
         return this.addDocument(bookCode, perfDocument);

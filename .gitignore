@@ -1,5 +1,7 @@
 .idea/
 
+test/test_data/generated
+
 # Logs
 logs
 *.log

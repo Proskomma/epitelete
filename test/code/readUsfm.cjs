@@ -46,7 +46,7 @@ test(
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
             const bookCode = "MRK";
-            console.log(await epitelete.readUsfm(bookCode));
+            // console.log(await epitelete.readUsfm(bookCode));
             t.pass("readUsfm works with valid bookCode");
         } catch (err) {
             t.fail("readUsfm throws on valid bookCode");

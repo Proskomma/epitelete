@@ -1,4 +1,4 @@
-import {Validator} from 'proskomma-json-tools';
+import {Validator, ProskommaRenderFromJson, toUsfmActions} from 'proskomma-json-tools';
 const _ = require("lodash");
 
 /**
@@ -327,6 +327,20 @@ class Epitelete {
         }
 
         return this.addDocument(bookCode, perfDocument);
+    }
+
+    /**
+     * Gets document from memory and converts it to usfm
+     * @async
+     * @param {string} bookCode
+     * @return {string} converted usfm
+     */
+    async readUsfm(bookCode) {
+        const perf = await this.readPerf(bookCode);
+        const renderer = new ProskommaRenderFromJson({srcJson: perf, actions: toUsfmActions});
+        const output = {};
+        renderer.renderDocument({docId: "", config: {}, output});
+        return output.usfm;
     }
 }
 

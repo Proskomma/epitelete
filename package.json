@@ -29,7 +29,7 @@
   "dependencies": {
     "@babel/core": "^7.17.10",
     "lodash": "4.17.21",
-    "proskomma-json-tools": "^0.4.0"
+    "proskomma-json-tools": "^0.4.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",

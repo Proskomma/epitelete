@@ -2899,6 +2899,16 @@ proskomma-json-tools@^0.4.0:
     ajv "^8.11.0"
     deep-equal "^2.0.5"
 
+proskomma-json-tools@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.4.1.tgz#0f7f48521506e6d440e109a432425b3c875d4235"
+  integrity sha512-GTpQe5bGrZ86Pl46oaR4H5fMnISyRseEiJ9fFKLG+hNLs2b5YJfr+XbicuCoAnsE5jcGrt9pxK4ue0S2nVYmAw==
+  dependencies:
+    "@babel/core" "^7.17.10"
+    "@babel/plugin-proposal-throw-expressions" "^7.18.6"
+    ajv "^8.11.0"
+    deep-equal "^2.0.5"
+
 proskomma-utils@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/proskomma-utils/-/proskomma-utils-0.7.0.tgz#482c54910464b7942b29c81aff97b8edd2945c2a"

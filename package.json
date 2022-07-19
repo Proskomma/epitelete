@@ -14,7 +14,8 @@
     "oneTest": "babel-tape-runner test/code/%TESTSCRIPT%.cjs",
     "build": "babel src -d dist",
     "prepublishOnly": "rm -fr dist && npm run build",
-    "generatePerf": "babel-tape-runner utils/generatePerf.js"
+    "generatePerf": "babel-tape-runner utils/generatePerf.js",
+    "generateUsfm": "babel-tape-runner utils/generateUsfm.js"
   },
   "repository": {
     "type": "git",

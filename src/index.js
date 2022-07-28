@@ -1,4 +1,5 @@
 import {Validator, ProskommaRenderFromJson, toUsfmActions} from 'proskomma-json-tools';
+import reports from './pipelines/reports';
 const _ = require("lodash");
 
 /**
@@ -35,7 +36,7 @@ class Epitelete {
 
         const { hs, ...opt } = options;
         const historySize = hs ? hs + 1 : 11//add one to passed history size so it matches undos allowed.
-        
+
         this.options = {
             historySize,
             ...opt
@@ -341,6 +342,33 @@ class Epitelete {
         const output = {};
         renderer.renderDocument({docId: "", config: {}, output});
         return output.usfm;
+    }
+
+    /**
+     * Generates and returns a report via a transform pipeline
+     * @param {string} bookCode
+     * @param {string} reportName
+     * @param {object} data
+     * @return {array} A report
+     */
+    makeDocumentReport(bookCode, reportName, data) {
+        if (!this.localBookCodes().includes(bookCode)) {
+            throw new Error(`bookCode '${bookCode}' is not available locally`);
+        }
+        if (!reports[reportName]) {
+            throw new Error(`Unknown report name '${reportName}'`);
+        }
+        return [];
+    }
+
+    /**
+     * Generates and returns a report for each document via a transform pipeline
+     * @param {string} reportName
+     * @param {object} data
+     * @return {object} reports for each documents with bookCode as the key
+     */
+    makeDocumentsReport(reportName, data) {
+        return {};
     }
 }
 

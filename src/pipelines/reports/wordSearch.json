@@ -1,0 +1,51 @@
+[
+  {
+    "id":  0,
+    "type": "inputs",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      },
+      {
+        "name": "searchString",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Word Search",
+    "name": "wordSearch",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Input perf"
+      },
+      {
+        "name": "searchString",
+        "type": "text",
+        "source": "Input searchString"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "matches",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Searches for a word"
+  },
+  {
+    "id": 999,
+    "type": "outputs",
+    "outputs": [
+      {
+        "name": "matches",
+        "source": "Transform 6 matches"
+      }
+    ]
+  }
+]

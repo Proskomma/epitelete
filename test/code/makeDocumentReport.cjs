@@ -16,7 +16,7 @@ test(
     async t => {
         t.plan(1);
         const docSetId = "DBL/eng_engWEBBE";
-        const epitelete = new Epitelete({ proskomma, docSetId });
+        const epitelete = new Epitelete({proskomma, docSetId});
         t.ok(typeof epitelete.makeDocumentReport === "function");
     }
 )
@@ -26,9 +26,19 @@ test(
     async t => {
         t.plan(1);
         const docSetId = "DBL/eng_engWEBBE";
-        const epitelete = new Epitelete({ proskomma, docSetId });
+        const epitelete = new Epitelete({proskomma, docSetId});
         await epitelete.fetchPerf("LUK");
-        t.throws(() => epitelete.makeDocumentReport("banana", "wordSearch", {}), /banana/);
+        t.throws(
+            () => epitelete.makeDocumentReport(
+                "banana",
+                "wordSearch",
+                {
+                    perf: {},
+                    searchString: "foo"
+                }
+            ),
+            /banana/
+        );
     }
 )
 
@@ -37,19 +47,83 @@ test(
     async t => {
         t.plan(1);
         const docSetId = "DBL/eng_engWEBBE";
-        const epitelete = new Epitelete({ proskomma, docSetId });
+        const epitelete = new Epitelete({proskomma, docSetId});
         await epitelete.fetchPerf("LUK");
-        t.throws(() => epitelete.makeDocumentReport("LUK", "banana", {}), /banana/);
+        t.throws(
+            () => epitelete.makeDocumentReport(
+                "LUK",
+                "banana",
+                {
+                    perf: {},
+                    searchString: "foo"
+                }
+            ),
+            /banana/
+        );
     }
 )
+
+test(
+    `makeDocumentReport() throws when inputs do not match spec (${testGroup})`,
+    async t => {
+        t.plan(3);
+        const docSetId = "DBL/eng_engWEBBE";
+        const epitelete = new Epitelete({proskomma, docSetId});
+        await epitelete.fetchPerf("LUK");
+        t.throws(
+            () => epitelete.makeDocumentReport(
+                "LUK",
+                "wordSearch",
+                {
+                    extra: "baa",
+                    perf: {},
+                    searchString: "foo"
+                }
+            ),
+            /3 provided/
+        );
+        t.throws(
+            () => epitelete.makeDocumentReport(
+                "LUK",
+                "wordSearch",
+                {
+                    perf: {},
+                    "baa": "foo"
+                }
+            ),
+            /searchString not provided/
+        );
+        t.throws(
+            () => epitelete.makeDocumentReport(
+                "LUK",
+                "wordSearch",
+                {
+                    perf: "perf",
+                    "searchString": "foo"
+                }
+            ),
+            /perf must be json/
+        );
+    }
+)
+
 
 test(
     `makeDocumentReport() does not throw with valid args (${testGroup})`,
     async t => {
         t.plan(1);
         const docSetId = "DBL/eng_engWEBBE";
-        const epitelete = new Epitelete({ proskomma, docSetId });
+        const epitelete = new Epitelete({proskomma, docSetId});
         await epitelete.fetchPerf("LUK");
-        t.doesNotThrow(() => epitelete.makeDocumentReport("LUK", "wordSearch", {}));
+        t.doesNotThrow(
+            () => epitelete.makeDocumentReport(
+                "LUK",
+                "wordSearch",
+                {
+                    perf: {},
+                    searchString: "foo"
+                }
+            )
+        );
     }
 )

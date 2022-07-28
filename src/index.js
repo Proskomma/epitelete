@@ -358,6 +358,20 @@ class Epitelete {
         if (!reports[reportName]) {
             throw new Error(`Unknown report name '${reportName}'`);
         }
+        const pipeline = reports[reportName];
+        const inputSpecs = pipeline[0].inputs;
+        const outputSpec = pipeline[pipeline.length - 1].outputs;
+        if (Object.keys(inputSpecs).length !== Object.keys(data).length) {
+            throw new Error(`${inputSpecs.length} input(s) expected by report ${reportName} but ${Object.keys(data).length} provided`);
+        }
+        for (const [inputSpecName, inputSpecType] of Object.entries(inputSpecs)) {
+            if (!data[inputSpecName]) {
+                throw new Error(`Input ${inputSpecName} not provided as input to ${reportName}`);
+            }
+            if ((typeof data[inputSpecName] === 'string') !== (inputSpecType === 'text')) {
+                throw new Error(`Input ${inputSpecName} must be ${inputSpecType} but ${typeof data[inputSpecName] === 'string' ? "text": "json"} was provided`);
+            }
+        }
         return [];
     }
 

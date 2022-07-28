@@ -1,17 +1,11 @@
 [
   {
-    "id":  0,
+    "id": 0,
     "type": "inputs",
-    "inputs": [
-      {
-        "name": "perf",
-        "type": "json"
-      },
-      {
-        "name": "searchString",
-        "type": "text"
-      }
-    ]
+    "inputs": {
+      "perf": "json",
+      "searchString": "text"
+    }
   },
   {
     "id": 6,
@@ -44,6 +38,7 @@
     "outputs": [
       {
         "name": "matches",
+        "type": "json",
         "source": "Transform 6 matches"
       }
     ]

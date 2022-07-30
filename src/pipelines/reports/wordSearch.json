@@ -1,7 +1,7 @@
 [
   {
     "id": 0,
-    "type": "inputs",
+    "type": "Inputs",
     "inputs": {
       "perf": "json",
       "searchString": "text"
@@ -12,6 +12,7 @@
     "title": "Word Search",
     "name": "wordSearch",
     "type": "Transform",
+    "transformName": "wordSearch",
     "inputs": [
       {
         "name": "perf",
@@ -34,7 +35,7 @@
   },
   {
     "id": 999,
-    "type": "outputs",
+    "type": "Outputs",
     "outputs": [
       {
         "name": "matches",

@@ -99,31 +99,31 @@ test(
                 "wordSearch",
                 {
                     perf: "perf",
-                    "searchString": "foo"
+                    "searchString": {}
                 }
             ),
-            /perf must be json/
+            /searchString must be text/
         );
     }
 )
 
 
 test(
-    `makeDocumentReport() does not throw with valid args (${testGroup})`,
+    `makeDocumentReport() returns output with valid args (${testGroup})`,
     async t => {
-        t.plan(1);
+        t.plan(2);
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({proskomma, docSetId});
         await epitelete.fetchPerf("LUK");
-        t.doesNotThrow(
-            () => epitelete.makeDocumentReport(
-                "LUK",
-                "wordSearch",
-                {
-                    perf: {},
-                    searchString: "foo"
-                }
-            )
+        const output = epitelete.makeDocumentReport(
+            "LUK",
+            "wordSearch",
+            {
+                perf: {},
+                searchString: "Zacharias"
+            }
         );
+        t.ok('matches' in output);
+        t.ok(output.matches.includes("1:5"));
     }
 )

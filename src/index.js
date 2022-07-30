@@ -1,5 +1,6 @@
 import {Validator, ProskommaRenderFromJson, toUsfmActions} from 'proskomma-json-tools';
 import reports from './pipelines/reports';
+import evaluateSteps from "./evaluateSteps";
 const _ = require("lodash");
 
 /**
@@ -355,14 +356,14 @@ class Epitelete {
         if (!this.localBookCodes().includes(bookCode)) {
             throw new Error(`bookCode '${bookCode}' is not available locally`);
         }
+        data.perf = this.getDocument(bookCode);
         if (!reports[reportName]) {
             throw new Error(`Unknown report name '${reportName}'`);
         }
         const pipeline = reports[reportName];
         const inputSpecs = pipeline[0].inputs;
-        const outputSpec = pipeline[pipeline.length - 1].outputs;
         if (Object.keys(inputSpecs).length !== Object.keys(data).length) {
-            throw new Error(`${inputSpecs.length} input(s) expected by report ${reportName} but ${Object.keys(data).length} provided`);
+            throw new Error(`${Object.keys(inputSpecs).length} input(s) expected by report ${reportName} but ${Object.keys(data).length} provided (${Object.keys(data).join(', ')})`);
         }
         for (const [inputSpecName, inputSpecType] of Object.entries(inputSpecs)) {
             if (!data[inputSpecName]) {
@@ -372,7 +373,7 @@ class Epitelete {
                 throw new Error(`Input ${inputSpecName} must be ${inputSpecType} but ${typeof data[inputSpecName] === 'string' ? "text": "json"} was provided`);
             }
         }
-        return [];
+        return evaluateSteps({specSteps: reports[reportName], inputValues: data});
     }
 
     /**

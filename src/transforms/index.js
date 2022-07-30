@@ -1,5 +1,5 @@
 import wordSearch from "./wordSearch";
 
-export {
+export default {
     wordSearch
 }

@@ -88,7 +88,11 @@ test(
                 "wordSearch",
                 {
                     perf: {},
-                    "baa": "foo"
+                    "baa": "foo",
+                    "ignoreCase": "text",
+                    "asRegex": "text",
+                    "logic": "text",
+                    "asPartial": "text"
                 }
             ),
             /searchString not provided/
@@ -99,7 +103,11 @@ test(
                 "wordSearch",
                 {
                     perf: "perf",
-                    "searchString": {}
+                    "searchString": {},
+                    "ignoreCase": "text",
+                    "asRegex": "text",
+                    "logic": "text",
+                    "asPartial": "text"
                 }
             ),
             /searchString must be text/
@@ -111,7 +119,7 @@ test(
 test(
     `makeDocumentReport() returns output with valid args (${testGroup})`,
     async t => {
-        t.plan(2);
+        t.plan(4);
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({proskomma, docSetId});
         await epitelete.fetchPerf("LUK");
@@ -120,10 +128,17 @@ test(
             "wordSearch",
             {
                 perf: {},
-                searchString: "Zacharias"
+                searchString: "Zacharias",
+                "ignoreCase": "1",
+                "asRegex": "0",
+                "logic": "A",
+                "asPartial": "0"
             }
         );
+        // console.log(output.matches.matches);
         t.ok('matches' in output);
-        t.ok(output.matches.includes("1:5"));
+        t.ok('searchTerms' in output.matches);
+        t.equal(output.matches.matches[0].chapter, '1');
+        t.equal(output.matches.matches[0].verses, '5');
     }
 )

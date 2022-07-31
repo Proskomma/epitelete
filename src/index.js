@@ -383,7 +383,13 @@ class Epitelete {
      * @return {object} reports for each documents with bookCode as the key
      */
     makeDocumentsReport(reportName, data) {
-        return {};
+        const bookCodes = this.localBookCodes();
+        const bookReports = bookCodes.map(bc => this.makeDocumentReport(bc, reportName, data));
+        const ret = {};
+        for (const bookReport of bookReports) {
+            ret[bookReport.matches.bookCode] = bookReport;
+        }
+        return ret;
     }
 }
 

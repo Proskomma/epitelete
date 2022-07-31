@@ -141,4 +141,34 @@ test(
         t.equal(output.matches.matches[0].chapter, '1');
         t.equal(output.matches.matches[0].verses, '5');
     }
+);
+
+test(
+    `makeDocumentsReport() (${testGroup})`,
+    async t => {
+        t.plan(5);
+        const docSetId = "DBL/eng_engWEBBE";
+        const epitelete = new Epitelete({proskomma, docSetId});
+        await epitelete.fetchPerf("MAT");
+        await epitelete.fetchPerf("MRK");
+        await epitelete.fetchPerf("LUK");
+        await epitelete.fetchPerf("JHN");
+        const output = epitelete.makeDocumentsReport(
+            "wordSearch",
+            {
+                perf: {},
+                searchString: "Zacharias",
+                "ignoreCase": "1",
+                "asRegex": "0",
+                "logic": "A",
+                "asPartial": "0"
+            }
+        );
+        // console.log(output.matches.matches);
+        t.ok('LUK' in output);
+        t.ok('matches' in output.LUK);
+        t.ok('searchTerms' in output.LUK.matches);
+        t.equal(output.LUK.matches.matches[0].chapter, '1');
+        t.equal(output.LUK.matches.matches[0].verses, '5');
+    }
 )

@@ -28,17 +28,23 @@ test(
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({proskomma, docSetId});
         await epitelete.fetchPerf("LUK");
-        t.throws(
-            () => epitelete.makeDocumentReport(
+        try {
+            await epitelete.makeDocumentReport(
                 "banana",
                 "wordSearch",
                 {
                     perf: {},
                     searchString: "foo"
                 }
-            ),
-            /banana/
-        );
+            );
+            t.fail("Should have thrown");
+        } catch (err) {
+            if (err.toString().includes('banana')) {
+                t.ok(err, "Expected error");
+            } else {
+                t.fail(`Unexpected error ${err}`)
+            }
+        }
     }
 )
 
@@ -49,19 +55,26 @@ test(
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({proskomma, docSetId});
         await epitelete.fetchPerf("LUK");
-        t.throws(
-            () => epitelete.makeDocumentReport(
+        try {
+            await epitelete.makeDocumentReport(
                 "LUK",
                 "banana",
                 {
                     perf: {},
                     searchString: "foo"
                 }
-            ),
-            /banana/
-        );
+            );
+            t.fail("Should have thrown");
+        } catch (err) {
+            if (err.toString().includes('banana')) {
+                t.ok(err, "Expected error");
+            } else {
+                t.fail(`Unexpected error ${err}`)
+            }
+        }
     }
 )
+
 
 test(
     `makeDocumentReport() throws when inputs do not match spec (${testGroup})`,
@@ -70,8 +83,8 @@ test(
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({proskomma, docSetId});
         await epitelete.fetchPerf("LUK");
-        t.throws(
-            () => epitelete.makeDocumentReport(
+        try {
+            await epitelete.makeDocumentReport(
                 "LUK",
                 "wordSearch",
                 {
@@ -79,11 +92,17 @@ test(
                     perf: {},
                     searchString: "foo"
                 }
-            ),
-            /3 provided/
-        );
-        t.throws(
-            () => epitelete.makeDocumentReport(
+            );
+            t.fail("Should have thrown");
+        } catch (err) {
+            if (err.toString().includes('3 provided')) {
+                t.ok(err, "Expected error");
+            } else {
+                t.fail(`Unexpected error ${err}`)
+            }
+        }
+        try {
+            await epitelete.makeDocumentReport(
                 "LUK",
                 "wordSearch",
                 {
@@ -94,11 +113,17 @@ test(
                     "logic": "text",
                     "asPartial": "text"
                 }
-            ),
-            /searchString not provided/
-        );
-        t.throws(
-            () => epitelete.makeDocumentReport(
+            );
+            t.fail("Should have thrown");
+        } catch (err) {
+            if (err.toString().includes('searchString not provided')) {
+                t.ok(err, "Expected error");
+            } else {
+                t.fail(`Unexpected error ${err}`)
+            }
+        }
+        try {
+            await epitelete.makeDocumentReport(
                 "LUK",
                 "wordSearch",
                 {
@@ -109,9 +134,15 @@ test(
                     "logic": "text",
                     "asPartial": "text"
                 }
-            ),
-            /searchString must be text/
-        );
+            );
+            t.fail("Should have thrown");
+        } catch (err) {
+            if (err.toString().includes('searchString must be text')) {
+                t.ok(err, "Expected error");
+            } else {
+                t.fail(`Unexpected error ${err}`)
+            }
+        }
     }
 )
 
@@ -123,7 +154,7 @@ test(
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({proskomma, docSetId});
         await epitelete.fetchPerf("LUK");
-        const output = epitelete.makeDocumentReport(
+        const output = await epitelete.makeDocumentReport(
             "LUK",
             "wordSearch",
             {
@@ -134,12 +165,13 @@ test(
                 "logic": "A",
                 "asPartial": "0"
             }
-        );
+        ).then(output => {
+            t.ok('matches' in output);
+            t.ok('searchTerms' in output.matches);
+            t.equal(output.matches.matches[0].chapter, '1');
+            t.equal(output.matches.matches[0].verses, '5');
+        });
         // console.log(output.matches.matches);
-        t.ok('matches' in output);
-        t.ok('searchTerms' in output.matches);
-        t.equal(output.matches.matches[0].chapter, '1');
-        t.equal(output.matches.matches[0].verses, '5');
     }
 );
 
@@ -153,7 +185,7 @@ test(
         await epitelete.fetchPerf("MRK");
         await epitelete.fetchPerf("LUK");
         await epitelete.fetchPerf("JHN");
-        const output = epitelete.makeDocumentsReport(
+        const output = await epitelete.makeDocumentsReport(
             "wordSearch",
             {
                 perf: {},
@@ -163,12 +195,13 @@ test(
                 "logic": "A",
                 "asPartial": "0"
             }
-        );
+        ).then(output => {
+            t.ok('LUK' in output);
+            t.ok('matches' in output.LUK);
+            t.ok('searchTerms' in output.LUK.matches);
+            t.equal(output.LUK.matches.matches[0].chapter, '1');
+            t.equal(output.LUK.matches.matches[0].verses, '5');
+        });
         // console.log(output.matches.matches);
-        t.ok('LUK' in output);
-        t.ok('matches' in output.LUK);
-        t.ok('searchTerms' in output.LUK.matches);
-        t.equal(output.LUK.matches.matches[0].chapter, '1');
-        t.equal(output.LUK.matches.matches[0].verses, '5');
     }
 )

@@ -2,7 +2,7 @@ import transforms from './transforms';
 
 const verbose = false;
 
-const evaluateSteps = ({specSteps, inputValues}) => {
+const evaluateSteps = async ({specSteps, inputValues}) => {
     verbose && console.log("** Evaluate **");
     // Find input, output and transforms
     const inputStep = specSteps.filter(s => s.type==="Inputs")[0];

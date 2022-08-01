@@ -352,7 +352,7 @@ class Epitelete {
      * @param {object} data
      * @return {array} A report
      */
-    makeDocumentReport(bookCode, reportName, data) {
+    async makeDocumentReport(bookCode, reportName, data) {
         if (!this.localBookCodes().includes(bookCode)) {
             throw new Error(`bookCode '${bookCode}' is not available locally`);
         }
@@ -373,7 +373,7 @@ class Epitelete {
                 throw new Error(`Input ${inputSpecName} must be ${inputSpecType} but ${typeof data[inputSpecName] === 'string' ? "text": "json"} was provided`);
             }
         }
-        return evaluateSteps({specSteps: reports[reportName], inputValues: data});
+        return await evaluateSteps({specSteps: reports[reportName], inputValues: data});
     }
 
     /**
@@ -382,11 +382,11 @@ class Epitelete {
      * @param {object} data
      * @return {object} reports for each documents with bookCode as the key
      */
-    makeDocumentsReport(reportName, data) {
+    async makeDocumentsReport(reportName, data) {
         const bookCodes = this.localBookCodes();
-        const bookReports = bookCodes.map(bc => this.makeDocumentReport(bc, reportName, data));
         const ret = {};
-        for (const bookReport of bookReports) {
+        for (const bookCode of bookCodes) {
+            const bookReport = await this.makeDocumentReport(bookCode, reportName, data);
             ret[bookReport.matches.bookCode] = bookReport;
         }
         return ret;

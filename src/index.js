@@ -347,10 +347,11 @@ class Epitelete {
 
     /**
      * Generates and returns a report via a transform pipeline
+     * @async
      * @param {string} bookCode
      * @param {string} reportName
      * @param {object} data
-     * @return {array} A report
+     * @return {Promise<array>} A report
      */
     async makeDocumentReport(bookCode, reportName, data) {
         if (!this.localBookCodes().includes(bookCode)) {
@@ -378,9 +379,10 @@ class Epitelete {
 
     /**
      * Generates and returns a report for each document via a transform pipeline
+     * @async
      * @param {string} reportName
      * @param {object} data
-     * @return {object} reports for each documents with bookCode as the key
+     * @return {Promise<object>} reports for each documents with bookCode as the key
      */
     async makeDocumentsReport(reportName, data) {
         const bookCodes = this.localBookCodes();

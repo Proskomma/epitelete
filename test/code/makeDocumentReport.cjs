@@ -214,7 +214,7 @@ test(
         const epitelete = new Epitelete({proskomma, docSetId});
         const perfDoc = await epitelete.fetchPerf("MAT");
 
-        const tit = await epitelete.fetchPerf("TIT");
+        // const tit = await epitelete.fetchPerf("TIT");
         // console.log(tit.sequences[tit.main_sequence_id].blocks[1].content)
 
         const hasWrapper = (perfDoc) => perfDoc.sequences[perfDoc.main_sequence_id].blocks.some((block) => block?.content?.some((element) => element?.type === "wrapper" && element?.subtype === "usfm:w"));

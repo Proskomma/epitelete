@@ -206,7 +206,7 @@ test(
     }
 )
 
-test.only(
+test(
     `stripsAlignment (${testGroup})`, //Sample Perfs doesn't contain alignment data. Testing stripping of word wrappers instead.
     async t => {
         t.plan(2);

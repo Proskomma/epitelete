@@ -3,12 +3,7 @@
     "id": 0,
     "type": "Inputs",
     "inputs": {
-      "perf": "json",
-      "searchString": "text",
-      "ignoreCase": "text",
-      "asRegex": "text",
-      "logic": "text",
-      "asPartial": "text"
+      "perf": "json"
     }
   },
   {

@@ -12,6 +12,7 @@
     "test": "bash -c \"babel-tape-runner test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "babel-tape-runner test/code/*.cjs",
     "oneTest": "babel-tape-runner test/code/%TESTSCRIPT%.cjs",
+    "oneTestOnLinux": "babel-tape-runner test/code/$TESTSCRIPT.cjs",
     "build": "babel src -d dist",
     "prepublishOnly": "rm -fr dist && npm run build",
     "generatePerf": "babel-tape-runner utils/generatePerf.js",
@@ -30,7 +31,7 @@
   "dependencies": {
     "@babel/core": "^7.17.10",
     "lodash": "4.17.21",
-    "proskomma-json-tools": "^0.4.1"
+    "proskomma-json-tools": "^0.4.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",

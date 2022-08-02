@@ -1,4 +1,6 @@
 import {Validator, ProskommaRenderFromJson, toUsfmActions} from 'proskomma-json-tools';
+import reports from './pipelines/reports';
+import evaluateSteps from "./evaluateSteps";
 const _ = require("lodash");
 
 /**
@@ -35,7 +37,7 @@ class Epitelete {
 
         const { hs, ...opt } = options;
         const historySize = hs ? hs + 1 : 11//add one to passed history size so it matches undos allowed.
-        
+
         this.options = {
             historySize,
             ...opt
@@ -341,6 +343,53 @@ class Epitelete {
         const output = {};
         renderer.renderDocument({docId: "", config: {}, output});
         return output.usfm;
+    }
+
+    /**
+     * Generates and returns a report via a transform pipeline
+     * @param {string} bookCode
+     * @param {string} reportName
+     * @param {object} data
+     * @return {array} A report
+     */
+    async makeDocumentReport(bookCode, reportName, data) {
+        if (!this.localBookCodes().includes(bookCode)) {
+            throw new Error(`bookCode '${bookCode}' is not available locally`);
+        }
+        data.perf = this.getDocument(bookCode);
+        if (!reports[reportName]) {
+            throw new Error(`Unknown report name '${reportName}'`);
+        }
+        const pipeline = reports[reportName];
+        const inputSpecs = pipeline[0].inputs;
+        if (Object.keys(inputSpecs).length !== Object.keys(data).length) {
+            throw new Error(`${Object.keys(inputSpecs).length} input(s) expected by report ${reportName} but ${Object.keys(data).length} provided (${Object.keys(data).join(', ')})`);
+        }
+        for (const [inputSpecName, inputSpecType] of Object.entries(inputSpecs)) {
+            if (!data[inputSpecName]) {
+                throw new Error(`Input ${inputSpecName} not provided as input to ${reportName}`);
+            }
+            if ((typeof data[inputSpecName] === 'string') !== (inputSpecType === 'text')) {
+                throw new Error(`Input ${inputSpecName} must be ${inputSpecType} but ${typeof data[inputSpecName] === 'string' ? "text": "json"} was provided`);
+            }
+        }
+        return await evaluateSteps({specSteps: reports[reportName], inputValues: data});
+    }
+
+    /**
+     * Generates and returns a report for each document via a transform pipeline
+     * @param {string} reportName
+     * @param {object} data
+     * @return {object} reports for each documents with bookCode as the key
+     */
+    async makeDocumentsReport(reportName, data) {
+        const bookCodes = this.localBookCodes();
+        const ret = {};
+        for (const bookCode of bookCodes) {
+            const bookReport = await this.makeDocumentReport(bookCode, reportName, data);
+            ret[bookReport.matches.bookCode] = bookReport;
+        }
+        return ret;
     }
 }
 

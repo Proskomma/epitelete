@@ -205,3 +205,27 @@ test(
         // console.log(output.matches.matches);
     }
 )
+
+test.only(
+    `stripsAlignment (${testGroup})`, //Sample Perfs doesn't contain alignment data. Testing stripping of word wrappers instead.
+    async t => {
+        t.plan(2);
+        const docSetId = "DBL/eng_engWEBBE";
+        const epitelete = new Epitelete({proskomma, docSetId});
+        const perfDoc = await epitelete.fetchPerf("MAT");
+
+        const hasWrapper = (perfDoc) => perfDoc.sequences[perfDoc.main_sequence_id].blocks.some((block) => block?.content?.some((element) => element?.type === "wrapper" && element?.subtype === "usfm:w"));
+
+        t.ok(hasWrapper(perfDoc), "perf has wrapper");
+
+        const output = await epitelete.makeDocumentReport(
+            "MAT",
+            "stripAlignment",
+            {
+                perf: {},
+            }
+        ).then(output => {
+            t.notOk(hasWrapper(output.perf), "perf does not have wrapper");
+        });
+    }
+)

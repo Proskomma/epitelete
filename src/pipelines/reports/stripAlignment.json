@@ -11,6 +11,7 @@
     "title": "Transform 4",
     "name": "verseWords",
     "type": "Transform",
+    "transformName": "verseWords",
     "inputs": [
       {
         "name": "perf",
@@ -31,6 +32,7 @@
     "title": "Strip Alignment",
     "name": "stripAlignment",
     "type": "Transform",
+    "transformName": "stripAlignment",
     "inputs": [
       {
         "name": "perf",
@@ -60,6 +62,7 @@
     "title": "Merge stripped perf",
     "name": "mergePerfText",
     "type": "Transform",
+    "transformName": "mergePerfText",
     "inputs": [
       {
         "name": "perf",

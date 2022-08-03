@@ -217,11 +217,22 @@ test(
 
         // const tit = await epitelete.fetchPerf("TIT");
         // console.log(tit.sequences[tit.main_sequence_id].blocks[1].content)
+        
+        const blockHasMarkup = ({ block, type, subtype }) => block.content?.some((element) => {
+            return element.type === type && element.subtype === subtype
+        })
+        const sequenceHasMarkup = ({ sequence, type, subtype }) => {
+            const blocks = sequence.blocks;
+            return blocks.some((block) => blockHasMarkup({ block, type, subtype }));
+        };
 
-        const hasMarkup = ({doc, type, subtype}) => doc.sequences[doc.main_sequence_id].blocks.some((block) => block?.content?.some((element) => element?.type === type && element?.subtype === subtype));
+        const docHasMarkup = ({ doc, type, subtype }) => {
+            const mainSequence = doc.sequences[doc.main_sequence_id];
+            return sequenceHasMarkup({ sequence: mainSequence, type, subtype })
+        }
 
-        t.ok(hasMarkup({ doc: perfDoc, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
-        t.ok(hasMarkup({doc: perfDoc, type: "start_milestone", subtype: "usfm:zaln"}), "perf has alignment");
+        t.ok(docHasMarkup({ doc: perfDoc, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
+        t.ok(docHasMarkup({doc: perfDoc, type: "start_milestone", subtype: "usfm:zaln"}), "perf has alignment");
 
         const output = await epitelete.makeDocumentReport(
             "TIT",
@@ -230,8 +241,8 @@ test(
                 perf: {},
             }
         ).then(output => {
-            t.notOk(hasMarkup({ doc: output.perf, type: "wrapper", subtype: "usfm:w" }), "perf does not have wrapper");
-            t.notOk(hasMarkup({doc: output.perf, type: "start_milestone", subtype: "usfm:zaln"}), "perf does not have alignment");
+            t.notOk(docHasMarkup({ doc: output.perf, type: "wrapper", subtype: "usfm:w" }), "perf does not have wrapper");
+            t.notOk(docHasMarkup({doc: output.perf, type: "start_milestone", subtype: "usfm:zaln"}), "perf does not have alignment");
         });
     }
 )

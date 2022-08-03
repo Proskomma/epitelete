@@ -45,6 +45,7 @@ class Epitelete {
 
         this.proskomma = proskomma;
         this.docSetId = docSetId;
+        /** @type history */
         this.history = {};
         this.validator = new Validator();
         this.backend = proskomma ? 'proskomma' : 'standalone';
@@ -401,7 +402,7 @@ export default Epitelete;
  * @typedef {object} contentElementPerf
  * @property {string} type
  * @property {string} [number]
- * @property {"verses"|"xref"|"footnote"|"noteCaller"} [subType]
+ * @property {"verses"|"xref"|"footnote"|"noteCaller"} [subtype]
  * @property {string} [target]
  * @property {number} [nBlocks]
  * @property {string} [previewText]
@@ -410,7 +411,7 @@ export default Epitelete;
 /**
  * @typedef {object} blockOrGraftPerf
  * @property {"block"|"graft"} type
- * @property {string} subType
+ * @property {string} subtype
  * @property {string} [target]
  * @property {number} [nBlocks]
  * @property {string} [previewText]
@@ -434,6 +435,22 @@ export default Epitelete;
  * @property {array} tags
  * @property {Object<string,perfSequence>} sequences
  * @property {string} mainSequence
+ */
+
+/**
+ * @typedef {string} bookCode
+ */
+
+/**
+ * @typedef {object} bookHistory
+ * @property {number} bookHistory.cursor
+ * @property {object} bookHistory.stack
+ * @property {perfDocument} bookHistory.stack.document
+ * @property {Object<string,any>} bookHistory.stack.pipelineData
+ */
+
+/**
+ * @typedef {Object<bookCode, bookHistory>} history
  */
 
 /**

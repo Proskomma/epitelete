@@ -205,30 +205,33 @@ test(
         // console.log(output.matches.matches);
     }
 )
+const alignedPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "TIT_dcs_eng-alignment_perf_v0.2.1.json")));
 
 test(
-    `stripsAlignment (${testGroup})`, //Sample Perfs doesn't contain alignment data. Testing stripping of word wrappers instead.
+    `strips alignment (${testGroup})`,
     async t => {
-        t.plan(2);
-        const docSetId = "DBL/eng_engWEBBE";
-        const epitelete = new Epitelete({proskomma, docSetId});
-        const perfDoc = await epitelete.fetchPerf("MAT");
+        t.plan(4);
+        const docSetId = "DCS/en_ult";
+        const epitelete = new Epitelete({docSetId});
+        const perfDoc = epitelete.sideloadPerf("TIT",alignedPerf);
 
         // const tit = await epitelete.fetchPerf("TIT");
         // console.log(tit.sequences[tit.main_sequence_id].blocks[1].content)
 
-        const hasWrapper = (perfDoc) => perfDoc.sequences[perfDoc.main_sequence_id].blocks.some((block) => block?.content?.some((element) => element?.type === "wrapper" && element?.subtype === "usfm:w"));
+        const hasMarkup = ({doc, type, subtype}) => doc.sequences[doc.main_sequence_id].blocks.some((block) => block?.content?.some((element) => element?.type === type && element?.subtype === subtype));
 
-        t.ok(hasWrapper(perfDoc), "perf has wrapper");
+        t.ok(hasMarkup({ doc: perfDoc, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
+        t.ok(hasMarkup({doc: perfDoc, type: "start_milestone", subtype: "usfm:zaln"}), "perf has alignment");
 
         const output = await epitelete.makeDocumentReport(
-            "MAT",
+            "TIT",
             "stripAlignment",
             {
                 perf: {},
             }
         ).then(output => {
-            t.notOk(hasWrapper(output.perf), "perf does not have wrapper");
+            t.notOk(hasMarkup({ doc: output.perf, type: "wrapper", subtype: "usfm:w" }), "perf does not have wrapper");
+            t.notOk(hasMarkup({doc: output.perf, type: "start_milestone", subtype: "usfm:zaln"}), "perf does not have alignment");
         });
     }
 )

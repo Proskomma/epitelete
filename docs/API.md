@@ -381,9 +381,9 @@ Generates and returns a report for each document via a transform pipeline
 | Name | Type |
 | --- | --- |
 | bookHistory.cursor | <code>number</code> | 
-| bookHistory.stack | <code>object</code> | 
-| bookHistory.stack.document | [<code>perfDocument</code>](#perfDocument) | 
-| bookHistory.stack.pipelineData | <code>Object.&lt;string, any&gt;</code> | 
+| bookHistory.stack | <code>Array.&lt;Object&gt;</code> | 
+| bookHistory.stack[].document | [<code>perfDocument</code>](#perfDocument) | 
+| bookHistory.stack[].pipelineData | <code>Object.&lt;string, any&gt;</code> | 
 
 
 * * *

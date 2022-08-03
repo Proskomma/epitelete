@@ -179,6 +179,9 @@ const wordSearchCode = function ({perf, searchString, ignoreCase = '1', logic = 
       if (toSearch.includes('?') || toSearch.includes('*')) { // check for wildcard characters
         let newSearch = toSearch.replaceAll('?', '\\S{1}');
         newSearch = newSearch.replaceAll('*', '\\S*');
+        if (!partialMatch_) {
+          newSearch = '\\b' + newSearch + '\\b';
+        }
         toSearch = '/' + newSearch + '/';
       }
     }

@@ -335,7 +335,7 @@ class Epitelete {
      * Gets document from memory and converts it to usfm
      * @async
      * @param {string} bookCode
-     * @return {string} converted usfm
+     * @return {Promise<string>} converted usfm
      */
     async readUsfm(bookCode) {
         const perf = await this.readPerf(bookCode);

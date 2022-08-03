@@ -205,3 +205,44 @@ test(
         // console.log(output.matches.matches);
     }
 )
+const alignedPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "TIT_dcs_eng-alignment_perf_v0.2.1.json")));
+
+test(
+    `strips alignment (${testGroup})`,
+    async t => {
+        t.plan(4);
+        const docSetId = "DCS/en_ult";
+        const epitelete = new Epitelete({docSetId});
+        const perfDoc = epitelete.sideloadPerf("TIT",alignedPerf);
+
+        // const tit = await epitelete.fetchPerf("TIT");
+        // console.log(tit.sequences[tit.main_sequence_id].blocks[1].content)
+        
+        const blockHasMarkup = ({ block, type, subtype }) => block.content?.some((element) => {
+            return element.type === type && element.subtype === subtype
+        })
+        const sequenceHasMarkup = ({ sequence, type, subtype }) => {
+            const blocks = sequence.blocks;
+            return blocks.some((block) => blockHasMarkup({ block, type, subtype }));
+        };
+
+        const docHasMarkup = ({ doc, type, subtype }) => {
+            const mainSequence = doc.sequences[doc.main_sequence_id];
+            return sequenceHasMarkup({ sequence: mainSequence, type, subtype })
+        }
+
+        t.ok(docHasMarkup({ doc: perfDoc, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
+        t.ok(docHasMarkup({doc: perfDoc, type: "start_milestone", subtype: "usfm:zaln"}), "perf has alignment");
+
+        const output = await epitelete.makeDocumentReport(
+            "TIT",
+            "stripAlignment",
+            {
+                perf: {},
+            }
+        ).then(output => {
+            t.notOk(docHasMarkup({ doc: output.perf, type: "wrapper", subtype: "usfm:w" }), "perf does not have wrapper");
+            t.notOk(docHasMarkup({doc: output.perf, type: "start_milestone", subtype: "usfm:zaln"}), "perf does not have alignment");
+        });
+    }
+)

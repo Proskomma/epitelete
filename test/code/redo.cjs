@@ -121,7 +121,7 @@ test(
             const doc = await epitelete.readPerf(bookCode);
             const history = epitelete.history[bookCode];
             t.ok(history);
-            t.same(history.stack[0], doc);
+            t.same(history.stack[0].document, doc);
             t.ok(history.cursor === 0);
 
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
@@ -134,12 +134,12 @@ test(
                 sequence3
             );
             t.equal(history.cursor, 0);
-            t.same(history.stack[0], newDoc);
+            t.same(history.stack[0].document, newDoc);
             t.ok(epitelete.canUndo(bookCode));
             const undonePerf = epitelete.undoPerf(bookCode);
             t.equal(history.cursor, 1);
-            t.same(history.stack[1], undonePerf);
-            t.same(history.stack[0], doc);
+            t.same(history.stack[1].document, undonePerf);
+            t.same(history.stack[0].document, doc);
             t.ok(epitelete.canRedo(bookCode));
         }catch (err){
             t.error(err);

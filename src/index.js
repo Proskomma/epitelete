@@ -59,7 +59,7 @@ class Epitelete {
      */
     getDocument(bookCode) {
         const history = this.history[bookCode];
-        return _.cloneDeep(history?.stack[history.cursor]);
+        return _.cloneDeep(history?.stack[history.cursor].document);
     }
 
     /**
@@ -83,7 +83,7 @@ class Epitelete {
      */
     addDocument(bookCode, doc) {
         this.history[bookCode] = {
-            stack: [_.cloneDeep(doc)], //save a copy of the given doc in memory
+            stack: [{document:_.cloneDeep(doc)}], //save a copy of the given doc in memory
             cursor: 0
         }
         return doc
@@ -95,7 +95,7 @@ class Epitelete {
      * @param {string} bookCode
      * @return {Promise<perfDocument>} fetched PERF document
      */
-    async fetchPerf(bookCode) {
+    async fetchPerf(bookCode, options) {
         if (this.backend === "standalone") {
             throw "Can't call sideloadPerf in standalone mode";
         }
@@ -168,7 +168,7 @@ class Epitelete {
         history.stack = history.stack.slice(history.cursor);
 
         // add modified copy to stack
-        history.stack.unshift(doc);
+        history.stack.unshift({document: doc});
         history.cursor = 0;
 
         // limit history.stack to options.historySize
@@ -288,7 +288,7 @@ class Epitelete {
         if (this.canUndo(bookCode)) {
             const history = this.history[bookCode];
             let cursor = ++history.cursor;
-            const doc = history.stack[cursor];
+            const doc = this.getDocument(bookCode);
             return _.cloneDeep(doc);
         }
         return null;
@@ -303,7 +303,7 @@ class Epitelete {
         if (this.canRedo(bookCode)) {
             const history = this.history[bookCode];
             let cursor = --history.cursor;
-            const doc = history.stack[cursor];
+            const doc = this.getDocument(bookCode);
             return _.cloneDeep(doc);
         }
         return null;
@@ -442,11 +442,11 @@ export default Epitelete;
  */
 
 /**
- * @typedef {object} bookHistory
+ * @typedef {Object} bookHistory
  * @property {number} bookHistory.cursor
- * @property {object} bookHistory.stack
- * @property {perfDocument} bookHistory.stack.document
- * @property {Object<string,any>} bookHistory.stack.pipelineData
+ * @property {Object[]} bookHistory.stack
+ * @property {perfDocument} bookHistory.stack[].document
+ * @property {Object<string,any>} bookHistory.stack[].pipelineData
  */
 
 /**

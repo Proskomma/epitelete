@@ -1,5 +1,6 @@
 import {Validator, ProskommaRenderFromJson, toUsfmActions} from 'proskomma-json-tools';
 import reports from './pipelines/reports';
+import filters from './pipelines/filters';
 import evaluateSteps from "./evaluateSteps";
 const _ = require("lodash");
 
@@ -59,7 +60,7 @@ class Epitelete {
      */
     getDocument(bookCode) {
         const history = this.history[bookCode];
-        return _.cloneDeep(history?.stack[history.cursor].document);
+        return _.cloneDeep(history?.stack[history.cursor].perfDocument);
     }
 
     /**
@@ -81,12 +82,85 @@ class Epitelete {
      * @return {perfDocument} same passed PERF document
      * @private
      */
-    addDocument(bookCode, doc) {
+    addDocument({ bookCode, perfDocument, pipelineData }) {
         this.history[bookCode] = {
-            stack: [{document:_.cloneDeep(doc)}], //save a copy of the given doc in memory
+            stack: [{perfDocument:_.cloneDeep(perfDocument), pipelineData}], //save a copy of the given doc in memory
             cursor: 0
         }
-        return doc
+        return perfDocument
+    }
+
+    /**
+     * Clears docs history
+     * @return {void} void
+     */
+    clearPerf() {
+        this.history = {};
+    }
+
+    /**
+     * Gets pipeline by given name
+     * @param {string} pipelineName - the pipeline name
+     * @param {object} data input data
+     * @return {pipeline} pipeline transforms
+     * @private
+     */
+    getPipeline(pipelines, pipelineName, data) {
+        if (!pipelines[pipelineName]) {
+            throw new Error(`Unknown report name '${pipelineName}'`);
+        }
+        const pipeline = pipelines[pipelineName];
+        const inputSpecs = pipeline[0].inputs;
+        if (Object.keys(inputSpecs).length !== Object.keys(data).length) {
+            throw new Error(`${Object.keys(inputSpecs).length} input(s) expected by report ${pipelineName} but ${Object.keys(data).length} provided (${Object.keys(data).join(', ')})`);
+        }
+        for (const [inputSpecName, inputSpecType] of Object.entries(inputSpecs)) {
+            if (!data[inputSpecName]) {
+                throw new Error(`Input ${inputSpecName} not provided as input to ${pipelineName}`);
+            }
+            if ((typeof data[inputSpecName] === 'string') !== (inputSpecType === 'text')) {
+                throw new Error(`Input ${inputSpecName} must be ${inputSpecType} but ${typeof data[inputSpecName] === 'string' ? "text": "json"} was provided`);
+            }
+        }
+        return pipeline;
+    }
+
+    setPipelineData(bookCode, data) {
+        const history = this.history[bookCode];
+        const currentData = history?.stack[history.cursor]
+        currentData.pipelineData = data;
+    }
+
+    /**
+     * Loads given perf into memory
+     * @param {string} bookCode
+     * @param {perfDocument} perfDocument - PERF document
+     * @return {Promise<perfDocument>} same sideloaded PERF document
+     */
+    async sideloadPerf(bookCode, perfDocument, options = {}) {
+        if (this.backend === "proskomma") {
+            throw "Can't call sideloadPerf in proskomma mode";
+        }
+
+        if (!bookCode || !perfDocument) {
+            throw "sideloadPerf requires 2 arguments (bookCode, perfDocument)";
+        }
+
+        const validatorResult = this.validator.validate('constraint','perfDocument','0.2.1', perfDocument);
+         if (!validatorResult.isValid) {
+            throw `perfJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
+        }
+
+        const { readPipeline } = options;
+        if (readPipeline) {
+            const inputValues = { perf: perfDocument };
+            const specSteps = this.getPipeline(filters, readPipeline, inputValues);
+            const { perf, ...pipelineData } = await evaluateSteps({ specSteps, inputValues });
+            this.addDocument({ bookCode, perfDocument, pipelineData });
+            return perf;
+        }
+
+        return this.addDocument({bookCode, perfDocument});
     }
 
     /**
@@ -95,15 +169,13 @@ class Epitelete {
      * @param {string} bookCode
      * @return {Promise<perfDocument>} fetched PERF document
      */
-    async fetchPerf(bookCode, options) {
+    async fetchPerf(bookCode, options = {}) {
         if (this.backend === "standalone") {
-            throw "Can't call sideloadPerf in standalone mode";
+            throw "Can't call fetchPerf in standalone mode";
         }
-
         if (!bookCode) {
             throw new Error("fetchPerf requires 1 argument (bookCode)");
         }
-
         const query = `{docSet(id: "${this.docSetId}") { document(bookCode: "${bookCode}") { perf } } }`;
         const { data } = this.proskomma.gqlQuerySync(query);
         const queryResult = data.docSet.document.perf;
@@ -111,27 +183,45 @@ class Epitelete {
         if (!queryResult) {
             throw new Error(`No document with bookCode="${bookCode}" found.`);
         }
-
         const perfDocument = JSON.parse(queryResult);
-
-        return this.addDocument(bookCode, perfDocument);
+        const { readPipeline } = options;
+        
+        if (readPipeline) {
+            const inputValues = { perf: perfDocument };
+            const specSteps = this.getPipeline(filters, readPipeline, inputValues);
+            const { perf, ...pipelineData } = await evaluateSteps({ specSteps, inputValues });
+            this.addDocument({ bookCode, perfDocument, pipelineData });
+            return perf;
+        }
+        return this.addDocument({ bookCode, perfDocument });
     }
 
     /**
      * Gets document from memory or fetches it if proskomma is set
      * @async
      * @param {string} bookCode
+     * @param {object} [options]
+     * @param {string} [options.readPipeline] - pipeline name
      * @return {Promise<perfDocument>} found or fetched PERF document
      */
-    async readPerf(bookCode) {
+    async readPerf(bookCode, options = {}) {
         if (!this.history[bookCode] && this.backend === "proskomma") {
-            return this.fetchPerf(bookCode);
+            return this.fetchPerf(bookCode, options);
         }
         if (!this.history[bookCode] && this.backend === "standalone") {
             throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
         }
+        const { readPipeline } = options;
+        const perfDocument = this.getDocument(bookCode);
 
-        return this.getDocument(bookCode);
+        if (readPipeline) {
+            const inputValues = { perf: perfDocument };
+            const specSteps = this.getPipeline(filters, readPipeline, inputValues);
+            const { perf, ...pipelineData } = await evaluateSteps({ specSteps, inputValues });
+            this.setPipelineData(bookCode, pipelineData);
+            return perf;
+        }
+        return perfDocument;
     }
 
     /**
@@ -157,24 +247,18 @@ class Epitelete {
         if (!validatorResult.isValid) {
             throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;
         }
-
         // if valid
         // modify the copy to add new sequence
         doc.sequences[sequenceId] = _.cloneDeep(perfSequence);
-
         const history = this.history[bookCode];
-
         // remove any old redo's from stack
         history.stack = history.stack.slice(history.cursor);
-
         // add modified copy to stack
-        history.stack.unshift({document: doc});
+        history.stack.unshift({perfDocument: doc});
         history.cursor = 0;
-
         // limit history.stack to options.historySize
         if (history.stack.length > this.options.historySize)
             history.stack.pop();
-
         // return copy of modified document
         return _.cloneDeep(doc);
     }
@@ -248,14 +332,6 @@ class Epitelete {
     }
 
     /**
-     * Clears docs history
-     * @return {void} void
-     */
-    clearPerf() {
-        this.history = {};
-    }
-
-    /**
      * Checks if able to undo from specific book history
      * @param {string} bookCode
      * @return {boolean}
@@ -310,29 +386,6 @@ class Epitelete {
     }
 
     /**
-     * Loads given perf into memory
-     * @param {string} bookCode
-     * @param {perfDocument} perfDocument - PERF document
-     * @return {perfDocument} same sideloaded PERF document
-     */
-    sideloadPerf(bookCode, perfDocument) {
-        if (this.backend === "proskomma") {
-            throw "Can't call sideloadPerf in proskomma mode";
-        }
-
-        if (!bookCode || !perfDocument) {
-            throw "sideloadPerf requires 2 arguments (bookCode, perfDocument)";
-        }
-
-        const validatorResult = this.validator.validate('constraint','perfDocument','0.2.1', perfDocument);
-         if (!validatorResult.isValid) {
-            throw `perfJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
-        }
-
-        return this.addDocument(bookCode, perfDocument);
-    }
-
-    /**
      * Gets document from memory and converts it to usfm
      * @async
      * @param {string} bookCode
@@ -359,23 +412,8 @@ class Epitelete {
             throw new Error(`bookCode '${bookCode}' is not available locally`);
         }
         data.perf = this.getDocument(bookCode);
-        if (!reports[reportName]) {
-            throw new Error(`Unknown report name '${reportName}'`);
-        }
-        const pipeline = reports[reportName];
-        const inputSpecs = pipeline[0].inputs;
-        if (Object.keys(inputSpecs).length !== Object.keys(data).length) {
-            throw new Error(`${Object.keys(inputSpecs).length} input(s) expected by report ${reportName} but ${Object.keys(data).length} provided (${Object.keys(data).join(', ')})`);
-        }
-        for (const [inputSpecName, inputSpecType] of Object.entries(inputSpecs)) {
-            if (!data[inputSpecName]) {
-                throw new Error(`Input ${inputSpecName} not provided as input to ${reportName}`);
-            }
-            if ((typeof data[inputSpecName] === 'string') !== (inputSpecType === 'text')) {
-                throw new Error(`Input ${inputSpecName} must be ${inputSpecType} but ${typeof data[inputSpecName] === 'string' ? "text": "json"} was provided`);
-            }
-        }
-        return await evaluateSteps({specSteps: reports[reportName], inputValues: data});
+        const pipeline = this.getPipeline(reports, reportName, data);
+        return await evaluateSteps({specSteps: pipeline, inputValues: data});
     }
 
     /**
@@ -445,7 +483,7 @@ export default Epitelete;
  * @typedef {Object} bookHistory
  * @property {number} bookHistory.cursor
  * @property {Object[]} bookHistory.stack
- * @property {perfDocument} bookHistory.stack[].document
+ * @property {perfDocument} bookHistory.stack[].perfDocument
  * @property {Object<string,any>} bookHistory.stack[].pipelineData
  */
 

@@ -189,7 +189,7 @@ const epitelete = new Epitelete({ docSetId, options });
 
 const bookCode = "GEN";
 const perfJSON = {...}
-let docPerf = epitelete.sideloadPerf(bookCode,perfJSON);
+let docPerf = await epitelete.sideloadPerf(bookCode,perfJSON);
 
 const sequenceId = docPerf.mainSequence;
 const sequence = docPerf.sequences[sequenceId];
@@ -226,7 +226,7 @@ Optionally could set `historySize` in the `options` arg.
 ```js
 ...
 
-docPerf = epitelete.sideloadPerf(bookCode, perfJSON);
+docPerf = await epitelete.sideloadPerf(bookCode, perfJSON);
 
 ...
 ```

@@ -46,6 +46,7 @@ test(
             const documents = epitelete.getDocuments();
             // console.log(documents);
             const sequences = documents[bookCode]?.sequences;
+            
             const mainSequenceId = documents[bookCode]?.main_sequence_id;
             const mainSequence = sequences[mainSequenceId];
             // console.log("Luke:",JSON.stringify(mainSequence, null, 4));

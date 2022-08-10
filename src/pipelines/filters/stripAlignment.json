@@ -51,7 +51,7 @@
         "type": "json"
       },
       {
-        "name": "stripped",
+        "name": "strippedAlignment",
         "type": "json"
       }
     ],
@@ -86,6 +86,11 @@
         "name": "perf",
         "type": "json",
         "source": "Transform 9 perf"
+      },
+      {
+        "name": "strippedAlignment",
+        "type": "json",
+        "source": "Transform 6 strippedAlignment"
       }
     ]
   }

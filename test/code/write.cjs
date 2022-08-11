@@ -144,7 +144,7 @@ test(
 
 const alignedPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "TIT_dcs_eng-alignment_perf_v0.2.1.json")));
 
-test.only(
+test(
     `writes perf and merges alignment (${testGroup})`,
     async t => {
         t.plan(2);

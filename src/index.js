@@ -131,6 +131,12 @@ class Epitelete {
         currentData.pipelineData = data;
     }
 
+    getPipelineData(bookCode) {
+        const history = this.history[bookCode];
+        const currentData = history?.stack[history.cursor]
+        return currentData.pipelineData;
+    }
+
     /**
      * Loads given perf into memory
      * @param {string} bookCode
@@ -229,38 +235,48 @@ class Epitelete {
      * @param {string} bookCode
      * @param {number} sequenceId - id of modified sequence
      * @param {perfSequence} perfSequence - modified sequence
-     * @return {perfDocument} modified PERF document
+     * @return {Promise<perfDocument>} modified PERF document
      */
-    writePerf(bookCode, sequenceId, perfSequence) {
-        // Get copy of last doc from memory
-        const doc = this.getDocument(bookCode);
-        if (!doc) {
+    async writePerf(bookCode, sequenceId, perfSequence, options = {}) {
+        const perfDocument = this.getDocument(bookCode);
+
+        if (!perfDocument) {
             throw `document not found: ${bookCode}`;
         }
-        // if not found throw error
-        if (!doc.sequences[sequenceId]) {
+
+        if (!perfDocument.sequences[sequenceId]) {
             throw `PERF sequence id not found: ${bookCode}, ${sequenceId}`;
         }
-        // validate new perf sequence
         const validatorResult = this.validator.validate('constraint','perfSequence','0.2.1',perfSequence);
-        // if not valid throw error
+
         if (!validatorResult.isValid) {
             throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;
         }
-        // if valid
-        // modify the copy to add new sequence
-        doc.sequences[sequenceId] = _.cloneDeep(perfSequence);
+
+        const filterPerfDocument = async (perfDocument, bookCode, writePipeline) => {
+            const pipelineData = this.getPipelineData(bookCode);
+            const inputValues = { perf: perfDocument, ...pipelineData };
+            const specSteps = this.getPipeline(filters, writePipeline, inputValues);
+            const { perf } = await evaluateSteps({ specSteps, inputValues });
+            return perf;
+        }
+
+        perfDocument.sequences[sequenceId] = _.cloneDeep(perfSequence);
+
+        const { writePipeline } = options;
+        const newPerfDoc = writePipeline
+            ? await filterPerfDocument(perfDocument, bookCode, writePipeline)
+            : perfDocument;
+
         const history = this.history[bookCode];
-        // remove any old redo's from stack
         history.stack = history.stack.slice(history.cursor);
-        // add modified copy to stack
-        history.stack.unshift({perfDocument: doc});
+        history.stack.unshift({ perfDocument: newPerfDoc });
         history.cursor = 0;
-        // limit history.stack to options.historySize
+
         if (history.stack.length > this.options.historySize)
             history.stack.pop();
-        // return copy of modified document
-        return _.cloneDeep(doc);
+
+        return _.cloneDeep(newPerfDoc);
     }
 
     /**
@@ -488,7 +504,7 @@ export default Epitelete;
  */
 
 /**
- * @typedef {Object<bookCode, bookHistory>} history
+ * @typedef {Object<string, bookHistory>} history
  */
 
 /**

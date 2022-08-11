@@ -141,3 +141,36 @@ test(
         }
     }
 )
+
+const alignedPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "TIT_dcs_eng-alignment_perf_v0.2.1.json")));
+
+test.only(
+    `writes perf and merges alignment (${testGroup})`,
+    async t => {
+        t.plan(2);
+        const docSetId = "DCS/en_ult";
+        const epitelete = new Epitelete({ docSetId });
+        const bookCode = "TIT";
+
+        const unaligned = await epitelete.sideloadPerf(bookCode, alignedPerf, { readPipeline: "stripAlignment" });
+
+        t.isNotDeepEqual(alignedPerf, unaligned, "alignment stripped")
+
+        const sequenceId = unaligned["main_sequence_id"];
+        const sequence = unaligned.sequences[sequenceId];
+
+        const merged = await epitelete.writePerf(bookCode, sequenceId, sequence, { writePipeline: "mergeAlignment" });
+
+        t.deepEqual(alignedPerf, merged, "writePipeline mergeAlignment roundtripped");
+
+        // const undone = JSON.stringify(epitelete.undoPerf(bookCode))
+        //     .replace(" of ", " belonging to ");
+        
+        // console.log(undone);
+        
+        // const newPerf = JSON.parse(undone);
+
+        // const newMerged = await epitelete.writePerf(bookCode, sequenceId, newPerf.sequences[sequenceId], { writePipeline: "mergeAlignment" });
+        // // console.log(JSON.stringify(newMerged.sequences[sequenceId].blocks[3].content, null, 4));
+    }
+)

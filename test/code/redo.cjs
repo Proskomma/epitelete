@@ -136,7 +136,7 @@ test(
             t.equal(history.cursor, 0);
             t.same(history.stack[0].perfDocument, newDoc);
             t.ok(epitelete.canUndo(bookCode));
-            const undonePerf = epitelete.undoPerf(bookCode);
+            const undonePerf = await epitelete.undoPerf(bookCode);
             t.equal(history.cursor, 1);
             t.same(history.stack[1].perfDocument, undonePerf);
             t.same(history.stack[0].perfDocument, doc);
@@ -157,7 +157,7 @@ test(
             const epitelete = new Epitelete({proskomma, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
-            const redoPerf = epitelete.redoPerf(bookCode);
+            const redoPerf = await epitelete.redoPerf(bookCode);
             t.notOk(redoPerf);
         }catch (err){
             t.error(err);
@@ -188,7 +188,7 @@ test(
                 sequenceId3,
                 sequence3
             );
-            const redoPerf = epitelete.redoPerf(bookCode);
+            const redoPerf = await epitelete.redoPerf(bookCode);
             t.notOk(redoPerf);
         }catch (err){
             t.error(err);
@@ -220,9 +220,9 @@ test(
                 sequenceId3,
                 sequence3
             );
-            const undonePerf = epitelete.undoPerf(bookCode);
+            const undonePerf = await epitelete.undoPerf(bookCode);
             const undonePerfKeys = Object.keys(undonePerf.sequences);
-            const redonePerf = epitelete.redoPerf(bookCode);
+            const redonePerf = await epitelete.redoPerf(bookCode);
             const redonePerfKeys = Object.keys(redonePerf.sequences);
             t.ok(redonePerf);
 

@@ -52,6 +52,11 @@ class Epitelete {
         this.backend = proskomma ? 'proskomma' : 'standalone';
     }
 
+    getBookData(bookCode) {
+        const history = this.history[bookCode];
+        return history?.stack[history.cursor];
+    }
+
     /**
      * Gets a copy of a document from history
      * @private
@@ -59,8 +64,8 @@ class Epitelete {
      * @return {perfDocument} matching PERF document
      */
     getDocument(bookCode) {
-        const history = this.history[bookCode];
-        return _.cloneDeep(history?.stack[history.cursor].perfDocument);
+        const bookData = this.getBookData(bookCode);
+        return _.cloneDeep(bookData?.perfDocument);
     }
 
     /**
@@ -126,15 +131,30 @@ class Epitelete {
     }
 
     setPipelineData(bookCode, data) {
-        const history = this.history[bookCode];
-        const currentData = history?.stack[history.cursor]
-        currentData.pipelineData = data;
+        const bookData = this.getBookData(bookCode);
+        bookData.pipelineData = data;
     }
 
     getPipelineData(bookCode) {
-        const history = this.history[bookCode];
-        const currentData = history?.stack[history.cursor]
-        return currentData.pipelineData;
+        const bookData = this.getBookData(bookCode);
+        return bookData?.pipelineData;
+    }
+
+    async readPipeline({ pipelineName, perfDocument }) {
+        if (!pipelineName) return { perfDocument };
+        const inputValues = { perf: perfDocument };
+        const specSteps = this.getPipeline(filters, pipelineName, inputValues);
+        const { perf, ...pipelineData } = await evaluateSteps({ specSteps, inputValues });
+        return { perfDocument: perf, pipelineData }
+    }
+
+    async writePipeline({ bookCode, pipelineName, perfDocument }) {
+        if (!pipelineName) return perfDocument;
+        const pipelineData = this.getPipelineData(bookCode);
+        const inputValues = { perf: perfDocument, ...pipelineData };
+        const specSteps = this.getPipeline(filters, pipelineName, inputValues);
+        const { perf } = await evaluateSteps({ specSteps, inputValues });
+        return perf;
     }
 
     /**
@@ -158,15 +178,10 @@ class Epitelete {
         }
 
         const { readPipeline } = options;
-        if (readPipeline) {
-            const inputValues = { perf: perfDocument };
-            const specSteps = this.getPipeline(filters, readPipeline, inputValues);
-            const { perf, ...pipelineData } = await evaluateSteps({ specSteps, inputValues });
-            this.addDocument({ bookCode, perfDocument, pipelineData });
-            return perf;
-        }
-
-        return this.addDocument({bookCode, perfDocument});
+        return this.addDocument({
+            bookCode,
+            ...await this.readPipeline({bookCode,pipelineName: readPipeline, perfDocument}) 
+        });
     }
 
     /**
@@ -191,15 +206,10 @@ class Epitelete {
         }
         const perfDocument = JSON.parse(queryResult);
         const { readPipeline } = options;
-        
-        if (readPipeline) {
-            const inputValues = { perf: perfDocument };
-            const specSteps = this.getPipeline(filters, readPipeline, inputValues);
-            const { perf, ...pipelineData } = await evaluateSteps({ specSteps, inputValues });
-            this.addDocument({ bookCode, perfDocument, pipelineData });
-            return perf;
-        }
-        return this.addDocument({ bookCode, perfDocument });
+        return this.addDocument({
+            bookCode,
+            ...await this.readPipeline({bookCode,pipelineName: readPipeline, perfDocument}) 
+        });
     }
 
     /**
@@ -217,17 +227,11 @@ class Epitelete {
         if (!this.history[bookCode] && this.backend === "standalone") {
             throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
         }
-        const { readPipeline } = options;
         const perfDocument = this.getDocument(bookCode);
-
-        if (readPipeline) {
-            const inputValues = { perf: perfDocument };
-            const specSteps = this.getPipeline(filters, readPipeline, inputValues);
-            const { perf, ...pipelineData } = await evaluateSteps({ specSteps, inputValues });
-            this.setPipelineData(bookCode, pipelineData);
-            return perf;
-        }
-        return perfDocument;
+        const { readPipeline } = options;
+        const { perfDocument: perf, pipelineData } = await this.readPipeline({ bookCode, pipelineName: readPipeline, perfDocument });
+        this.setPipelineData(bookCode, pipelineData);
+        return perf;
     }
 
     /**
@@ -253,20 +257,10 @@ class Epitelete {
             throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;
         }
 
-        const filterPerfDocument = async (perfDocument, bookCode, writePipeline) => {
-            const pipelineData = this.getPipelineData(bookCode);
-            const inputValues = { perf: perfDocument, ...pipelineData };
-            const specSteps = this.getPipeline(filters, writePipeline, inputValues);
-            const { perf } = await evaluateSteps({ specSteps, inputValues });
-            return perf;
-        }
-
         perfDocument.sequences[sequenceId] = _.cloneDeep(perfSequence);
 
         const { writePipeline } = options;
-        const newPerfDoc = writePipeline
-            ? await filterPerfDocument(perfDocument, bookCode, writePipeline)
-            : perfDocument;
+        const newPerfDoc = await this.writePipeline({ bookCode, pipelineName: writePipeline, perfDocument });
 
         const history = this.history[bookCode];
         history.stack = history.stack.slice(history.cursor);
@@ -374,14 +368,13 @@ class Epitelete {
     /**
      * Gets previous document from history
      * @param {string} bookCode
-     * @return {?perfDocument} PERF document or null if can not undo
+     * @return {Promise<?perfDocument>} PERF document or null if can not undo
      */
-    undoPerf(bookCode) {
+    async undoPerf(bookCode, options) {
         if (this.canUndo(bookCode)) {
             const history = this.history[bookCode];
-            let cursor = ++history.cursor;
-            const doc = this.getDocument(bookCode);
-            return _.cloneDeep(doc);
+            ++history.cursor;
+            return await this.readPerf(bookCode, options);
         }
         return null;
     }
@@ -389,14 +382,13 @@ class Epitelete {
     /**
      * Gets next document from history
      * @param {string} bookCode
-     * @return {?perfDocument} PERF document or null if can not redo
+     * @return {Promise<?perfDocument>} PERF document or null if can not redo
      */
-    redoPerf(bookCode){
+    async redoPerf(bookCode, options){
         if (this.canRedo(bookCode)) {
             const history = this.history[bookCode];
-            let cursor = --history.cursor;
-            const doc = this.getDocument(bookCode);
-            return _.cloneDeep(doc);
+            --history.cursor;
+            return await this.readPerf(bookCode, options);
         }
         return null;
     }

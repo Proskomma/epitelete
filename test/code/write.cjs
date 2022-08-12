@@ -78,7 +78,8 @@ test(
             const newDoc = await epitelete.writePerf(bookCode1, sequenceId3, sequence3);
             t.fail('Did not throw!');
         } catch (err) {
-            if(err.toString() !== 'document not found: LK'){
+            if (err.toString() !== 'document not found: LK') {
+                throw err
                 t.fail(err)
             }
             else{
@@ -147,30 +148,26 @@ const alignedPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "te
 test(
     `writes perf and merges alignment (${testGroup})`,
     async t => {
-        t.plan(2);
+        t.plan(3);
         const docSetId = "DCS/en_ult";
         const epitelete = new Epitelete({ docSetId });
         const bookCode = "TIT";
+        const readOptions = { readPipeline: "stripAlignment" };
+        const writeOptions = { writePipeline: "mergeAlignment" };
 
-        const unaligned = await epitelete.sideloadPerf(bookCode, alignedPerf, { readPipeline: "stripAlignment" });
+        const unaligned = await epitelete.sideloadPerf(bookCode, alignedPerf, readOptions);
 
         t.isNotDeepEqual(alignedPerf, unaligned, "alignment stripped")
 
         const sequenceId = unaligned["main_sequence_id"];
         const sequence = unaligned.sequences[sequenceId];
 
-        const merged = await epitelete.writePerf(bookCode, sequenceId, sequence, { writePipeline: "mergeAlignment" });
+        const merged = await epitelete.writePerf(bookCode, sequenceId, sequence, writeOptions);
 
         t.deepEqual(alignedPerf, merged, "writePipeline mergeAlignment roundtripped");
 
-        // const undone = JSON.stringify(epitelete.undoPerf(bookCode))
-        //     .replace(" of ", " belonging to ");
-        
-        // console.log(undone);
-        
-        // const newPerf = JSON.parse(undone);
+        const undone = await epitelete.undoPerf(bookCode, readOptions);
 
-        // const newMerged = await epitelete.writePerf(bookCode, sequenceId, newPerf.sequences[sequenceId], { writePipeline: "mergeAlignment" });
-        // // console.log(JSON.stringify(newMerged.sequences[sequenceId].blocks[3].content, null, 4));
+        t.deepEqual(unaligned, undone, "undoing with filter returns same as reading previous with filter");
     }
 )

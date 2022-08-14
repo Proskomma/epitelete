@@ -78,7 +78,8 @@ test(
             const newDoc = await epitelete.writePerf(bookCode1, sequenceId3, sequence3);
             t.fail('Did not throw!');
         } catch (err) {
-            if(err.toString() !== 'document not found: LK'){
+            if (err.toString() !== 'document not found: LK') {
+                throw err
                 t.fail(err)
             }
             else{
@@ -139,5 +140,34 @@ test(
                 t.pass('Success')
             }
         }
+    }
+)
+
+const alignedPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "TIT_dcs_eng-alignment_perf_v0.2.1.json")));
+
+test(
+    `writes perf and merges alignment (${testGroup})`,
+    async t => {
+        t.plan(3);
+        const docSetId = "DCS/en_ult";
+        const epitelete = new Epitelete({ docSetId });
+        const bookCode = "TIT";
+        const readOptions = { readPipeline: "stripAlignment" };
+        const writeOptions = { writePipeline: "mergeAlignment" };
+
+        const unaligned = await epitelete.sideloadPerf(bookCode, alignedPerf, readOptions);
+
+        t.isNotDeepEqual(alignedPerf, unaligned, "alignment stripped")
+
+        const sequenceId = unaligned["main_sequence_id"];
+        const sequence = unaligned.sequences[sequenceId];
+
+        const merged = await epitelete.writePerf(bookCode, sequenceId, sequence, writeOptions);
+
+        t.deepEqual(alignedPerf, merged, "writePipeline mergeAlignment roundtripped");
+
+        const undone = await epitelete.undoPerf(bookCode, readOptions);
+
+        t.deepEqual(unaligned, undone, "undoing with filter returns same as reading previous with filter");
     }
 )

@@ -118,7 +118,7 @@ test(
             const epitelete = new Epitelete({proskomma, docSetId});
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
-            const undoPerf = epitelete.undoPerf(bookCode);
+            const undoPerf = await epitelete.undoPerf(bookCode);
             t.notOk(undoPerf);
         }catch (err){
             t.error(err);
@@ -149,7 +149,7 @@ test(
                 sequenceId3,
                 sequence3
             );
-            const undoPerf = epitelete.undoPerf(bookCode);
+            const undoPerf = await epitelete.undoPerf(bookCode);
             t.ok(undoPerf);
             t.deepEqual(undoPerf, _doc, 'expect undoPerf should return the original doc')
         }catch (err){
@@ -189,7 +189,7 @@ test(
 
             //Undo n times
             for (let index = 1; index < n; index++) {
-                auxDoc = epitelete.undoPerf(bookCode);
+                auxDoc = await epitelete.undoPerf(bookCode);
                 const expectedBlockCount = newBlocksCount + index;
                 t.equal(auxDoc.sequences[sequenceId].blocks.length, expectedBlockCount);
             }
@@ -197,7 +197,7 @@ test(
 
             //Redo n times
             for (let index = 1; index < n; index++) {
-                auxDoc = epitelete.redoPerf(bookCode);
+                auxDoc = await epitelete.redoPerf(bookCode);
                 const expectedBlockCount = initialBlocksCount - index;
                 t.equal(auxDoc.sequences[sequenceId].blocks.length, expectedBlockCount);
             }
@@ -205,7 +205,7 @@ test(
 
             //Undo n times to then test stack slicing
             for (let index = 1; index < n; index++) {
-                auxDoc = epitelete.undoPerf(bookCode);
+                auxDoc = await epitelete.undoPerf(bookCode);
             }
 
             //Write one more time to check stack slicing

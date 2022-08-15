@@ -1,6 +1,6 @@
 {
   "name": "epitelete",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "PERF Middleware for Editors in the Proskomma Ecosystem",
   "main": "dist/index.js",
   "directories": {
@@ -13,7 +13,7 @@
     "rawTest": "babel-tape-runner test/code/*.cjs",
     "oneTest": "babel-tape-runner test/code/%TESTSCRIPT%.cjs",
     "oneTestOnLinux": "babel-tape-runner test/code/$TESTSCRIPT.cjs",
-    "build": "babel src -d dist",
+    "build": "babel src -d dist --copy-files",
     "prepublishOnly": "rm -fr dist && npm run build",
     "generatePerf": "babel-tape-runner utils/generatePerf.js",
     "generateUsfm": "babel-tape-runner utils/generateUsfm.js",

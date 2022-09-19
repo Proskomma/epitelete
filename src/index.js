@@ -1,4 +1,4 @@
-import {Validator, ProskommaRenderFromJson, toUsfmActions} from 'proskomma-json-tools';
+import {Validator, ProskommaRenderFromJson, transforms} from 'proskomma-json-tools';
 import reports from './pipelines/reports';
 import filters from './pipelines/filters';
 import evaluateSteps from "./evaluateSteps";
@@ -180,7 +180,7 @@ class Epitelete {
         const { readPipeline } = options;
         return this.addDocument({
             bookCode,
-            ...await this.readPipeline({bookCode,pipelineName: readPipeline, perfDocument}) 
+            ...await this.readPipeline({bookCode,pipelineName: readPipeline, perfDocument})
         });
     }
 
@@ -208,7 +208,7 @@ class Epitelete {
         const { readPipeline } = options;
         return this.addDocument({
             bookCode,
-            ...await this.readPipeline({bookCode,pipelineName: readPipeline, perfDocument}) 
+            ...await this.readPipeline({bookCode,pipelineName: readPipeline, perfDocument})
         });
     }
 
@@ -401,7 +401,7 @@ class Epitelete {
      */
     async readUsfm(bookCode) {
         const perf = await this.readPerf(bookCode);
-        const renderer = new ProskommaRenderFromJson({srcJson: perf, actions: toUsfmActions});
+        const renderer = new ProskommaRenderFromJson({srcJson: perf, actions: transforms.toUsfmActions});
         const output = {};
         renderer.renderDocument({docId: "", config: {}, output});
         return output.usfm;

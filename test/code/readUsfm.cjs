@@ -41,12 +41,14 @@ test(
 test(
     `readUsfm should read valid bookCode (${testGroup})`,
     async t => {
-        t.plan(1);
+        t.plan(3);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
             const bookCode = "MRK";
-            // console.log(await epitelete.readUsfm(bookCode));
+            const usfm = await epitelete.readUsfm(bookCode);
+            t.ok(usfm);
+            t.ok(usfm.length > 0);
             t.pass("readUsfm works with valid bookCode");
         } catch (err) {
             t.fail("readUsfm throws on valid bookCode");

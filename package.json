@@ -46,6 +46,7 @@
     "path": "^0.12.7",
     "tap-summary": "^4.0.0",
     "tape": "^5.5.3",
-    "uw-proskomma": "^0.8.5"
+    "uw-proskomma": "^0.8.5",
+    "pipeline-handler": "^1.1.0"
   }
 }

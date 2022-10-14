@@ -16,8 +16,6 @@ const buildMilestone = (atts, type) => {
             str = str + oneifyTag(key) + "=\"" + value + "\" ";
         }
     };
-    console.log(str + "\\*");
-    let a = atts["nimportequoi"][0];
     return str + "\\*";
 }
 
@@ -242,7 +240,6 @@ const localToUsfmActions = {
             test: () => true,
             action: ({workspace, output}) => {
                 output.usfm = workspace.usfmBits.join('').replace(/(\s*)\n(\s*)/gm, "\n");
-                console.log("endDocument OK");
             }
         },
     ]

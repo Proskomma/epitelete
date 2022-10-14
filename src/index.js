@@ -45,7 +45,7 @@ class Epitelete {
         };
 
         this.proskomma = proskomma;
-        this.pipelineHandler = new PipelineHandler(pipelines, transformActions, proskomma, true);
+        this.pipelineHandler = new PipelineHandler(pipelines, transformActions, proskomma);
         this.docSetId = docSetId;
         /** @type history */
         this.history = {};

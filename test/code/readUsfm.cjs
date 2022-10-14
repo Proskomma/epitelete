@@ -51,6 +51,7 @@ test(
             t.ok(usfm.length > 0);
             t.pass("readUsfm works with valid bookCode");
         } catch (err) {
+            console.log(err);
             t.fail("readUsfm throws on valid bookCode");
         }
     }

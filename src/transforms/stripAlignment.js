@@ -191,7 +191,7 @@ const stripMarkupCode = function ({perf, verseWords}) {
             actions: mergeActions(
                 [
                     localStripMarkupActions,
-                    transforms.identityActions
+                    transforms.perf2perf.identityActions
                 ]
             )
         }

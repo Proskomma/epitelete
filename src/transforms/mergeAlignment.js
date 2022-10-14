@@ -157,7 +157,7 @@ const mergeAlignmentCode = function ({ perf, verseWords: totalOccurrences, strip
     const cl = new PerfRenderFromJson({
         srcJson: perf,
         actions: mergeActions(
-            [localMergeAlignmentActions, transforms.identityActions]
+            [localMergeAlignmentActions, transforms.perf2perf.identityActions]
         )
     });
     const output = {};

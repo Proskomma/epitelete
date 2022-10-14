@@ -12,7 +12,7 @@
     }
   },
   {
-    "id": 8,
+    "id": 1,
     "title": "Simplify Input PERF",
     "name": "justTheBible",
     "transformName": "justTheBible",
@@ -32,7 +32,7 @@
     ]
   },
   {
-    "id": 9,
+    "id": 2,
     "title": "Merge Text in Input PERF",
     "name": "mergePerfText",
     "transformName": "mergePerfText",
@@ -41,7 +41,7 @@
       {
         "name": "perf",
         "type": "json",
-        "source": "Transform 8 perf"
+        "source": "Transform 1 perf"
       }
     ],
     "outputs": [
@@ -52,7 +52,7 @@
     ]
   },
   {
-    "id": 5,
+    "id": 3,
     "title": "Search Term",
     "type": "Source",
     "sourceLocation": "local",
@@ -60,7 +60,7 @@
     "outputType": "text"
   },
   {
-    "id": 11,
+    "id": 4,
     "title": "Ignore Case",
     "type": "Source",
     "sourceLocation": "local",
@@ -68,7 +68,7 @@
     "outputType": "text"
   },
   {
-    "id": 12,
+    "id": 5,
     "title": "Regex",
     "type": "Source",
     "sourceLocation": "local",
@@ -76,7 +76,7 @@
     "outputType": "text"
   },
   {
-    "id": 15,
+    "id": 5,
     "title": "Logic",
     "type": "Source",
     "sourceLocation": "local",
@@ -84,7 +84,7 @@
     "outputType": "text"
   },
   {
-    "id": 16,
+    "id": 6,
     "title": "Partial",
     "type": "Source",
     "sourceLocation": "local",
@@ -92,7 +92,7 @@
     "outputType": "text"
   },
   {
-    "id": 10,
+    "id": 7,
     "title": "Do Word Search",
     "name": "wordSearch",
     "transformName": "wordSearch",
@@ -101,7 +101,7 @@
       {
         "name": "perf",
         "type": "json",
-        "source": "Transform 9 perf"
+        "source": "Transform 2 perf"
       },
       {
         "name": "searchString",
@@ -143,7 +143,7 @@
       {
         "name": "matches",
         "type": "json",
-        "source": "Transform 10 matches"
+        "source": "Transform 7 matches"
       }
     ]
   }

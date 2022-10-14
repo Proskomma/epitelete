@@ -399,8 +399,7 @@ class Epitelete {
         }
         if(this.pipelineHandler === null) this.instanciatePipelineHandler();
         data.perf = this.getDocument(bookCode);
-        const pipeline = this.pipelineHandler.getPipeline(reportName, data);
-        return await this.pipelineHandler.evaluateSteps({specSteps: pipeline, inputValues: data});
+        return await this.pipelineHandler.runPipeline(reportName, data);
     }
 
     /**

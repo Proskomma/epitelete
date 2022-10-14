@@ -56,7 +56,7 @@ const localJustTheBibleActions = {
             action: () => {
             }
         },
-    ],
+    ]
 };
 
 const justTheBibleCode = function ({perf}) {
@@ -66,7 +66,7 @@ const justTheBibleCode = function ({perf}) {
             actions: mergeActions(
                 [
                     localJustTheBibleActions,
-                    transforms.identityActions
+                    transforms.perf2perf.identityActions
                 ]
             )
         }

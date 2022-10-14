@@ -9,15 +9,15 @@
   "scripts": {
     "doc": "jsdoc -c jsdoc.json",
     "apiGen": "npx run-func ./api.generate.js insertApiDocs",
-    "test": "bash -c \"babel-tape-runner test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
-    "rawTest": "babel-tape-runner test/code/*.cjs",
-    "oneTest": "babel-tape-runner test/code/%TESTSCRIPT%.cjs",
-    "oneTestOnLinux": "babel-tape-runner test/code/$TESTSCRIPT.cjs",
+    "test": "bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
+    "rawTest": "tape -r @babel/register test/code/*.cjs",
+    "oneTest": "tape -r @babel/register test/code/%TESTSCRIPT%.cjs",
+    "oneTestOnLinux": "tape -r @babel/register test/code/$TESTSCRIPT.cjs",
     "build": "babel src -d dist --copy-files",
     "prepublishOnly": "rm -fr dist && npm run build",
-    "generatePerf": "babel-tape-runner utils/generatePerf.js",
-    "generateUsfm": "babel-tape-runner utils/generateUsfm.js",
-    "runTests": "babel-tape-runner utils/test.js"
+    "generatePerf": "tape -r @babel/register utils/generatePerf.js",
+    "generateUsfm": "tape -r @babel/register utils/generateUsfm.js",
+    "runTests": "tape -r @babel/register utils/test.js"
   },
   "repository": {
     "type": "git",
@@ -30,15 +30,15 @@
   },
   "homepage": "https://github.com/Proskomma/epitelete#readme",
   "dependencies": {
-    "@babel/core": "^7.17.10",
+    "@babel/core": "^7.19.0",
     "lodash": "4.17.21",
-    "proskomma-json-tools": "^0.4.2"
+    "proskomma-json-tools": "^0.5.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
     "@babel/preset-env": "^7.17.10",
-    "babel-eslint": "^10.1.0",
-    "babel-tape-runner": "^3.0.0",
+    "@babel/eslint-parser": "^7.18.9",
+    "@babel/register": "^7.18.9",
     "eslint": "^8.15.0",
     "fs-extra": "^10.1.0",
     "jsdoc": "^3.6.10",

@@ -1,4 +1,4 @@
-import {ProskommaRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
+import {PerfRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
 import xre from "xregexp";
 
 const localStripMarkupActions = {
@@ -185,7 +185,7 @@ const localStripMarkupActions = {
 };
 
 const stripMarkupCode = function ({perf, verseWords}) {
-    const cl = new ProskommaRenderFromJson(
+    const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
             actions: mergeActions(

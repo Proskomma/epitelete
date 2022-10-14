@@ -1,4 +1,4 @@
-import { ProskommaRenderFromJson, transforms, mergeActions } from 'proskomma-json-tools';
+import { PerfRenderFromJson, transforms, mergeActions } from 'proskomma-json-tools';
 import xre from "xregexp";
 
 const lexingRegexes = [
@@ -154,7 +154,7 @@ const localMergeAlignmentActions = {
 };
 
 const mergeAlignmentCode = function ({ perf, verseWords: totalOccurrences, strippedAlignment }) {
-    const cl = new ProskommaRenderFromJson({
+    const cl = new PerfRenderFromJson({
         srcJson: perf,
         actions: mergeActions(
             [localMergeAlignmentActions, transforms.identityActions]

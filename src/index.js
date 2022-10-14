@@ -1,4 +1,4 @@
-import {Validator, ProskommaRenderFromJson, transforms} from 'proskomma-json-tools';
+import {Validator, PerfRenderFromJson, transforms} from 'proskomma-json-tools';
 import pipelines from './pipelines';
 import transformActions from './transforms';
 import PipelineHandler from 'pipeline-handler';
@@ -45,12 +45,16 @@ class Epitelete {
         };
 
         this.proskomma = proskomma;
-        this.pipelineHandler = new PipelineHandler(pipelines, transformActions, proskomma);
+        this.pipelineHandler = new PipelineHandler(pipelines, transformActions, proskomma, true);
         this.docSetId = docSetId;
         /** @type history */
         this.history = {};
         this.validator = new Validator();
         this.backend = proskomma ? 'proskomma' : 'standalone';
+    }
+
+    instanciatePipelineHandler() {
+        this.pipelineHandler = new PipelineHandler(pipelines, transformActions, this.proskomma);
     }
 
     getBookData(bookCode) {
@@ -120,18 +124,14 @@ class Epitelete {
 
     async readPipeline({ pipelineName, perfDocument }) {
         if (!pipelineName) return { perfDocument };
-        const inputValues = { perf: perfDocument };
-        const specSteps = this.pipelineHandler.getPipeline(pipelineName, inputValues);
-        const { perf, ...pipelineData } = await this.pipelineHandler.evaluateSteps({ specSteps, inputValues });
+        const { perf, ...pipelineData } = await this.pipelineHandler.runPipeline(pipelineName, { perf: perfDocument });
         return { perfDocument: perf, pipelineData }
     }
 
     async writePipeline({ bookCode, pipelineName, perfDocument }) {
         if (!pipelineName) return perfDocument;
         const pipelineData = this.getPipelineData(bookCode);
-        const inputValues = { perf: perfDocument, ...pipelineData };
-        const specSteps = this.pipelineHandler.getPipeline(pipelineName, inputValues);
-        const { perf } = await this.pipelineHandler.evaluateSteps({ specSteps, inputValues });
+        const { perf } = await this.pipelineHandler.runPipeline(pipelineName, { perf: perfDocument, ...pipelineData });
         return perf;
     }
 
@@ -158,7 +158,7 @@ class Epitelete {
         const { readPipeline } = options;
         return this.addDocument({
             bookCode,
-            ...await this.readPipeline({bookCode,pipelineName: readPipeline, perfDocument})
+            ...await this.readPipeline({ pipelineName: readPipeline, perfDocument })
         });
     }
 
@@ -186,7 +186,7 @@ class Epitelete {
         const { readPipeline } = options;
         return this.addDocument({
             bookCode,
-            ...await this.readPipeline({bookCode,pipelineName: readPipeline, perfDocument})
+            ...await this.readPipeline({ pipelineName: readPipeline, perfDocument })
         });
     }
 
@@ -207,7 +207,7 @@ class Epitelete {
         }
         const perfDocument = this.getDocument(bookCode);
         const { readPipeline } = options;
-        const { perfDocument: perf, pipelineData } = await this.readPipeline({ bookCode, pipelineName: readPipeline, perfDocument });
+        const { perfDocument: perf, pipelineData } = await this.readPipeline({ pipelineName: readPipeline, perfDocument });
         this.setPipelineData(bookCode, pipelineData);
         return perf;
     }
@@ -379,9 +379,9 @@ class Epitelete {
      */
     async readUsfm(bookCode) {
         const perf = await this.readPerf(bookCode);
-        const renderer = new ProskommaRenderFromJson({srcJson: perf, actions: transforms.toUsfmActions});
-        const output = {};
-        renderer.renderDocument({docId: "", config: {}, output});
+        if(this.pipelineHandler === null) this.instanciatePipelineHandler();
+        // console.log(this.pipelineHandler.transforms);
+        const output = await this.pipelineHandler.runPipeline("perf2usfmPipeline", { perf: perf });
         return output.usfm;
     }
 

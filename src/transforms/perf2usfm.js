@@ -45,6 +45,7 @@ const localToUsfmActions = {
                     workspace.usfmBits.push(`\\${oneifyTag(key)} ${value}\n`);
                 };
                 console.log("OK workspace.usfmBits[0] ==" + workspace.usfmBits[0]);
+                console.log("OK context.document.metadata.document ==" + context.document.metadata.document);
             }
         },
     ],
@@ -62,6 +63,7 @@ const localToUsfmActions = {
                 if (target) {
                     environment.context.renderer.renderSequenceId(environment, target);
                 }
+                console.log("a graft :", )
             }
         }
     ],

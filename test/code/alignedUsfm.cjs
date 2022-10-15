@@ -42,12 +42,9 @@ test(`readUsfm should read valid bookCode (${testGroup})`, async (t) => {
     const originalEpi = getEpi(originalUsfm);
     const newUsfm = await originalEpi.readUsfm(bookCode);
     t.ok(newUsfm, "Epitelete converts PERF to USFM.");
-
     const newEpi = getEpi(newUsfm);
-
     const originalPerf = await originalEpi.readPerf(bookCode);
     const newPerf = await newEpi.readPerf(bookCode);
-
     t.same(
       getPerfData(originalPerf),
       getPerfData(newPerf),

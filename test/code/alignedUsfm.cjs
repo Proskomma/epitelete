@@ -35,7 +35,7 @@ const getPerfData = (perf) => {
   return { sequences: _sequences, metadata };
 };
 
-test(`readUsfm should read valid bookCode (${testGroup})`, async (t) => {
+test(`readUsfm converts aligned PERF to USFM with no data loss (${testGroup})`, async (t) => {
   t.plan(2);
   try {
     const bookCode = "TIT";

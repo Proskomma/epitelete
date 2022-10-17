@@ -1,4 +1,4 @@
-import {ProskommaRenderFromJson} from 'proskomma-json-tools';
+import {PerfRenderFromJson} from 'proskomma-json-tools';
 import xre from "xregexp";
 const splitWords = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})');
 
@@ -166,7 +166,7 @@ const doSearch = function(workspace, config){
 }
 
 const wordSearchCode = function ({perf, searchString, ignoreCase = '1', logic = '', regex = '0', partialMatch = '0'}) {
-    const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordSearchActions});
+    const cl = new PerfRenderFromJson({srcJson: perf, actions: localWordSearchActions});
     const output = {};
     const ignoreCase_ = ignoreCase.trim() === '1';
     logic = logic.trim().substring(0,1).toUpperCase();

@@ -1,4 +1,4 @@
-import { ProskommaRenderFromJson } from 'proskomma-json-tools';
+import { PerfRenderFromJson } from 'proskomma-json-tools';
 import xre from "xregexp";
 
 const localVerseWordsActions = {
@@ -51,7 +51,7 @@ const localVerseWordsActions = {
 };
 
 const verseWordsCode = function ({ perf }) {
-    const cl = new ProskommaRenderFromJson(
+    const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
             actions: localVerseWordsActions

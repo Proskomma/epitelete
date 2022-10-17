@@ -1,4 +1,4 @@
-import {ProskommaRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
+import {PerfRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
 
 const localJustTheBibleActions = {
     startMilestone: [
@@ -56,17 +56,17 @@ const localJustTheBibleActions = {
             action: () => {
             }
         },
-    ],
+    ]
 };
 
 const justTheBibleCode = function ({perf}) {
-    const cl = new ProskommaRenderFromJson(
+    const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
             actions: mergeActions(
                 [
                     localJustTheBibleActions,
-                    transforms.identityActions
+                    transforms.perf2perf.identityActions
                 ]
             )
         }

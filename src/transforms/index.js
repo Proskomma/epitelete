@@ -4,6 +4,8 @@ import mergePerfText from "./mergePerfText";
 import verseWords from "./verseWords";
 import stripAlignment from "./stripAlignment";
 import mergeAlignment from "./mergeAlignment";
+import calculateUsfmChapterPositions from "./calculateUsfmChapterPositions";
+import perf2usfm from "./perf2usfm";
 
 export default {
     wordSearch,
@@ -11,5 +13,7 @@ export default {
     mergePerfText,
     verseWords,
     stripAlignment,
-    mergeAlignment
+    mergeAlignment,
+    calculateUsfmChapterPositions,
+    perf2usfm
 }

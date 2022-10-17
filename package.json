@@ -32,7 +32,8 @@
   "dependencies": {
     "@babel/core": "^7.19.0",
     "lodash": "4.17.21",
-    "proskomma-json-tools": "^0.5.7"
+    "proskomma-json-tools": "^0.5.7",
+    "pipeline-handler": "^1.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
@@ -44,7 +45,6 @@
     "jsdoc": "^3.6.10",
     "jsdoc-to-markdown": "^7.1.1",
     "path": "^0.12.7",
-    "pipeline-handler": "^1.1.0",
     "tap-summary": "^4.0.0",
     "tape": "^5.5.3",
     "uw-proskomma": "^0.8.5"

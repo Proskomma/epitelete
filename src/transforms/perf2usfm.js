@@ -10,7 +10,7 @@ const oneifyTag = t => {
 const buildMilestone = (atts, type) => {
     let str=`\\${type}-s |`;
     for (let [key, value] of Object.entries(atts)) {
-        if(key === "x-morph") {
+        if(key === "x-morph" && typeof value !== "string") {
             str = str + oneifyTag(key) + "=\"" + value.join(',') + "\" ";
         } else {
             str = str + oneifyTag(key) + "=\"" + value + "\" ";

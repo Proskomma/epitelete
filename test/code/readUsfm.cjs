@@ -56,7 +56,7 @@ const documentPerf = fse.readJsonSync(
   path.resolve(path.join(__dirname, "..", "test_data", "cecil.perf.json"))
 );
 
-test.only(`Test readUsfm with different perf (${testGroup})`, async (t) => {
+test(`Test readUsfm with different perf (${testGroup})`, async (t) => {
   t.plan(3);
   try {
     const docSetId = "DBL/eng_engWEBBE";

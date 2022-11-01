@@ -4,7 +4,7 @@ const fse = require("fs-extra");
 const { UWProskomma } = require("uw-proskomma");
 const Epitelete = require("../../src/index").default;
 
-const testGroup = "Read aligned doc";
+const testGroup = "alignedUsfm";
 
 const originalUsfm = fse
   .readFileSync(
@@ -53,5 +53,23 @@ test(`readUsfm converts aligned PERF to USFM with no data loss (${testGroup})`, 
   } catch (err) {
     console.log(err);
     t.fail("readUsfm throws on valid bookCode");
+  }
+});
+
+const alignedPerf = fse.readJsonSync(
+  path.resolve(path.join(__dirname, "..", "test_data", "TIT_dcs_eng-alignment_perf_v0.2.1.json"))
+);
+
+test(`reads usfm with special aligned perf (${testGroup})`, async (t) => {
+  t.plan(1);
+  try {
+    const bookCode = "TIT";
+    const epi = new Epitelete({ docSetId: "dcs/en_ult" });
+    await epi.sideloadPerf(bookCode,alignedPerf);
+    await epi.readUsfm(bookCode);
+    t.pass("reads usfm for start milestones with no atts");
+  } catch (err) {
+    console.log(err);
+    t.fail("readUsfm should not throw an error");
   }
 });

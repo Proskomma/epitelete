@@ -48,8 +48,7 @@
           "content": [
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             {
               "type": "mark",
@@ -3046,8 +3045,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -5218,8 +5216,7 @@
             "— ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -7276,8 +7273,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -9080,8 +9076,7 @@
             ".",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             }
           ]
         },
@@ -10652,8 +10647,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -13017,8 +13011,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -15205,8 +15198,7 @@
             ".",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             }
           ]
         },
@@ -16373,8 +16365,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -18779,8 +18770,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -20766,8 +20756,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -22564,8 +22553,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -25233,8 +25221,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -26373,8 +26360,7 @@
             ".",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             }
           ]
         },
@@ -27094,8 +27080,7 @@
             ".",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             }
           ]
         },
@@ -28432,8 +28417,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -29689,8 +29673,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -31729,8 +31712,7 @@
             ", ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -33163,8 +33145,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -34632,8 +34613,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -36563,8 +36543,7 @@
             ".",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             }
           ]
         },
@@ -38197,8 +38176,7 @@
             ". ",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             },
             " ",
             {
@@ -39142,8 +39120,7 @@
             ".",
             {
               "type": "start_milestone",
-              "subtype": "usfm:ts",
-              "atts": {}
+              "subtype": "usfm:ts"
             }
           ]
         },

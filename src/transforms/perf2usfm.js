@@ -7,7 +7,7 @@ const oneifyTag = t => {
     return t;
 }
 
-const buildMilestone = (atts, type) => {
+const buildMilestone = (atts = {}, type) => {
     let str=`\\${type}-s |`;
     for (let [key, value] of Object.entries(atts)) {
         if(key === "x-morph" && typeof value !== "string") {
@@ -19,7 +19,7 @@ const buildMilestone = (atts, type) => {
     return str + "\\*";
 }
 
-const buildEndWrapper = (atts, type, isnested = false) => {
+const buildEndWrapper = (atts = {}, type, isnested = false) => {
     let str="|";
     for (let [key, value] of Object.entries(atts)) {
         str = str + oneifyTag(key) + "=\"" + value + "\" ";

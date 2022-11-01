@@ -3,7 +3,7 @@ const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
 const Epitelete = require("../src/index").default;
 
-const args = process.argv.slice(3)
+const args = process.argv.slice(5)
 const pk = new UWProskomma();
 
 console.log("Loading source to proskomma...");

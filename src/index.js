@@ -17,7 +17,17 @@ class Epitelete {
      * @param {number} [args.options.historySize=10] - size of history buffer
      * @return {Epitelete} Epitelete instance
      */
-    constructor({ proskomma = null, docSetId, options = {} }) {
+    constructor({ proskomma = null, docSetId, options = {}, ...args }) {
+        const validateParams = (knownParams, params, errorMessage) => {
+            const _knownParams = new Set(knownParams);
+            const unknownParams = Object.keys(params).filter(p => !_knownParams.has(p));
+            if (unknownParams.length > 0) {
+                throw new Error(`${errorMessage}. Expected one of: [${[..._knownParams].join(', ')}], But got: [${unknownParams.join(', ')}]`);
+            } 
+        }
+        validateParams(["historySize"], options, "Unexpected option in constructor");
+        validateParams(["proskomma", "docSetId", "options"], args, "Unexpected arg in constructor");
+
         if (!docSetId) {
             throw new Error("docSetId is required");
         }
@@ -27,13 +37,6 @@ class Epitelete {
 
         if (proskomma && !gqlResult?.docSet) {
             throw new Error("Provided docSetId is not present in the Proskomma instance.");
-        }
-        const knownOptions = new Set([
-            'historySize',
-        ]);
-        const unknownOptions = Object.keys(options).filter(o => !knownOptions.has(o));
-        if (unknownOptions.length > 0) {
-            throw new Error(`Unknown options in constructor: ${unknownOptions.join(', ')}`);
         }
 
         const { hs, ...opt } = options;

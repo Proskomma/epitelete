@@ -56,10 +56,19 @@ class Epitelete {
         this.backend = proskomma ? 'proskomma' : 'standalone';
     }
 
+    /**
+     * Adds a new PipelineHandler instance to current Epitelete pipelineHandler prop.
+     * @private
+    */
     instanciatePipelineHandler() {
         this.pipelineHandler = new PipelineHandler(pipelines, transformActions, this.proskomma);
     }
 
+    /**
+     * Gets book data from history in current cursor position.
+     * @param {string} bookCode
+     * @private
+    */
     getBookData(bookCode) {
         const history = this.history[bookCode];
         return history?.stack[history.cursor];
@@ -111,26 +120,55 @@ class Epitelete {
         this.history = {};
     }
 
+    /**
+     * Sets pipeline data for book in current history position
+     * @return {void} void
+     */
     setPipelineData(bookCode, data) {
         const bookData = this.getBookData(bookCode);
         bookData.pipelineData = data;
     }
 
+    /**
+     * Gets pipeline data for book in current history position
+     * @param {string} bookCode
+     */
     getPipelineData(bookCode) {
         const bookData = this.getBookData(bookCode);
         return bookData?.pipelineData;
     }
 
+    /**
+     * Exposes Epitelete's internal pipelineHandler instance.
+     * @return {PipelineHandler} pipelineHandler instance
+     */
     getPipelineHandler() {
         return this.pipelineHandler;
     }
 
-    async readPipeline({ pipelineName, perfDocument }) {
-        if (!pipelineName) return { perfDocument };
+    /**
+     * Traverses given PERF document through declared pipeline.
+     * @param {string} bookCode - The history bookCode in which to store pipelineData
+     * @param {string} pipelineName - The name of the pipeline to be traversed
+     * @param {perfDocument} perfDocument - PERF document to run through the pipeline
+     * @return {Promise<perfDocument>} - Transformed PERF document
+     * @private
+     */
+    async readPipeline({ bookCode, pipelineName, perfDocument }) {
+        if (!pipelineName) return perfDocument;
         const { perf, ...pipelineData } = await this.pipelineHandler.runPipeline(pipelineName, { perf: perfDocument });
-        return { perfDocument: perf, pipelineData }
+        this.setPipelineData(bookCode, pipelineData);
+        return perf
     }
 
+    /**
+     * Traverses given PERF document through declared pipeline.
+     * @param {string} bookCode - The history bookCode from which to get pipelineData
+     * @param {string} pipelineName - The name of the pipeline to be traversed
+     * @param {perfDocument} perfDocument - PERF document to run through the pipeline
+     * @return {Promise<perfDocument>} - Transformed PERF document
+     * @private
+     */
     async writePipeline({ bookCode, pipelineName, perfDocument }) {
         if (!pipelineName) return perfDocument;
         const pipelineData = this.getPipelineData(bookCode);
@@ -139,9 +177,32 @@ class Epitelete {
     }
 
     /**
+     * Adds given PERF document to history and returns the PERF passed through the specified pipeline.
+     * @async
+     * @param {string} bookCode
+     * @param {perfDocument} perfDocument - PERF document
+     * @param {object} [options]
+     * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
+     * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
+     * @return {Promise<perfDocument>} fetched PERF document
+     * @private
+     */
+    async loadPerf(bookCode, perfDocument, options) {
+        const { writePipeline, readPipeline } = options;
+        const savedPerf = this.addDocument({
+            bookCode,
+            perfDocument: await this.writePipeline({ pipelineName: writePipeline, perfDocument })
+        });
+        return await this.readPipeline({ bookCode, pipelineName: readPipeline, perfDocument: savedPerf });
+    }
+
+    /**
      * Loads given perf into memory
      * @param {string} bookCode
      * @param {perfDocument} perfDocument - PERF document
+     * @param {object} [options]
+     * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
+     * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
      * @return {Promise<perfDocument>} same sideloaded PERF document
      */
     async sideloadPerf(bookCode, perfDocument, options = {}) {
@@ -157,18 +218,16 @@ class Epitelete {
          if (!validatorResult.isValid) {
             throw `perfJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
         }
-
-        const { readPipeline } = options;
-        return this.addDocument({
-            bookCode,
-            ...await this.readPipeline({ pipelineName: readPipeline, perfDocument })
-        });
+        return await this.loadPerf(bookCode, perfDocument, options);
     }
 
     /**
      * Fetches document from proskomma instance
      * @async
      * @param {string} bookCode
+     * @param {object} [options]
+     * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
+     * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
      * @return {Promise<perfDocument>} fetched PERF document
      */
     async fetchPerf(bookCode, options = {}) {
@@ -186,11 +245,7 @@ class Epitelete {
             throw new Error(`No document with bookCode="${bookCode}" found.`);
         }
         const perfDocument = JSON.parse(queryResult);
-        const { readPipeline } = options;
-        return this.addDocument({
-            bookCode,
-            ...await this.readPipeline({ pipelineName: readPipeline, perfDocument })
-        });
+        return await this.loadPerf(bookCode, perfDocument, options);
     }
 
     /**
@@ -198,7 +253,7 @@ class Epitelete {
      * @async
      * @param {string} bookCode
      * @param {object} [options]
-     * @param {string} [options.readPipeline] - pipeline name
+     * @param {string} [options.readPipeline] - name of pipeline to be run through after read.
      * @return {Promise<perfDocument>} found or fetched PERF document
      */
     async readPerf(bookCode, options = {}) {
@@ -210,9 +265,7 @@ class Epitelete {
         }
         const perfDocument = this.getDocument(bookCode);
         const { readPipeline } = options;
-        const { perfDocument: perf, pipelineData } = await this.readPipeline({ pipelineName: readPipeline, perfDocument });
-        this.setPipelineData(bookCode, pipelineData);
-        return perf;
+        return await this.readPipeline({ bookCode, pipelineName: readPipeline, perfDocument });
     }
 
     /**
@@ -220,6 +273,9 @@ class Epitelete {
      * @param {string} bookCode
      * @param {number} sequenceId - id of modified sequence
      * @param {perfSequence} perfSequence - modified sequence
+     * @param {object} [options]
+     * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
+     * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
      * @return {Promise<perfDocument>} modified PERF document
      */
     async writePerf(bookCode, sequenceId, perfSequence, options = {}) {
@@ -251,7 +307,7 @@ class Epitelete {
         if (history.stack.length > this.options.historySize)
             history.stack.pop();
 
-        return _.cloneDeep(newPerfDoc);
+        return this.readPerf(bookCode, options);
     }
 
     /**
@@ -349,6 +405,8 @@ class Epitelete {
     /**
      * Gets previous document from history
      * @param {string} bookCode
+     * @param {object} [options]
+     * @param {string} [options.readPipeline] - name of pipeline to be run through after read from memory.
      * @return {Promise<?perfDocument>} PERF document or null if can not undo
      */
     async undoPerf(bookCode, options) {
@@ -363,6 +421,8 @@ class Epitelete {
     /**
      * Gets next document from history
      * @param {string} bookCode
+     * @param {object} [options]
+     * @param {string} [options.readPipeline] - name of pipeline to be run through after read from memory.
      * @return {Promise<?perfDocument>} PERF document or null if can not redo
      */
     async redoPerf(bookCode, options){
@@ -378,12 +438,13 @@ class Epitelete {
      * Gets document from memory and converts it to usfm
      * @async
      * @param {string} bookCode
+     * @param {object} [options]
+     * @param {string} [options.readPipeline] - name of pipeline to be run through before usfm conversion.
      * @return {Promise<string>} converted usfm
      */
-    async readUsfm(bookCode) {
-        const perf = await this.readPerf(bookCode);
+    async readUsfm(bookCode, options) {
+        const perf = await this.readPerf(bookCode, options);
         if(this.pipelineHandler === null) this.instanciatePipelineHandler();
-        // console.log(this.pipelineHandler.transforms);
         const output = await this.pipelineHandler.runPipeline("perf2usfmPipeline", { perf: perf });
         return output.usfm;
     }
@@ -426,42 +487,59 @@ class Epitelete {
 export default Epitelete;
 
 /**
- * @typedef {object} contentElementPerf
- * @property {string} type
- * @property {string} [number]
- * @property {"verses"|"xref"|"footnote"|"noteCaller"} [subtype]
- * @property {string} [target]
- * @property {number} [nBlocks]
- * @property {string} [previewText]
+ * A content element, ie some form of (possibly nested) markup
+ * @typedef {object} contentElementPerf Element
+ * @property {"mark"|"wrapper"|"start_milestone"|"end_milestone"|"graft"} type The type of element
+ * @property {string} [subtype] The subtype of the element, which is context-dependent
+ * @property {object} [atts] An object containing USFM attributes or subtype-specific additional information (such as the number of a verse or chapter). The value may be a boolean, a string or an array of strings
+ * @property {string} [target] The id of the sequence containing graft content
+ * @property {perfSequence} [sequence] The sequence containing graft content
+ * @property {string} [preview_text] An optional field to provide some kind of printable label for a graft
+ * @property {boolean} [new] If present and true, is interpreted as a request for the server to create a new graft
+ * @property {contentElementPerf} [content] Nested content within the content element
+ * @property {contentElementPerf} [meta_content] Non-Scripture content related to the content element, such as checking data or related resources
  */
 
 /**
+ * A block, which represents either a paragraph of text or a graft
  * @typedef {object} blockOrGraftPerf
- * @property {"block"|"graft"} type
- * @property {string} subtype
- * @property {string} [target]
- * @property {number} [nBlocks]
- * @property {string} [previewText]
- * @property {string} [firstBlockScope]
- * @property {Array<string|contentElementPerf>} [content]
+ * @property {"paragraph"|"graft"} type The type of block
+ * @property {string} [subtype] A type-specific subtype
+ * @property {string} [target] The id of the sequence containing graft content
+ * @property {perfSequence} [sequence] The sequence containing graft content
+ * @property {string} [preview_text] An optional field to provide some kind of printable label for a graft
+ * @property {boolean} [new] If present and true, is interpreted as a request for the server to create a new graft
+ * @property {object} [atts] An object containing USFM attributes or subtype-specific additional information (such as the number of a verse or chapter). The value may be a boolean, a string or an array of strings
+ * @property {Array<string|contentElementPerf>} [content] The content of the block
  */
 
 /**
+ * A sequence contains a 'flow' of one or more blocks
  * @typedef {object} perfSequence
- * @property {"main"|"introduction"|"introTitle"|"IntroEndTitle"|"title"|"endTitle"|"heading"|"remark"|"sidebar"|"table"|"tree"|"kv"|"footnote"|"noteCaller"|"xref"|"pubNumber"|"altNumber"|"esbCat"|"fig"|"temp"} type
- * @property {number} [nBlocks]
- * @property {string} [firstBlockScope]
- * @property {string} [previewText]
- * @property {boolean} selected
- * @property {blockOrGraftPerf[]} [blocks]
+ * @property {string} type The type of sequence
+ * @property {string} [preview_text] An optional field to provide some kind of printable label
+ * @property {blockOrGraftPerf[]} [blocks] The blocks that, together, represent the 'flow' of the sequence
  */
 
 /**
+ * A document, typically corresponding to a single USFM or USX book
  * @typedef {object} perfDocument
- * @property {object} headers
- * @property {array} tags
- * @property {Object<string,perfSequence>} sequences
- * @property {string} mainSequence
+ * @property {object} schema
+ * @property {"flat"|"nested"} schema.structure The basic 'shape' of the content
+ * @property {string} schema.structure_version the semantic version of the structure schema
+ * @property {array} schema.constraints
+ * @property {object} metadata Metadata describing the document and the translation it belongs to
+ * @property {object} [metadata.translation] Metadata concerning the translation to which the document belongs
+ * @property {array} [metadata.translation.tags] Tags attached to the translation
+ * @property {object} [metadata.translation.properties] Key/value properties attached to the translation
+ * @property {object} [metadata.translation.selectors] Proskomma selectors for the translation that, together, provide a primary key in the translation store
+ * @property {object} [metadata.document] Metadata concerning the document itself
+ * @property {array} [metadata.document.tags] Tags attached to the document
+ * @property {object} [metadata.document.properties] Key/value properties attached to the document
+ * @property {string} [metadata.document.chapters]
+ * @property {Object<string,perfSequence>} [sequences]
+ * @property {perfSequence} [sequence]
+ * @property {string} [main_sequence_id]
  */
 
 /**
@@ -488,6 +566,6 @@ export default Epitelete;
 
 /**
  * PipelineHandlers instance
- * @typedef PipelineHandler
+ * @typedef {import('pipeline-handler')} PipelineHandler
  * @see {@link https://github.com/DanielC-N/pipelineHandler}
  */

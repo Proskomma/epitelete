@@ -139,8 +139,8 @@ class Epitelete {
     setPipelineData(bookCode, data) {
         const { stack, cursor } = this.getBookHistory(bookCode);
         stack[cursor] ??= {};
-        // const currentData = stack[cursor].pipelineData;
-        stack[cursor].pipelineData = data ?? undefined;
+        const currentData = stack[cursor].pipelineData;
+        if (data) stack[cursor].pipelineData = { ...currentData, ...data };
     }
 
     /**
@@ -169,12 +169,17 @@ class Epitelete {
      * @private
      */
     async runPipeline({ bookCode, pipelineName, perfDocument }) {
-        if (!pipelineName) return perfDocument;
-        const data = this.getPipelineData(bookCode);
+        if (!pipelineName) return { perf: perfDocument };
+        const storedData = this.getPipelineData(bookCode);
+        const [_inputs] = this.pipelineHandler.pipelines[pipelineName];
+        const { inputs } = _inputs;
+        const data = storedData ? Object.keys(storedData).reduce((data, inputKey) => {
+            if (inputKey in inputs) data[inputKey] = storedData[inputKey];
+            return data;
+        }, {}) : undefined;
         const pipelineArgs = { perf: perfDocument, ...data };
         const { perf, ...pipelineData } = await this.pipelineHandler.runPipeline(pipelineName, pipelineArgs);
-        this.setPipelineData(bookCode, pipelineData);
-        return perf
+        return { perf, pipelineData };
     }
 
     /**
@@ -190,12 +195,15 @@ class Epitelete {
      */
     async loadPerf(bookCode, perfDocument, options) {
         const { writePipeline, readPipeline } = options;
-        const transformedPerf = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });
+        const {perf:writePerf, pipelineData: writePipelineData} = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });
+        this.setPipelineData(bookCode, writePipelineData);
         const savedPerf = this.addDocument({
             bookCode,
-            perfDocument: transformedPerf
+            perfDocument: writePerf
         });
-        return await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument: savedPerf });
+        const {perf:readPerf, pipelineData: readPipelineData} = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument: savedPerf });
+        this.setPipelineData(bookCode, readPipelineData);
+        return  readPerf
     }
 
     /**
@@ -267,7 +275,9 @@ class Epitelete {
         }
         const perfDocument = this.getDocument(bookCode);
         const { readPipeline } = options;
-        return await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument });
+        const { perf, pipelineData } = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument });
+        this.setPipelineData(bookCode, pipelineData);
+        return perf;
     }
 
     /**
@@ -299,12 +309,13 @@ class Epitelete {
         perfDocument.sequences[sequenceId] = _.cloneDeep(perfSequence);
 
         const { writePipeline } = options;
-        const newPerfDoc = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });
+        const { perf:newPerfDoc, pipelineData } = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });
 
         const history = this.history[bookCode];
         history.stack = history.stack.slice(history.cursor);
         history.stack.unshift({ perfDocument: newPerfDoc });
         history.cursor = 0;
+        this.setPipelineData(bookCode, pipelineData);
 
         if (history.stack.length > this.options.historySize)
             history.stack.pop();

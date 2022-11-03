@@ -13,16 +13,20 @@ proskomma.loadSuccinctDocSet(succinctJson);
 
 const alignedPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "TIT_dcs_eng-alignment_perf_v0.2.1.json")));
 
-test.only(
+test(
     `read follows correct pipeline flow. (${testGroup})`,
     async t => {
         const bookCode = "TIT";
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({ docSetId });
-        const perf = await epitelete.sideloadPerf(bookCode, alignedPerf, { writePipeline: "stripAlignment", readPipeline: "mergeAlignment" });
-        t.ok(!!perf);
+      const perf = await epitelete.sideloadPerf(bookCode, alignedPerf, { writePipeline: "stripAlignment", readPipeline: "mergeAlignment" });
+      t.ok(!!perf);
+      t.ok(docHasMarkup({ doc: perf, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
+        t.ok(docHasMarkup({ doc: perf, type: "start_milestone", subtype: "usfm:zaln" }), "perf has alignment");
         const perf2 = await epitelete.writePerf(bookCode, perf.main_sequence_id, perf.sequences[perf.main_sequence_id] ,{writePipeline: "stripAlignment", readPipeline: "mergeAlignment" });
-        t.ok(!!perf2);
+      t.ok(!!perf2);
+      t.ok(docHasMarkup({ doc: perf2, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
+        t.ok(docHasMarkup({ doc: perf2, type: "start_milestone", subtype: "usfm:zaln" }), "perf has alignment");
         t.end();
     }
 )

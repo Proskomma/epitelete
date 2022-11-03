@@ -171,9 +171,9 @@ class Epitelete {
     async runPipeline({ bookCode, pipelineName, perfDocument }) {
         if (!pipelineName) return perfDocument;
         const data = this.getPipelineData(bookCode);
-        const pipelineArgs = { perf: perfDocument, ..._.cloneDeep(data) };
+        const pipelineArgs = { perf: perfDocument, ...data };
         const { perf, ...pipelineData } = await this.pipelineHandler.runPipeline(pipelineName, pipelineArgs);
-        this.setPipelineData(bookCode, _.cloneDeep(pipelineData));
+        this.setPipelineData(bookCode, pipelineData);
         return perf
     }
 
@@ -309,7 +309,7 @@ class Epitelete {
         if (history.stack.length > this.options.historySize)
             history.stack.pop();
 
-        return this.readPerf(bookCode, options);
+        return await this.readPerf(bookCode, options);
     }
 
     /**

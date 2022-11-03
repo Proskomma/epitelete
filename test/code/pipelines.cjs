@@ -19,9 +19,10 @@ test.only(
         const bookCode = "TIT";
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({ docSetId });
-        const perf2 = await epitelete.sideloadPerf(bookCode, alignedPerf, { writePipeline: "stripAlignment", readPipeline: "mergeAlignment" });
-        const perf = await epitelete.writePerf(bookCode, perf2.main_sequence_id, perf2.sequences[perf2.main_sequence_id] ,{writePipeline: "mergeAlignment" });
+        const perf = await epitelete.sideloadPerf(bookCode, alignedPerf, { writePipeline: "stripAlignment", readPipeline: "mergeAlignment" });
         t.ok(!!perf);
+        const perf2 = await epitelete.writePerf(bookCode, perf.main_sequence_id, perf.sequences[perf.main_sequence_id] ,{writePipeline: "stripAlignment", readPipeline: "mergeAlignment" });
+        t.ok(!!perf2);
         t.end();
     }
 )

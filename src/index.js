@@ -247,6 +247,9 @@ class Epitelete {
         if (!bookCode) {
             throw new Error("fetchPerf requires 1 argument (bookCode)");
         }
+         if (bookCode.length > 3 || !/^[A-Z0-9]{3}$/.test(bookCode)) {
+            throw new Error(`Invalid bookCode: "${bookCode}". Only three characters (uppercase letters [A-Z] or numbers [0-9]) allowed.`);
+        }
         const query = `{docSet(id: "${this.docSetId}") { document(bookCode: "${bookCode}") { perf } } }`;
         const { data } = this.proskomma.gqlQuerySync(query);
         const queryResult = data.docSet.document.perf;

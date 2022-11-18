@@ -32,7 +32,7 @@
   "dependencies": {
     "@babel/core": "^7.19.0",
     "lodash": "4.17.21",
-    "pipeline-handler": "^1.1.0",
+    "pipeline-handler": "^1.1.1",
     "proskomma-json-tools": "^0.5.7"
   },
   "devDependencies": {

@@ -151,7 +151,7 @@ class Epitelete {
         }
 
         const validatorResult = this.validator.validate('constraint','perfDocument','0.2.1', perfDocument);
-         if (!validatorResult.isValid) {
+        if (!validatorResult.isValid) {
             throw `perfJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
         }
 

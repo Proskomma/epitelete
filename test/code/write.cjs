@@ -152,7 +152,7 @@ test(
         const docSetId = "DCS/en_ult";
         const epitelete = new Epitelete({ docSetId });
         const bookCode = "TIT";
-        const readOptions = { readPipeline: "stripAlignment" };
+        const readOptions = { readPipeline: "stripAlignmentPipeline" };
         const writeOptions = { writePipeline: "mergeAlignmentPipeline" };
 
         const unaligned = await epitelete.sideloadPerf(bookCode, alignedPerf, readOptions);

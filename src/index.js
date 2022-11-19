@@ -1,7 +1,7 @@
-import {Validator, PerfRenderFromJson, transforms} from 'proskomma-json-tools';
+import { Validator } from 'proskomma-json-tools';
 import pipelines from './pipelines';
 import transformActions from './transforms';
-import PipelineHandler from 'pipeline-handler';
+import { PipelineHandler } from 'pipeline-handler';
 const _ = require("lodash");
 
 /**
@@ -45,7 +45,7 @@ class Epitelete {
         };
 
         this.proskomma = proskomma;
-        this.pipelineHandler = new PipelineHandler(pipelines, transformActions, proskomma);
+        this.pipelineHandler = new PipelineHandler({pipelines: pipelines ?? null, transforms: transformActions ?? null, proskomma});
         this.docSetId = docSetId;
         /** @type history */
         this.history = {};
@@ -54,7 +54,7 @@ class Epitelete {
     }
 
     instanciatePipelineHandler() {
-        this.pipelineHandler = new PipelineHandler(pipelines, transformActions, this.proskomma);
+        this.pipelineHandler = new PipelineHandler({pipelines: pipelines ?? null, transforms: transformActions ?? null, proskomma:this.proskomma});
     }
 
     getBookData(bookCode) {

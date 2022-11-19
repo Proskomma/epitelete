@@ -2,7 +2,7 @@ const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
-const Epitelete = require("../../src/index").default;
+const Epitelete = require("../../dist/index").default;
 const _ = require("lodash");
 
 const testGroup = "Write";
@@ -153,7 +153,7 @@ test(
         const epitelete = new Epitelete({ docSetId });
         const bookCode = "TIT";
         const readOptions = { readPipeline: "stripAlignment" };
-        const writeOptions = { writePipeline: "mergeAlignment" };
+        const writeOptions = { writePipeline: "mergeAlignmentPipeline" };
 
         const unaligned = await epitelete.sideloadPerf(bookCode, alignedPerf, readOptions);
 
@@ -164,7 +164,7 @@ test(
 
         const merged = await epitelete.writePerf(bookCode, sequenceId, sequence, writeOptions);
 
-        t.deepEqual(alignedPerf, merged, "writePipeline mergeAlignment roundtripped");
+        t.deepEqual(alignedPerf, merged, "writePipeline mergeAlignmentPipeline roundtripped");
 
         const undone = await epitelete.undoPerf(bookCode, readOptions);
 

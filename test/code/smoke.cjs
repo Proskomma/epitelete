@@ -18,10 +18,11 @@ proskomma.loadSuccinctDocSet(succinctJson);
 
 test(`Instantiate Epitelete (${testGroup})`, async function (t) {
   try {
-    t.plan(4);
+    t.plan(5);
     t.doesNotThrow(
       () => new Epitelete({ proskomma, docSetId: "DBL/eng_engWEBBE" })
     );
+    t.throws(() => new Epitelete({ banana: "split", docSetId: "DBL/eng_engWEBBE"  }), /But got: \[banana\]/, "no unknown args");
     t.throws(() => new Epitelete({ proskomma }), /docSetId is required/);
     t.throws(() => new Epitelete({}), /docSetId is required/);
     t.throws(
@@ -35,7 +36,7 @@ test(`Instantiate Epitelete (${testGroup})`, async function (t) {
 
 test(`Instantiate Epitelete with options (${testGroup})`, async function (t) {
   try {
-    t.plan(3);
+    t.plan(2);
     t.doesNotThrow(
       () =>
         new Epitelete({ proskomma, docSetId: "DBL/eng_engWEBBE", options: {} })
@@ -48,7 +49,6 @@ test(`Instantiate Epitelete with options (${testGroup})`, async function (t) {
           options: { historySize: 10 },
         })
     );
-    t.throws(() => new Epitelete({ banana: "split" }), /docSetId is required/);
   } catch (err) {
     t.error(err);
   }

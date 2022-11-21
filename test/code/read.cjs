@@ -25,16 +25,57 @@ test(
 test(
     `readPerf should not read wrong bookCode (${testGroup})`,
     async t => {
-        t.plan(1);
-        try {
-            const docSetId = "DBL/eng_engWEBBE";
-            const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LU";
-            await epitelete.readPerf(bookCode);
+        t.plan(6);
+        const docSetId = "DBL/eng_engWEBBE";
+        const epitelete = new Epitelete({ proskomma, docSetId });
+
+        await epitelete.readPerf("LU")
+        .then(() => {
             t.fail("readPerf with bad bookCode should throw but didn't");
-        } catch (err) {
-            t.pass("readPerf throws on bad bookCode");
-        }
+        })
+        .catch((err) => {
+            t.match(err.toString(), /Only three characters/, "Should throw meaningful error on invalid code.")
+        });
+
+        await epitelete.readPerf("TITUS")
+        .then(() => {
+            t.fail("readPerf with bad bookCode should throw but didn't");
+        })
+        .catch((err) => {
+            t.match(err.toString(), /Only three characters/, "Should throw meaningful error on invalid code.")
+        });
+
+        await epitelete.readPerf("tit")
+        .then(() => {
+            t.fail("readPerf with bad bookCode should throw but didn't");
+        })
+        .catch((err) => {
+            t.match(err.toString(), /uppercase letters/, "Should throw meaningful error on invalid code.")
+        });
+
+        await epitelete.readPerf("T1_")
+        .then(() => {
+            t.fail("readPerf with bad bookCode should throw but didn't");
+        })
+        .catch((err) => {
+            t.match(err.toString(), /Only.+uppercase.+letters.+allowed/, "Should throw meaningful error on invalid code.")
+        });
+
+        await epitelete.readPerf("T1_")
+        .then(() => {
+            t.fail("readPerf with bad bookCode should throw but didn't");
+        })
+        .catch((err) => {
+            t.match(err.toString(), /Only.+uppercase.+letters.+or.+numbers.+allowed/, "Should throw meaningful error on invalid code.")
+        });
+
+        await epitelete.readPerf("3JN")
+        .then(() => {
+            t.pass("doesn't throw on valid code.");
+        })
+        .catch((err) => {
+            t.fail("Shouldn't throw on valid code.")
+        });
     }
 )
 

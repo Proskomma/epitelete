@@ -224,7 +224,7 @@ class Epitelete {
             throw "sideloadPerf requires 2 arguments (bookCode, perfDocument)";
         }
 
-        const validatorResult = this.validator.validate('constraint','perfDocument','0.2.1', perfDocument);
+        const validatorResult = this.validator.validate('constraint','perfDocument','0.3.0', perfDocument);
         if (!validatorResult.isValid) {
             throw `perfJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
         }
@@ -303,7 +303,7 @@ class Epitelete {
         if (!perfDocument.sequences[sequenceId]) {
             throw `PERF sequence id not found: ${bookCode}, ${sequenceId}`;
         }
-        const validatorResult = this.validator.validate('constraint','perfSequence','0.2.1',perfSequence);
+        const validatorResult = this.validator.validate('constraint','perfSequence','0.3.0',perfSequence);
 
         if (!validatorResult.isValid) {
             throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;

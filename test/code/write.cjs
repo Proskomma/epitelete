@@ -3,7 +3,7 @@ const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
 const Epitelete = require("../../dist/index").default;
-const _ = require("lodash");
+import deepCopy from 'rfdc/default';
 
 const testGroup = "Write";
 
@@ -66,7 +66,7 @@ test(
             const epitelete = new Epitelete({ proskomma, docSetId });
             const bookCode = "LUK";
             const doc = await epitelete.readPerf(bookCode);
-            const oldDoc = _.cloneDeep(doc);
+            const oldDoc = deepCopy(doc);
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = doc.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
@@ -101,8 +101,8 @@ test(
             t.fail('Did not throw!');
         } catch (err) {
             if (err.toString() !== 'document not found: LK') {
-                throw err
                 t.fail(err)
+                throw err
             }
             else{
                 t.pass('Success')

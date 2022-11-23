@@ -33,7 +33,8 @@
     "@babel/core": "^7.19.0",
     "lodash": "4.17.21",
     "pipeline-handler": "^2.2.0",
-    "proskomma-json-tools": "^0.5.9"
+    "proskomma-json-tools": "^0.5.9",
+    "rfdc": "^1.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",

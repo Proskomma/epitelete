@@ -3,7 +3,7 @@ const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
 const Epitelete = require("../../dist/index").default;
-const _ = require("lodash");
+import deepCopy from 'rfdc/default';
 
 const testGroup = "Check";
 

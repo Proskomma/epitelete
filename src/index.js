@@ -2,7 +2,8 @@ import { Validator } from 'proskomma-json-tools';
 import pipelines from './pipelines';
 import transformActions from './transforms';
 import { PipelineHandler } from 'pipeline-handler';
-const _ = require("lodash");
+import deepCopy from 'rfdc/default';
+import { validateParams } from './utils';
 
 /**
  * PERF Middleware for Editors in the Proskomma Ecosystem
@@ -18,13 +19,6 @@ class Epitelete {
      * @return {Epitelete} Epitelete instance
      */
     constructor({ proskomma = null, docSetId, options = {}, ...args }) {
-        const validateParams = (knownParams, params, errorMessage) => {
-            const _knownParams = new Set(knownParams);
-            const unknownParams = Object.keys(params).filter(p => !_knownParams.has(p));
-            if (unknownParams.length > 0) {
-                throw new Error(`${errorMessage}. Expected one of: [${[..._knownParams].join(', ')}], But got: [${unknownParams.join(', ')}]`);
-            } 
-        }
         validateParams(["historySize"], options, "Unexpected option in constructor");
         validateParams(["proskomma", "docSetId", "options"], args, "Unexpected arg in constructor");
 
@@ -78,11 +72,14 @@ class Epitelete {
      * Gets a copy of a document from history
      * @private
      * @param {string} bookCode
+     * @param {boolean} [clone=true] true if document should be cloned
      * @return {perfDocument} matching PERF document
      */
-    getDocument(bookCode) {
+    getDocument(bookCode, clone = true) {
         const bookData = this.getBookData(bookCode);
-        return _.cloneDeep(bookData?.perfDocument);
+        const perfDocument = bookData?.perfDocument;
+        if (!perfDocument) return;
+        return clone ? deepCopy(perfDocument) : {...perfDocument}
     }
 
     /**
@@ -122,13 +119,15 @@ class Epitelete {
      * Adds new document to history (replaces any doc with same bookCode already in history)
      * @param {string} bookCode
      * @param {perfDocument} doc
+     * @param {boolean} [clone=true] true if document should be cloned
      * @return {perfDocument} same passed PERF document
      * @private
      */
-    addDocument({ bookCode, perfDocument }) {
+
+    addDocument({ bookCode, perfDocument, clone = true }) {
         const { stack, cursor } = this.getBookHistory(bookCode);
         stack[cursor] ??= {};
-        stack[cursor].perfDocument = _.cloneDeep(perfDocument);
+        stack[cursor].perfDocument = clone ? deepCopy(perfDocument) : perfDocument;
         return perfDocument
     }
 
@@ -190,16 +189,20 @@ class Epitelete {
      * @param {object} [options]
      * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
      * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
+     * @param {boolean} [options.safe = true] - turns safe mode
+     * 
      * @return {Promise<perfDocument>} fetched PERF document
      * @private
      */
     async loadPerf(bookCode, perfDocument, options) {
+        const isSafe = options.safe ?? false;
         const { writePipeline, readPipeline } = options;
         const {perf:writePerf, pipelineData: writePipelineData} = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });
         this.setPipelineData(bookCode, writePipelineData);
         const savedPerf = this.addDocument({
             bookCode,
-            perfDocument: writePerf
+            perfDocument: writePerf,
+            clone: isSafe
         });
         const {perf:readPerf, pipelineData: readPipelineData} = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument: savedPerf });
         this.setPipelineData(bookCode, readPipelineData);
@@ -213,9 +216,12 @@ class Epitelete {
      * @param {object} [options]
      * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
      * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
+     * @param {boolean} [options.safe = true] - turns safe mode
      * @return {Promise<perfDocument>} same sideloaded PERF document
      */
     async sideloadPerf(bookCode, perfDocument, options = {}) {
+        validateParams(["writePipeline", "readPipeline", "safe"], options, "Unexpected option in sideloadPerf");
+        
         if (this.backend === "proskomma") {
             throw "Can't call sideloadPerf in proskomma mode";
         }
@@ -238,9 +244,12 @@ class Epitelete {
      * @param {object} [options]
      * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
      * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
+     * @param {boolean} [options.safe = true] - turns safe mode
      * @return {Promise<perfDocument>} fetched PERF document
      */
     async fetchPerf(bookCode, options = {}) {
+        validateParams(["writePipeline","readPipeline","safe"], options, "Unexpected option in fetchPerf");
+
         if (this.backend === "standalone") {
             throw "Can't call fetchPerf in standalone mode";
         }
@@ -267,16 +276,20 @@ class Epitelete {
      * @param {string} bookCode
      * @param {object} [options]
      * @param {string} [options.readPipeline] - name of pipeline to be run through after read.
+     * @param {boolean} [options.safe = true] - turns safe mode
      * @return {Promise<perfDocument>} found or fetched PERF document
      */
     async readPerf(bookCode, options = {}) {
+        validateParams(["readPipeline","safe"], options, "Unexpected option in readPerf");
+        const isSafe = options.safe ?? false;
+
         if (!this.history[bookCode] && this.backend === "proskomma") {
             return this.fetchPerf(bookCode, options);
         }
         if (!this.history[bookCode] && this.backend === "standalone") {
             throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
         }
-        const perfDocument = this.getDocument(bookCode);
+        const perfDocument = this.getDocument(bookCode, isSafe);
         const { readPipeline } = options;
         const { perf, pipelineData } = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument });
         this.setPipelineData(bookCode, pipelineData);
@@ -291,10 +304,14 @@ class Epitelete {
      * @param {object} [options]
      * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
      * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
+     * @param {boolean} [options.safe = true] - turns safe mode
      * @return {Promise<perfDocument>} modified PERF document
      */
     async writePerf(bookCode, sequenceId, perfSequence, options = {}) {
-        const perfDocument = this.getDocument(bookCode);
+        validateParams(["writePipeline","readPipeline","safe"], options, "Unexpected option in writePerf");
+        const isSafe = options.safe ?? false;
+
+        const perfDocument = this.getDocument(bookCode, false);
 
         if (!perfDocument) {
             throw `document not found: ${bookCode}`;
@@ -308,8 +325,11 @@ class Epitelete {
         if (!validatorResult.isValid) {
             throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;
         }
-
-        perfDocument.sequences[sequenceId] = _.cloneDeep(perfSequence);
+        const sequences = {
+            ...perfDocument.sequences,
+            [sequenceId]: (isSafe ? deepCopy(perfSequence) : perfSequence)
+        }
+        perfDocument.sequences = sequences;
 
         const { writePipeline } = options;
         const { perf:newPerfDoc, pipelineData } = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });

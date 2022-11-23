@@ -3,7 +3,7 @@ const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
 const Epitelete = require("../../dist/index").default;
-const _ = require("lodash");
+import deepCopy from 'rfdc/default';
 
 
 const testGroup = "Redo";
@@ -57,8 +57,8 @@ test(
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.getDocuments();
-            const _doc = _.cloneDeep(documents[bookCode]);
-            const lukeDoc = _.cloneDeep(_doc);
+            const _doc = deepCopy(documents[bookCode]);
+            const lukeDoc = deepCopy(_doc);
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
@@ -88,8 +88,8 @@ test(
             const bookCode = "LUK";
             const perf = await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();
-            const _doc = _.cloneDeep(documents[bookCode]);
-            const lukeDoc = _.cloneDeep(_doc);
+            const _doc = deepCopy(documents[bookCode]);
+            const lukeDoc = deepCopy(_doc);
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
@@ -176,8 +176,8 @@ test(
             const bookCode = "LUK";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.getDocuments();
-            const _doc = _.cloneDeep(documents[bookCode]);
-            const lukeDoc = _.cloneDeep(_doc);
+            const _doc = deepCopy(documents[bookCode]);
+            const lukeDoc = deepCopy(_doc);
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
@@ -208,8 +208,8 @@ test(
             const perf = await epitelete.readPerf(bookCode);
             const perfKeys = Object.keys(perf.sequences);
             const documents = epitelete.getDocuments();
-            const _doc = _.cloneDeep(documents[bookCode]);
-            const lukeDoc = _.cloneDeep(_doc);
+            const _doc = deepCopy(documents[bookCode]);
+            const lukeDoc = deepCopy(_doc);
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];

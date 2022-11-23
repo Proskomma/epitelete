@@ -19,12 +19,15 @@
 <dd></dd>
 <dt><a href="#bookCode">bookCode</a> : <code>string</code></dt>
 <dd></dd>
-<dt><a href="#bookHistory">bookHistory</a> : <code>object</code></dt>
+<dt><a href="#bookHistory">bookHistory</a> : <code>Object</code></dt>
 <dd></dd>
-<dt><a href="#history">history</a> : <code>Object.&lt;bookCode, bookHistory&gt;</code></dt>
+<dt><a href="#history">history</a> : <code>Object.&lt;string, bookHistory&gt;</code></dt>
 <dd></dd>
 <dt><a href="#Proskomma">Proskomma</a></dt>
 <dd><p>Proskomma instance</p>
+</dd>
+<dt><a href="#PipelineHandler">PipelineHandler</a></dt>
+<dd><p>PipelineHandlers instance</p>
 </dd>
 </dl>
 
@@ -38,18 +41,18 @@ PERF Middleware for Editors in the Proskomma Ecosystem
 * [Epitelete](#Epitelete)
     * [new Epitelete(args)](#new_Epitelete_new)
     * [.history](#Epitelete+history) : [<code>history</code>](#history)
+    * [.clearPerf()](#Epitelete+clearPerf) ⇒ <code>void</code>
+    * [.sideloadPerf(bookCode, perfDocument)](#Epitelete+sideloadPerf) ⇒ [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument)
     * [.fetchPerf(bookCode)](#Epitelete+fetchPerf) ⇒ [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument)
-    * [.readPerf(bookCode)](#Epitelete+readPerf) ⇒ [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument)
-    * [.writePerf(bookCode, sequenceId, perfSequence)](#Epitelete+writePerf) ⇒ [<code>perfDocument</code>](#perfDocument)
+    * [.readPerf(bookCode, [options])](#Epitelete+readPerf) ⇒ [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument)
+    * [.writePerf(bookCode, sequenceId, perfSequence)](#Epitelete+writePerf) ⇒ [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument)
     * [.checkPerfSequence(perfSequence)](#Epitelete+checkPerfSequence) ⇒ <code>Array.&lt;string&gt;</code>
     * [.localBookCodes()](#Epitelete+localBookCodes) ⇒ <code>Array.&lt;string&gt;</code>
     * [.bookHeaders()](#Epitelete+bookHeaders) ⇒ <code>Object</code>
-    * [.clearPerf()](#Epitelete+clearPerf) ⇒ <code>void</code>
     * [.canUndo(bookCode)](#Epitelete+canUndo) ⇒ <code>boolean</code>
     * [.canRedo(bookCode)](#Epitelete+canRedo) ⇒ <code>boolean</code>
-    * [.undoPerf(bookCode)](#Epitelete+undoPerf) ⇒ [<code>perfDocument</code>](#perfDocument)
-    * [.redoPerf(bookCode)](#Epitelete+redoPerf) ⇒ [<code>perfDocument</code>](#perfDocument)
-    * [.sideloadPerf(bookCode, perfDocument)](#Epitelete+sideloadPerf) ⇒ [<code>perfDocument</code>](#perfDocument)
+    * [.undoPerf(bookCode)](#Epitelete+undoPerf) ⇒ <code>Promise.&lt;?perfDocument&gt;</code>
+    * [.redoPerf(bookCode)](#Epitelete+redoPerf) ⇒ <code>Promise.&lt;?perfDocument&gt;</code>
     * [.readUsfm(bookCode)](#Epitelete+readUsfm) ⇒ <code>Promise.&lt;string&gt;</code>
     * [.makeDocumentReport(bookCode, reportName, data)](#Epitelete+makeDocumentReport) ⇒ <code>Promise.&lt;array&gt;</code>
     * [.makeDocumentsReport(reportName, data)](#Epitelete+makeDocumentsReport) ⇒ <code>Promise.&lt;object&gt;</code>
@@ -80,6 +83,32 @@ PERF Middleware for Editors in the Proskomma Ecosystem
 
 * * *
 
+<a name="Epitelete+clearPerf"></a>
+
+## epitelete.clearPerf() ⇒ <code>void</code>
+Clears docs history
+
+**Kind**: instance method of [<code>Epitelete</code>](#Epitelete)  
+**Returns**: <code>void</code> - void  
+
+* * *
+
+<a name="Epitelete+sideloadPerf"></a>
+
+## epitelete.sideloadPerf(bookCode, perfDocument) ⇒ [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument)
+Loads given perf into memory
+
+**Kind**: instance method of [<code>Epitelete</code>](#Epitelete)  
+**Returns**: [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument) - same sideloaded PERF document  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| bookCode | <code>string</code> |  |
+| perfDocument | [<code>perfDocument</code>](#perfDocument) | PERF document |
+
+
+* * *
+
 <a name="Epitelete+fetchPerf"></a>
 
 ## epitelete.fetchPerf(bookCode) ⇒ [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument)
@@ -97,26 +126,28 @@ Fetches document from proskomma instance
 
 <a name="Epitelete+readPerf"></a>
 
-## epitelete.readPerf(bookCode) ⇒ [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument)
+## epitelete.readPerf(bookCode, [options]) ⇒ [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument)
 Gets document from memory or fetches it if proskomma is set
 
 **Kind**: instance method of [<code>Epitelete</code>](#Epitelete)  
 **Returns**: [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument) - found or fetched PERF document  
 
-| Param | Type |
-| --- | --- |
-| bookCode | <code>string</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| bookCode | <code>string</code> |  |
+| [options] | <code>object</code> |  |
+| [options.readPipeline] | <code>string</code> | pipeline name |
 
 
 * * *
 
 <a name="Epitelete+writePerf"></a>
 
-## epitelete.writePerf(bookCode, sequenceId, perfSequence) ⇒ [<code>perfDocument</code>](#perfDocument)
+## epitelete.writePerf(bookCode, sequenceId, perfSequence) ⇒ [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument)
 Merges a sequence with the document and saves the new modified document.
 
 **Kind**: instance method of [<code>Epitelete</code>](#Epitelete)  
-**Returns**: [<code>perfDocument</code>](#perfDocument) - modified PERF document  
+**Returns**: [<code>Promise.&lt;perfDocument&gt;</code>](#perfDocument) - modified PERF document  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -158,17 +189,8 @@ Get array of book codes from history
 Gets the available books for current docSet.
 
 **Kind**: instance method of [<code>Epitelete</code>](#Epitelete)  
-**Returns**: <code>Object</code> - an object with book codes as keys, and valuescontain book header data  
-
-* * *
-
-<a name="Epitelete+clearPerf"></a>
-
-## epitelete.clearPerf() ⇒ <code>void</code>
-Clears docs history
-
-**Kind**: instance method of [<code>Epitelete</code>](#Epitelete)  
-**Returns**: <code>void</code> - void  
+**Returns**: <code>Object</code> - an object with book codes as keys, and values
+contain book header data  
 
 * * *
 
@@ -202,11 +224,11 @@ Checks if able to redo from specific book history
 
 <a name="Epitelete+undoPerf"></a>
 
-## epitelete.undoPerf(bookCode) ⇒ [<code>perfDocument</code>](#perfDocument)
+## epitelete.undoPerf(bookCode) ⇒ <code>Promise.&lt;?perfDocument&gt;</code>
 Gets previous document from history
 
 **Kind**: instance method of [<code>Epitelete</code>](#Epitelete)  
-**Returns**: [<code>perfDocument</code>](#perfDocument) - PERF document or null if can not undo  
+**Returns**: <code>Promise.&lt;?perfDocument&gt;</code> - PERF document or null if can not undo  
 
 | Param | Type |
 | --- | --- |
@@ -217,31 +239,15 @@ Gets previous document from history
 
 <a name="Epitelete+redoPerf"></a>
 
-## epitelete.redoPerf(bookCode) ⇒ [<code>perfDocument</code>](#perfDocument)
+## epitelete.redoPerf(bookCode) ⇒ <code>Promise.&lt;?perfDocument&gt;</code>
 Gets next document from history
 
 **Kind**: instance method of [<code>Epitelete</code>](#Epitelete)  
-**Returns**: [<code>perfDocument</code>](#perfDocument) - PERF document or null if can not redo  
+**Returns**: <code>Promise.&lt;?perfDocument&gt;</code> - PERF document or null if can not redo  
 
 | Param | Type |
 | --- | --- |
 | bookCode | <code>string</code> | 
-
-
-* * *
-
-<a name="Epitelete+sideloadPerf"></a>
-
-## epitelete.sideloadPerf(bookCode, perfDocument) ⇒ [<code>perfDocument</code>](#perfDocument)
-Loads given perf into memory
-
-**Kind**: instance method of [<code>Epitelete</code>](#Epitelete)  
-**Returns**: [<code>perfDocument</code>](#perfDocument) - same sideloaded PERF document  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| bookCode | <code>string</code> |  |
-| perfDocument | [<code>perfDocument</code>](#perfDocument) | PERF document |
 
 
 * * *
@@ -374,7 +380,7 @@ Generates and returns a report for each document via a transform pipeline
 
 <a name="bookHistory"></a>
 
-# bookHistory : <code>object</code>
+# bookHistory : <code>Object</code>
 **Kind**: global typedef  
 **Properties**
 
@@ -382,7 +388,7 @@ Generates and returns a report for each document via a transform pipeline
 | --- | --- |
 | bookHistory.cursor | <code>number</code> | 
 | bookHistory.stack | <code>Array.&lt;Object&gt;</code> | 
-| bookHistory.stack[].document | [<code>perfDocument</code>](#perfDocument) | 
+| bookHistory.stack[].perfDocument | [<code>perfDocument</code>](#perfDocument) | 
 | bookHistory.stack[].pipelineData | <code>Object.&lt;string, any&gt;</code> | 
 
 
@@ -390,7 +396,7 @@ Generates and returns a report for each document via a transform pipeline
 
 <a name="history"></a>
 
-# history : <code>Object.&lt;bookCode, bookHistory&gt;</code>
+# history : <code>Object.&lt;string, bookHistory&gt;</code>
 **Kind**: global typedef  
 
 * * *
@@ -402,6 +408,16 @@ Proskomma instance
 
 **Kind**: global typedef  
 **See**: [https://github.com/mvahowe/proskomma-js](https://github.com/mvahowe/proskomma-js)  
+
+* * *
+
+<a name="PipelineHandler"></a>
+
+# PipelineHandler
+PipelineHandlers instance
+
+**Kind**: global typedef  
+**See**: [https://github.com/DanielC-N/pipelineHandler](https://github.com/DanielC-N/pipelineHandler)  
 
 * * *
 

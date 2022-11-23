@@ -2,7 +2,7 @@ const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
-const Epitelete = require("../../src/index").default;
+const Epitelete = require("../../dist/index").default;
 
 const testGroup = "Books";
 

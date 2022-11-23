@@ -14,6 +14,6 @@
     "destination": "./docs/",
     "template": "./custom-template",
     "tutorials": "./tutorials",
-    "readme": "./readme/readme.md"
+    "readme": "./readme.md"
   }
 }

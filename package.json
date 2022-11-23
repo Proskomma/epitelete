@@ -17,8 +17,7 @@
     "build": "babel src -d dist --copy-files",
     "prepublishOnly": "rm -fr dist && npm run build",
     "generatePerf": "tape -r @babel/register utils/generatePerf.js",
-    "generateUsfm": "tape -r @babel/register utils/generateUsfm.js",
-    "runTests": "tape -r @babel/register utils/test.js"
+    "generateUsfm": "tape -r @babel/register utils/generateUsfm.js"
   },
   "repository": {
     "type": "git",
@@ -33,8 +32,8 @@
   "dependencies": {
     "@babel/core": "^7.19.0",
     "lodash": "4.17.21",
-    "pipeline-handler": "^1.1.0",
-    "proskomma-json-tools": "^0.5.7"
+    "pipeline-handler": "^2.2.0",
+    "proskomma-json-tools": "^0.5.9"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",

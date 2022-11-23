@@ -2,7 +2,7 @@ const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
-const Epitelete = require("../../src/index").default;
+const Epitelete = require("../../dist/index").default;
 
 const testGroup = "Pipelines";
 
@@ -33,13 +33,13 @@ test(
         const bookCode = "TIT";
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({ docSetId });
-      const perf = await epitelete.sideloadPerf(bookCode, alignedPerf, { writePipeline: "stripAlignment", readPipeline: "mergeAlignment" });
-      t.ok(!!perf);
-      t.ok(docHasMarkup({ doc: perf, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
+        const perf = await epitelete.sideloadPerf(bookCode, alignedPerf, { writePipeline: "stripAlignmentPipeline", readPipeline: "mergeAlignmentPipeline" });
+        t.ok(!!perf);
+        t.ok(docHasMarkup({ doc: perf, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
         t.ok(docHasMarkup({ doc: perf, type: "start_milestone", subtype: "usfm:zaln" }), "perf has alignment");
-        const perf2 = await epitelete.writePerf(bookCode, perf.main_sequence_id, perf.sequences[perf.main_sequence_id] ,{writePipeline: "stripAlignment", readPipeline: "mergeAlignment" });
-      t.ok(!!perf2);
-      t.ok(docHasMarkup({ doc: perf2, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
+        const perf2 = await epitelete.writePerf(bookCode, perf.main_sequence_id, perf.sequences[perf.main_sequence_id] ,{writePipeline: "stripAlignmentPipeline", readPipeline: "mergeAlignmentPipeline" });
+        t.ok(!!perf2);
+        t.ok(docHasMarkup({ doc: perf2, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
         t.ok(docHasMarkup({ doc: perf2, type: "start_milestone", subtype: "usfm:zaln" }), "perf has alignment");
         t.end();
     }
@@ -52,7 +52,7 @@ test(
         const bookCode = "TIT";
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({ docSetId });
-        const readPipeline = "stripAlignment"
+        const readPipeline = "stripAlignmentPipeline"
         await epitelete.sideloadPerf(bookCode, alignedPerf);
     
         const pipelineInputs = epitelete.pipelineHandler?.pipelines[readPipeline]?.[0]?.inputs;

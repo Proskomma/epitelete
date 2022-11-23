@@ -1,7 +1,7 @@
-import {Validator, PerfRenderFromJson, transforms} from 'proskomma-json-tools';
+import { Validator } from 'proskomma-json-tools';
 import pipelines from './pipelines';
 import transformActions from './transforms';
-import PipelineHandler from 'pipeline-handler';
+import { PipelineHandler } from 'pipeline-handler';
 const _ = require("lodash");
 
 /**
@@ -48,7 +48,7 @@ class Epitelete {
         };
 
         this.proskomma = proskomma;
-        this.pipelineHandler = new PipelineHandler(pipelines, transformActions, proskomma);
+        this.pipelineHandler = new PipelineHandler({pipelines: pipelines ?? null, transforms: transformActions ?? null, proskomma});
         this.docSetId = docSetId;
         /** @type history */
         this.history = {};
@@ -61,7 +61,7 @@ class Epitelete {
      * @private
     */
     instanciatePipelineHandler() {
-        this.pipelineHandler = new PipelineHandler(pipelines, transformActions, this.proskomma);
+        this.pipelineHandler = new PipelineHandler({pipelines: pipelines ?? null, transforms: transformActions ?? null, proskomma:this.proskomma});
     }
 
     /**
@@ -224,8 +224,8 @@ class Epitelete {
             throw "sideloadPerf requires 2 arguments (bookCode, perfDocument)";
         }
 
-        const validatorResult = this.validator.validate('constraint','perfDocument','0.2.1', perfDocument);
-         if (!validatorResult.isValid) {
+        const validatorResult = this.validator.validate('constraint','perfDocument','0.3.0', perfDocument);
+        if (!validatorResult.isValid) {
             throw `perfJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
         }
         return await this.loadPerf(bookCode, perfDocument, options);
@@ -303,7 +303,7 @@ class Epitelete {
         if (!perfDocument.sequences[sequenceId]) {
             throw `PERF sequence id not found: ${bookCode}, ${sequenceId}`;
         }
-        const validatorResult = this.validator.validate('constraint','perfSequence','0.2.1',perfSequence);
+        const validatorResult = this.validator.validate('constraint','perfSequence','0.3.0',perfSequence);
 
         if (!validatorResult.isValid) {
             throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;

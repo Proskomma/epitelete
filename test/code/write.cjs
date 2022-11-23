@@ -2,7 +2,7 @@ const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
-const Epitelete = require("../../src/index").default;
+const Epitelete = require("../../dist/index").default;
 const _ = require("lodash");
 
 const testGroup = "Write";
@@ -11,6 +11,28 @@ const proskomma = new UWProskomma();
 // const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "fra_lsg_succinct.json")));
 const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "eng_engWEBBE_succinct.json")));
 proskomma.loadSuccinctDocSet(succinctJson);
+
+function removeAtts(elem) {
+    let outObject, value, key;
+
+    if (typeof elem !== "object" || elem === null) {
+        return elem;
+    }
+
+    // Create an array or object to hold the values
+    outObject = Array.isArray(elem) ? [] : {};
+
+    for (key in elem) {
+        // if it's an empty 'atts' we do NOT copy it
+        if(key == "atts" && Object.keys(elem[key]).length === 0) continue;
+        value = elem[key];
+
+        // Recursively (deep) copy for nested objects, including arrays
+        outObject[key] = removeAtts(value);
+    }
+
+    return outObject;
+}
 
 test(
     `roundtrip unchanged PERF (${testGroup})`,
@@ -152,8 +174,8 @@ test(
         const docSetId = "DCS/en_ult";
         const epitelete = new Epitelete({ docSetId });
         const bookCode = "TIT";
-        const readOptions = { readPipeline: "stripAlignment" };
-        const writeOptions = { writePipeline: "mergeAlignment" };
+        const readOptions = { readPipeline: "stripAlignmentPipeline" };
+        const writeOptions = { writePipeline: "mergeAlignmentPipeline" };
 
         const unaligned = await epitelete.sideloadPerf(bookCode, alignedPerf, readOptions);
 
@@ -163,8 +185,9 @@ test(
         const sequence = unaligned.sequences[sequenceId];
 
         const merged = await epitelete.writePerf(bookCode, sequenceId, sequence, writeOptions);
+        const mergeNoAtts = removeAtts(merged);
 
-        t.deepEqual(alignedPerf, merged, "writePipeline mergeAlignment roundtripped");
+        t.deepEqual(alignedPerf, mergeNoAtts, "writePipeline mergeAlignmentPipeline roundtripped");
 
         const undone = await epitelete.undoPerf(bookCode, readOptions);
 

@@ -2,7 +2,7 @@ const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
-const Epitelete = require("../../src/index").default;
+const Epitelete = require("../../dist/index").default;
 
 const testGroup = "Read";
 
@@ -128,7 +128,7 @@ test(
         t.ok(docHasMarkup({ doc: aligned, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
         t.ok(docHasMarkup({ doc: aligned, type: "start_milestone", subtype: "usfm:zaln" }), "perf has alignment");
 
-        const unaligned = await epitelete.readPerf("TIT", { readPipeline: "stripAlignment" });
+        const unaligned = await epitelete.readPerf("TIT", { readPipeline: "stripAlignmentPipeline" });
 
         t.notOk(docHasMarkup({ doc: unaligned, type: "wrapper", subtype: "usfm:w" }), "perf does not have wrapper");
         t.notOk(docHasMarkup({ doc: unaligned, type: "start_milestone", subtype: "usfm:zaln" }), "perf does not have alignment");
@@ -144,7 +144,7 @@ test(
         const docSetId = "DCS/en_ult";
         const epitelete = new Epitelete({docSetId});
 
-        const unaligned = await epitelete.sideloadPerf("TIT", alignedPerf, { readPipeline: "stripAlignment" });
+        const unaligned = await epitelete.sideloadPerf("TIT", alignedPerf, { readPipeline: "stripAlignmentPipeline" });
 
         t.notOk(docHasMarkup({ doc: unaligned, type: "wrapper", subtype: "usfm:w" }), "perf does not have wrapper");
         t.notOk(docHasMarkup({ doc: unaligned, type: "start_milestone", subtype: "usfm:zaln" }), "perf does not have alignment");

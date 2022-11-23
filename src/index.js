@@ -19,8 +19,8 @@ class Epitelete {
      * @return {Epitelete} Epitelete instance
      */
     constructor({ proskomma = null, docSetId, options = {}, ...args }) {
-        validateParams(["historySize"], options, "Unexpected option in constructor");
         validateParams(["proskomma", "docSetId", "options"], args, "Unexpected arg in constructor");
+        validateParams(["historySize","pipelines","transforms"], options, "Unexpected option in constructor");
 
         if (!docSetId) {
             throw new Error("docSetId is required");
@@ -42,7 +42,12 @@ class Epitelete {
         };
 
         this.proskomma = proskomma;
-        this.pipelineHandler = new PipelineHandler({pipelines: pipelines ?? null, transforms: transformActions ?? null, proskomma});
+        this.pipelineHandler = new PipelineHandler({
+            pipelines: pipelines || options.pipelines
+                ? { ...pipelines, ...options.pipelines } : null,
+            transforms: transformActions || options.transforms
+                ? { ...transformActions, ...options.transforms } : null
+        });
         this.docSetId = docSetId;
         /** @type history */
         this.history = {};
@@ -54,8 +59,13 @@ class Epitelete {
      * Adds a new PipelineHandler instance to current Epitelete pipelineHandler prop.
      * @private
     */
-    instanciatePipelineHandler() {
-        this.pipelineHandler = new PipelineHandler({pipelines: pipelines ?? null, transforms: transformActions ?? null, proskomma:this.proskomma});
+    instanciatePipelineHandler({pipelines: _pipelines, transforms}) {
+        new PipelineHandler({
+            pipelines: pipelines || _pipelines
+                ? { ...pipelines, ..._pipelines } : null,
+            transforms: transformActions || transforms
+                ? { ...transformActions, ...transforms } : null
+        });
     }
 
     /**
@@ -189,20 +199,20 @@ class Epitelete {
      * @param {object} [options]
      * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
      * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
-     * @param {boolean} [options.safe = true] - turns safe mode
+     * @param {boolean} [options.cloning = true] - turns safe mode
      * 
      * @return {Promise<perfDocument>} fetched PERF document
      * @private
      */
     async loadPerf(bookCode, perfDocument, options) {
-        const isSafe = options.safe ?? true;
+        const shouldClone = options.cloning ?? true;
         const { writePipeline, readPipeline } = options;
         const {perf:writePerf, pipelineData: writePipelineData} = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });
         this.setPipelineData(bookCode, writePipelineData);
         const savedPerf = this.addDocument({
             bookCode,
             perfDocument: writePerf,
-            clone: isSafe
+            clone: shouldClone
         });
         const {perf:readPerf, pipelineData: readPipelineData} = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument: savedPerf });
         this.setPipelineData(bookCode, readPipelineData);
@@ -216,7 +226,7 @@ class Epitelete {
      * @param {object} [options]
      * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
      * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
-     * @param {boolean} [options.safe = true] - turns safe mode
+     * @param {boolean} [options.cloning = true] - turns safe mode
      * @return {Promise<perfDocument>} same sideloaded PERF document
      */
     async sideloadPerf(bookCode, perfDocument, options = {}) {
@@ -244,7 +254,7 @@ class Epitelete {
      * @param {object} [options]
      * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
      * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
-     * @param {boolean} [options.safe = true] - turns safe mode
+     * @param {boolean} [options.cloning = true] - turns safe mode
      * @return {Promise<perfDocument>} fetched PERF document
      */
     async fetchPerf(bookCode, options = {}) {
@@ -254,7 +264,7 @@ class Epitelete {
             throw "Can't call fetchPerf in standalone mode";
         }
         if (!bookCode) {
-            throw new Error("fetchPerf requires 1 argument (bookCode)");
+            throw new Error("fetchPerf requires argument (bookCode)");
         }
          if (bookCode.length > 3 || !/^[A-Z0-9]{3}$/.test(bookCode)) {
             throw new Error(`Invalid bookCode: "${bookCode}". Only three characters (uppercase letters [A-Z] or numbers [0-9]) allowed.`);
@@ -276,12 +286,12 @@ class Epitelete {
      * @param {string} bookCode
      * @param {object} [options]
      * @param {string} [options.readPipeline] - name of pipeline to be run through after read.
-     * @param {boolean} [options.safe = true] - turns safe mode
+     * @param {boolean} [options.cloning = true] - turns safe mode
      * @return {Promise<perfDocument>} found or fetched PERF document
      */
     async readPerf(bookCode, options = {}) {
         validateParams(["readPipeline","safe"], options, "Unexpected option in readPerf");
-        const isSafe = options.safe ?? true;
+        const shouldClone = options.cloning ?? true;
 
         if (!this.history[bookCode] && this.backend === "proskomma") {
             return this.fetchPerf(bookCode, options);
@@ -289,7 +299,7 @@ class Epitelete {
         if (!this.history[bookCode] && this.backend === "standalone") {
             throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
         }
-        const perfDocument = this.getDocument(bookCode, isSafe);
+        const perfDocument = this.getDocument(bookCode, shouldClone);
         const { readPipeline } = options;
         const { perf, pipelineData } = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument });
         this.setPipelineData(bookCode, pipelineData);
@@ -304,12 +314,12 @@ class Epitelete {
      * @param {object} [options]
      * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
      * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
-     * @param {boolean} [options.safe = true] - turns safe mode
+     * @param {boolean} [options.cloning = true] - turns safe mode
      * @return {Promise<perfDocument>} modified PERF document
      */
     async writePerf(bookCode, sequenceId, perfSequence, options = {}) {
         validateParams(["writePipeline","readPipeline","safe"], options, "Unexpected option in writePerf");
-        const isSafe = options.safe ?? true;
+        const shouldClone = options.cloning ?? true;
 
         const perfDocument = this.getDocument(bookCode, false);
 
@@ -327,7 +337,7 @@ class Epitelete {
         }
         const sequences = {
             ...perfDocument.sequences,
-            [sequenceId]: (isSafe ? deepCopy(perfSequence) : perfSequence)
+            [sequenceId]: (shouldClone ? deepCopy(perfSequence) : perfSequence)
         }
         perfDocument.sequences = sequences;
 
@@ -344,6 +354,64 @@ class Epitelete {
             history.stack.pop();
 
         return await this.readPerf(bookCode, readOptions);
+    }
+
+    /**
+     * Gets previous document from history
+     * @param {string} bookCode
+     * @param {object} [options]
+     * @param {string} [options.readPipeline] - name of pipeline to be run through after read from memory.
+     * @param {boolean} [options.cloning = true] - turns safe mode
+     * @return {Promise<?perfDocument>} PERF document or null if can not undo
+     */
+    async undoPerf(bookCode, options) {
+        if (this.canUndo(bookCode)) {
+            const history = this.history[bookCode];
+            ++history.cursor;
+            return await this.readPerf(bookCode, options);
+        }
+        return null;
+    }
+
+    /**
+     * Gets next document from history
+     * @param {string} bookCode
+     * @param {object} [options]
+     * @param {string} [options.readPipeline] - name of pipeline to be run through after read from memory.
+     * @param {boolean} [options.cloning = true] - turns safe mode
+     * @return {Promise<?perfDocument>} PERF document or null if can not redo
+     */
+    async redoPerf(bookCode, options){
+        if (this.canRedo(bookCode)) {
+            const history = this.history[bookCode];
+            --history.cursor;
+            return await this.readPerf(bookCode, options);
+        }
+        return null;
+    }
+
+    /**
+     * Checks if able to undo from specific book history
+     * @param {string} bookCode
+     * @return {boolean}
+     */
+    canUndo(bookCode) {
+        const history = this.history[bookCode];
+        if (!history) return false;
+        if ((history.cursor + 1) === history.stack.length) return false;
+        return true;
+    }
+
+    /**
+     * Checks if able to redo from specific book history
+     * @param {string} bookCode
+     * @return {boolean}
+     */
+    canRedo(bookCode) {
+        const history = this.history[bookCode];
+        if (!history) return false;
+        if (history.cursor === 0) return false;
+        return true;
     }
 
     /**
@@ -412,62 +480,6 @@ class Epitelete {
             }
         }
         return documentHeaders;
-    }
-
-    /**
-     * Checks if able to undo from specific book history
-     * @param {string} bookCode
-     * @return {boolean}
-     */
-    canUndo(bookCode) {
-        const history = this.history[bookCode];
-        if (!history) return false;
-        if ((history.cursor + 1) === history.stack.length) return false;
-        return true;
-    }
-
-    /**
-     * Checks if able to redo from specific book history
-     * @param {string} bookCode
-     * @return {boolean}
-     */
-    canRedo(bookCode) {
-        const history = this.history[bookCode];
-        if (!history) return false;
-        if (history.cursor === 0) return false;
-        return true;
-    }
-
-    /**
-     * Gets previous document from history
-     * @param {string} bookCode
-     * @param {object} [options]
-     * @param {string} [options.readPipeline] - name of pipeline to be run through after read from memory.
-     * @return {Promise<?perfDocument>} PERF document or null if can not undo
-     */
-    async undoPerf(bookCode, options) {
-        if (this.canUndo(bookCode)) {
-            const history = this.history[bookCode];
-            ++history.cursor;
-            return await this.readPerf(bookCode, options);
-        }
-        return null;
-    }
-
-    /**
-     * Gets next document from history
-     * @param {string} bookCode
-     * @param {object} [options]
-     * @param {string} [options.readPipeline] - name of pipeline to be run through after read from memory.
-     * @return {Promise<?perfDocument>} PERF document or null if can not redo
-     */
-    async redoPerf(bookCode, options){
-        if (this.canRedo(bookCode)) {
-            const history = this.history[bookCode];
-            --history.cursor;
-            return await this.readPerf(bookCode, options);
-        }
-        return null;
     }
 
     /**

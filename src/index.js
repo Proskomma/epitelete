@@ -195,7 +195,7 @@ class Epitelete {
      * @private
      */
     async loadPerf(bookCode, perfDocument, options) {
-        const isSafe = options.safe ?? false;
+        const isSafe = options.safe ?? true;
         const { writePipeline, readPipeline } = options;
         const {perf:writePerf, pipelineData: writePipelineData} = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });
         this.setPipelineData(bookCode, writePipelineData);
@@ -281,7 +281,7 @@ class Epitelete {
      */
     async readPerf(bookCode, options = {}) {
         validateParams(["readPipeline","safe"], options, "Unexpected option in readPerf");
-        const isSafe = options.safe ?? false;
+        const isSafe = options.safe ?? true;
 
         if (!this.history[bookCode] && this.backend === "proskomma") {
             return this.fetchPerf(bookCode, options);
@@ -309,7 +309,7 @@ class Epitelete {
      */
     async writePerf(bookCode, sequenceId, perfSequence, options = {}) {
         validateParams(["writePipeline","readPipeline","safe"], options, "Unexpected option in writePerf");
-        const isSafe = options.safe ?? false;
+        const isSafe = options.safe ?? true;
 
         const perfDocument = this.getDocument(bookCode, false);
 
@@ -331,7 +331,7 @@ class Epitelete {
         }
         perfDocument.sequences = sequences;
 
-        const { writePipeline } = options;
+        const { writePipeline, ...readOptions } = options;
         const { perf:newPerfDoc, pipelineData } = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });
 
         const history = this.history[bookCode];
@@ -343,7 +343,7 @@ class Epitelete {
         if (history.stack.length > this.options.historySize)
             history.stack.pop();
 
-        return await this.readPerf(bookCode, options);
+        return await this.readPerf(bookCode, readOptions);
     }
 
     /**

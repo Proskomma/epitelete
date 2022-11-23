@@ -86,7 +86,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const readOutput = await epitelete.readPerf(bookCode);
             t.ok(readOutput);
             const fetchedOutput = await epitelete.fetchPerf(bookCode);

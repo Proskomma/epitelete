@@ -20,7 +20,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const canRedo = epitelete.canRedo(bookCode);
             t.notOk(canRedo);
         }catch (err){
@@ -37,7 +37,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode);
             const canRedo = epitelete.canRedo(bookCode);
             t.notOk(canRedo);
@@ -54,7 +54,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.getDocuments();
             const _doc = deepCopy(documents[bookCode]);
@@ -85,7 +85,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const perf = await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();
             const _doc = deepCopy(documents[bookCode]);
@@ -116,7 +116,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             t.same(epitelete.history,{});
             const doc = await epitelete.readPerf(bookCode);
             const history = epitelete.history[bookCode];
@@ -155,7 +155,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode)
             const redoPerf = await epitelete.redoPerf(bookCode);
             t.notOk(redoPerf);
@@ -173,7 +173,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.getDocuments();
             const _doc = deepCopy(documents[bookCode]);
@@ -204,7 +204,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const perf = await epitelete.readPerf(bookCode);
             const perfKeys = Object.keys(perf.sequences);
             const documents = epitelete.getDocuments();
@@ -243,7 +243,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const canRedo = epitelete.canRedo(bookCode);
             t.notOk(canRedo);
         }catch (err){

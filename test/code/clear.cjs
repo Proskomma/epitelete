@@ -28,9 +28,9 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode);
-            t.ok("LUK" in epitelete.getDocuments(), "Can not clearPerf because no document was added.");
+            t.ok("TIT" in epitelete.getDocuments(), "Can not clearPerf because no document was added.");
             epitelete.clearPerf()
             t.same(epitelete.getDocuments(), {});
             t.same(epitelete.history, {});

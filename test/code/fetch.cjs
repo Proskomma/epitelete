@@ -46,7 +46,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const doc = await epitelete.fetchPerf(bookCode);
             for (const k of ["schema", "metadata", "sequences", "main_sequence_id"]) {
                 t.ok(k in doc);

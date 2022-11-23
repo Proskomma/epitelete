@@ -41,7 +41,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();
             const lukeDoc = documents[bookCode];
@@ -64,7 +64,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const doc = await epitelete.readPerf(bookCode);
             const oldDoc = deepCopy(doc);
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
@@ -90,7 +90,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const bookCode1 = "LK"
             const doc = await epitelete.readPerf(bookCode);
             const sequences = doc.sequences;
@@ -118,7 +118,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();
             const lukeDoc = documents[bookCode];
@@ -145,7 +145,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();
             const lukeDoc = documents[bookCode];

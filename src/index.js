@@ -16,6 +16,8 @@ class Epitelete {
      * @param {number} args.docSetId - a docSetId
      * @param {object} [args.options={}] - setting params
      * @param {number} [args.options.historySize=10] - size of history buffer
+     * @param {object} [args.options.pipelines] - custom pipelines to add to epitelete's internal pipeline handler.
+     * @param {object} [args.options.transforms] - custom transform actions to add to epitelete's internal pipeline handler.
      * @return {Epitelete} Epitelete instance
      */
     constructor({ proskomma = null, docSetId, options = {}, ...args }) {
@@ -57,6 +59,9 @@ class Epitelete {
 
     /**
      * Adds a new PipelineHandler instance to current Epitelete pipelineHandler prop.
+     * @param {Object} args - method args
+     * @param {Object} [args.pipelines] - custom pipelines to add to epitelete's internal pipeline handler.
+     * @param {Object} [args.transforms] - custom transform actions to add to epitelete's internal pipeline handler.
      * @private
     */
     instanciatePipelineHandler({pipelines: _pipelines, transforms}) {

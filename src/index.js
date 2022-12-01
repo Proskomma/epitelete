@@ -205,7 +205,7 @@ class Epitelete {
      * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
      * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
      * @param {boolean} [options.cloning = true] - turns safe mode
-     * 
+     *
      * @return {Promise<perfDocument>} fetched PERF document
      * @private
      */
@@ -213,14 +213,26 @@ class Epitelete {
         const shouldClone = options.cloning ?? true;
         const { writePipeline, readPipeline } = options;
         const {perf:writePerf, pipelineData: writePipelineData} = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });
+        let validatorResult = this.validator.validate('constraint','perfDocument','0.3.0', writePerf);
+        if (!validatorResult.isValid) {
+            throw new Error(`writePerf is schema invalid: ${JSON.stringify(validatorResult.errors)}`);
+        }
         this.setPipelineData(bookCode, writePipelineData);
         const savedPerf = this.addDocument({
             bookCode,
             perfDocument: writePerf,
             clone: shouldClone
         });
+        validatorResult = this.validator.validate('constraint','perfDocument','0.3.0', savedPerf);
+        if (!validatorResult.isValid) {
+            throw new Error(`savedPerf is schema invalid: ${JSON.stringify(validatorResult.errors)}`);
+        }
         // console.log(JSON.stringify(writePerf, " ", 4));
         const {perf:readPerf, pipelineData: readPipelineData} = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument: savedPerf });
+        validatorResult = this.validator.validate('constraint','perfDocument','0.3.0', readPerf);
+        if (!validatorResult.isValid) {
+            throw new Error(`readPerf is schema invalid: ${JSON.stringify(validatorResult.errors)}`);
+        }
         this.setPipelineData(bookCode, readPipelineData);
         return readPerf;
     }
@@ -237,7 +249,7 @@ class Epitelete {
      */
     async sideloadPerf(bookCode, perfDocument, options = {}) {
         validateParams(["writePipeline", "readPipeline", "safe"], options, "Unexpected option in sideloadPerf");
-        
+
         if (this.backend === "proskomma") {
             throw "Can't call sideloadPerf in proskomma mode";
         }

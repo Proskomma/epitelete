@@ -47,7 +47,7 @@ test(
         t.ok(docHasMarkup({ doc: perf, type: "start_milestone", subtype: "usfm:zaln" }), "perf has alignment");
         let perf2;
         try {
-            const perf2 = await epitelete.writePerf(bookCode, perf.main_sequence_id, perf.sequences[perf.main_sequence_id], {
+            perf2 = await epitelete.writePerf(bookCode, perf.main_sequence_id, perf.sequences[perf.main_sequence_id], {
                 writePipeline: "stripAlignmentPipeline",
                 readPipeline: "mergeAlignmentPipeline"
             });

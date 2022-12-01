@@ -3,6 +3,7 @@ const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
 const Epitelete = require("../../dist/index").default;
+const {Validator} = require("proskomma-json-tools");
 
 const testGroup = "Pipelines";
 
@@ -43,6 +44,14 @@ test(
             t.fail(`sideloadPerf() threw an error: ${err}`);
         }
         t.ok(!!perf);
+        const validator = new Validator();
+        let validation = validator.validate(
+            'constraint',
+            'perfDocument',
+            '0.3.0',
+            perf
+        );
+        t.equal(validation.errors, []);
         t.ok(docHasMarkup({ doc: perf, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
         t.ok(docHasMarkup({ doc: perf, type: "start_milestone", subtype: "usfm:zaln" }), "perf has alignment");
         let perf2;

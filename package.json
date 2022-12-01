@@ -9,7 +9,7 @@
   "scripts": {
     "doc": "jsdoc -c jsdoc.json",
     "apiGen": "npx run-func ./api.generate.js insertApiDocs",
-    "test": "bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
+    "test": "babel src -d dist --copy-files && bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "tape -r @babel/register test/code/*.cjs",
     "drill": "node utils/drill.js",
     "oneTest": "tape -r @babel/register test/code/%TESTSCRIPT%.cjs",

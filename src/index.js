@@ -219,9 +219,10 @@ class Epitelete {
             perfDocument: writePerf,
             clone: shouldClone
         });
+        // console.log(JSON.stringify(writePerf, " ", 4));
         const {perf:readPerf, pipelineData: readPipelineData} = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument: savedPerf });
         this.setPipelineData(bookCode, readPipelineData);
-        return  readPerf
+        return readPerf;
     }
 
     /**

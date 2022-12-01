@@ -910,7 +910,15 @@
     pirates "^4.0.5"
     source-map-support "^0.5.16"
 
-"@babel/runtime-corejs3@^7.12.1", "@babel/runtime-corejs3@^7.16.5":
+"@babel/runtime-corejs3@^7.12.1":
+  version "7.20.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.20.6.tgz#63dae945963539ab0ad578efbf3eff271e7067ae"
+  integrity sha512-tqeujPiuEfcH067mx+7otTQWROVMKHXEaOQcAeNV5dDdbPWvPcFA8/W9LXw2NfjNmOetqLl03dfnG2WALPlsRQ==
+  dependencies:
+    core-js-pure "^3.25.1"
+    regenerator-runtime "^0.13.11"
+
+"@babel/runtime-corejs3@^7.16.5":
   version "7.20.1"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.20.1.tgz#d0775a49bb5fba77e42cbb7276c9955c7b05af8d"
   integrity sha512-CGulbEDcg/ND1Im7fUNRZdGXmX2MTWVVZacQi/6DiKE5HNwZ3aVTm5PV4lO8HHz0B2h8WQyvKKjbX5XgTtydsg==
@@ -3584,7 +3592,7 @@ process@^0.11.1, process@^0.11.10:
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
   integrity sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==
 
-proskomma-json-tools@^0.5.10:
+proskomma-json-tools@^0.5.10, proskomma-json-tools@^0.5.7:
   version "0.5.10"
   resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.5.10.tgz#51e1c57aed9ed711c39b1b712669f52f71cae462"
   integrity sha512-RmBR0fmG6I7bjd4W/ad6jmgko5Xm45pj4fp55uvgj9AwGEYoD+jRXJcS1A4XR0u4OyoGqAE4TIAGAtIXzbfa7w==
@@ -3594,7 +3602,7 @@ proskomma-json-tools@^0.5.10:
     ajv "^8.11.0"
     deep-equal "^2.0.5"
 
-proskomma-json-tools@^0.5.7, proskomma-json-tools@^0.5.9:
+proskomma-json-tools@^0.5.9:
   version "0.5.9"
   resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.5.9.tgz#9c6acf5aa726a88eac8bea68b9cd6a37c6282ee5"
   integrity sha512-yF+M+aLkKPqKo66iQCrBcZUSZdAqIfuizPnvxMB9agZC0BCmOi+FfWZjp38CJ99Lr3YGh72azY+9XRTEXv1Fnw==
@@ -3809,7 +3817,7 @@ regenerate@^1.4.2:
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.2.tgz#b9346d8827e8f5a32f7ba29637d398b69014848a"
   integrity sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==
 
-regenerator-runtime@^0.13.10:
+regenerator-runtime@^0.13.10, regenerator-runtime@^0.13.11:
   version "0.13.11"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
   integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==

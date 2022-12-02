@@ -3,6 +3,7 @@ const path = require("path");
 const fse = require("fs-extra");
 const { Proskomma } = require("proskomma");
 const Epitelete = require("../../dist/index").default;
+const {Validator} = require("proskomma-json-tools");
 
 const testGroup = "Pipelines";
 
@@ -50,11 +51,35 @@ test(
         const bookCode = "TIT";
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({ docSetId });
-        const perf = await epitelete.sideloadPerf(bookCode, alignedPerf, { writePipeline: "stripAlignmentPipeline", readPipeline: "mergeAlignmentPipeline" });
+        let perf;
+        try {
+            perf = await epitelete.sideloadPerf(bookCode, alignedPerf, {
+                writePipeline: "stripAlignmentPipeline",
+                readPipeline: "mergeAlignmentPipeline"
+            });
+        } catch (err) {
+            t.fail(`sideloadPerf() threw an error: ${err}`);
+        }
         t.ok(!!perf);
+        const validator = new Validator();
+        let validation = validator.validate(
+            'constraint',
+            'perfDocument',
+            '0.3.0',
+            perf
+        );
+        t.equal(validation.errors, []);
         t.ok(docHasMarkup({ doc: perf, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
         t.ok(docHasMarkup({ doc: perf, type: "start_milestone", subtype: "usfm:zaln" }), "perf has alignment");
-        const perf2 = await epitelete.writePerf(bookCode, perf.main_sequence_id, perf.sequences[perf.main_sequence_id] ,{writePipeline: "stripAlignmentPipeline", readPipeline: "mergeAlignmentPipeline" });
+        let perf2;
+        try {
+            perf2 = await epitelete.writePerf(bookCode, perf.main_sequence_id, perf.sequences[perf.main_sequence_id], {
+                writePipeline: "stripAlignmentPipeline",
+                readPipeline: "mergeAlignmentPipeline"
+            });
+        } catch (err) {
+            t.fail(`writePerf() threw an error: ${err}`);
+        }
         t.ok(!!perf2);
         t.ok(docHasMarkup({ doc: perf2, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
         t.ok(docHasMarkup({ doc: perf2, type: "start_milestone", subtype: "usfm:zaln" }), "perf has alignment");
@@ -71,7 +96,7 @@ test(
         const epitelete = new Epitelete({ docSetId });
         const readPipeline = "stripAlignmentPipeline"
         await epitelete.sideloadPerf(bookCode, alignedPerf);
-    
+
         const pipelineInputs = epitelete.pipelineHandler?.pipelines[readPipeline]?.[0]?.inputs;
         t.ok(!!pipelineInputs, `epitelete contains ${readPipeline} pipeline`);
         const expectedDataLength = Object.keys(pipelineInputs).length;

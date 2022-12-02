@@ -161,7 +161,7 @@ test(
 
 const alignedPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "TIT_dcs_eng-alignment_perf_v0.2.1.json")));
 
-test.only(
+test(
     `writes perf and merges alignment (${testGroup})`,
     async t => {
         t.plan(3);
@@ -180,7 +180,7 @@ test.only(
 
         const merged = await epitelete.writePerf(bookCode, sequenceId, sequence, writeOptions);
         // const mergeNoAtts = merged;
-        console.log(JSON.stringify(merged," ",4));
+        // console.log(JSON.stringify(merged," ",4));
 
         t.deepEqual(alignedPerf, merged, "writePipeline mergeAlignmentPipeline roundtripped");
 

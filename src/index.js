@@ -36,7 +36,7 @@ class Epitelete {
         }
 
         const { hs, ...opt } = options;
-        const historySize = hs ? hs + 1 : 11//add one to passed history size so it matches undos allowed.
+        const historySize = hs ? hs + 1 : 11 //add one to passed history size so it matches undos allowed.
 
         this.options = {
             historySize,
@@ -48,7 +48,8 @@ class Epitelete {
             pipelines: pipelines || options.pipelines
                 ? { ...pipelines, ...options.pipelines } : null,
             transforms: transformActions || options.transforms
-                ? { ...transformActions, ...options.transforms } : null
+                ? { ...transformActions, ...options.transforms } : null,
+            proskomma: proskomma,
         });
         this.docSetId = docSetId;
         /** @type history */
@@ -219,7 +220,6 @@ class Epitelete {
             perfDocument: writePerf,
             clone: shouldClone
         });
-        // console.log(JSON.stringify(writePerf, " ", 4));
         const {perf:readPerf, pipelineData: readPipelineData} = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument: savedPerf });
         this.setPipelineData(bookCode, readPipelineData);
         return readPerf;

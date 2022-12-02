@@ -1,10 +1,27 @@
 const path = require("path");
 const fse = require("fs-extra");
-const {UWProskomma} = require("uw-proskomma");
+const { Proskomma } = require("proskomma");
 const Epitelete = require("../src/index").default;
 
-const args = process.argv.slice(5)
-const pk = new UWProskomma();
+const args = process.argv.slice(5);
+
+const pk = new Proskomma([
+  {
+      name: "org",
+      type: "string",
+      regex: "^[^\\s]+$"
+  },
+  {
+      name: "lang",
+      type: "string",
+      regex: "^[^\\s]+$"
+  },
+  {
+      name: "abbr",
+      type: "string",
+      regex: "^[A-za-z0-9_-]+$"
+  }
+]);
 
 console.log("Loading source to proskomma...");
 const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test", "test_data", "fra_lsg_succinct.json")));

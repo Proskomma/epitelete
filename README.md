@@ -45,9 +45,9 @@ Uses a [proskomma](https://github.com/mvahowe/proskomma-js) instance to handle [
 
 ```js
 import Epitelete from "epitelete"
-import UWProskomma from "uw-proskomma";
+import Proskomma from "proskomma";
 
-const proskomma = new UWProskomma();
+const proskomma = new Proskomma();
 proskomma.loadSuccinctDocSet(succintJson);
 
 const docSetId = "doc_set_id";
@@ -74,16 +74,16 @@ docPerf = epitelete.redoPerf(bookCode);
 **1. Install proskomma:**
 
 ```
-npm install uw-proskomma
+npm install proskomma
 ```
 
 **2. Instantiate and set Proskomma:**
 
 ```js
 
-import UWProskomma from "uw-proskomma";
+import Proskomma from "proskomma";
 
-const proskomma = new UWProskomma();
+const proskomma = new Proskomma();
 
 proskomma.loadSuccinctDocSet(succintJson);
 

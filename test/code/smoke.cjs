@@ -1,12 +1,28 @@
 const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
-const { UWProskomma } = require("uw-proskomma");
+const { Proskomma } = require("proskomma");
 const Epitelete = require("../../dist/index").default;
 
 const testGroup = "Smoke";
 
-const proskomma = new UWProskomma();
+const proskomma = new Proskomma([
+  {
+      name: "org",
+      type: "string",
+      regex: "^[^\\s]+$"
+  },
+  {
+      name: "lang",
+      type: "string",
+      regex: "^[^\\s]+$"
+  },
+  {
+      name: "abbr",
+      type: "string",
+      regex: "^[A-za-z0-9_-]+$"
+  }
+]);
 // const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "fra_lsg_succinct.json")));
 const succinctJson = fse.readJsonSync(
   path.resolve(
@@ -77,15 +93,17 @@ proskomma.importDocument(docUst.selectors, "usfm", docUst.content);
 test(`Instantiate Epitelete multiple times using the same pk instance (${testGroup})`, async function (t) {
   t.plan(2);
   try {
+    // console.log(proskomma.docSetList());
     const epi1 = new Epitelete({
       proskomma,
-      docSetId: "dcs/en_ult",
+      docSetId: "dcs_en_ult",
       options: { historySize: 10 },
     });
 
+
     const epi2 = new Epitelete({
       proskomma,
-      docSetId: "dcs/en_ust",
+      docSetId: "dcs_en_ust",
       options: { historySize: 10 },
     });
 

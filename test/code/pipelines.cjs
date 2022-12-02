@@ -16,6 +16,9 @@ const sequenceHasMarkup = ({ sequence, type, subtype }) => {
 };
 
 const docHasMarkup = ({ doc, type, subtype }) => {
+    if (!doc || !doc.sequences) {
+        return false;
+    }
     const mainSequence = doc.sequences[doc.main_sequence_id];
     return sequenceHasMarkup({ sequence: mainSequence, type, subtype })
 }
@@ -66,7 +69,7 @@ test(
             'constraint',
             'perfDocument',
             '0.3.0',
-            perf
+            perf || {}
         );
         t.equal(validation.errors, []);
         t.ok(docHasMarkup({ doc: perf, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");

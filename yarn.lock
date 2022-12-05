@@ -3567,13 +3567,13 @@ pipeline-handler@2.2.0:
     proskomma-json-tools "^0.5.9"
     xregexp "^5.1.1"
 
-pipeline-handler@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/pipeline-handler/-/pipeline-handler-2.2.1.tgz#dd045ba86960f22bd605ab255905897142cc0a2b"
-  integrity sha512-SYofG9N/jzcP8sX/4NxRX5ggM+hk4g9jX4F4REgyXJGK/rfeCsB5TIKEufrDhh9sJacAKLATiUFj9PA2bYxxYg==
+pipeline-handler@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/pipeline-handler/-/pipeline-handler-2.2.2.tgz#7768d4dadc766036801413186879830309351263"
+  integrity sha512-Fc/4rgxiKilZJkEUSVjaiJW6itxsNZg3ToubuyACWnYfNtH1CwtPkBo80G/Nt8/WHb2VtHDQnIIlN3no0Mg+Lw==
   dependencies:
     deep-copy-all "^1.3.4"
-    proskomma-json-tools "^0.5.9"
+    proskomma-json-tools "^0.5.12"
     xregexp "^5.1.1"
 
 pirates@^4.0.5:
@@ -3615,7 +3615,17 @@ process@^0.11.1, process@^0.11.10:
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
   integrity sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==
 
-proskomma-json-tools@^0.5.11, proskomma-json-tools@^0.5.9:
+proskomma-json-tools@^0.5.12:
+  version "0.5.12"
+  resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.5.12.tgz#d82b4aee5368877ad3db28356da5870411e1f734"
+  integrity sha512-Zn4KlM8xO/VnkaXoxbv4dWwOqcV4mtObUSRqwQJKv0UWkl7xiHVo5rKxH1lPgF5TitikjVpIrZL/DUCvheYrSw==
+  dependencies:
+    "@babel/core" "^7.17.10"
+    "@babel/plugin-proposal-throw-expressions" "^7.18.6"
+    ajv "^8.11.0"
+    deep-equal "^2.0.5"
+
+proskomma-json-tools@^0.5.9:
   version "0.5.11"
   resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.5.11.tgz#508f97066b1b45fac25529d8cc8ebdf18343cd7f"
   integrity sha512-DTYHq1syAN6DvoXdZWAGWJEtXqzrLZXGqFGOzwHMhQZc4qjHK8T+MbCnunxZh/83sCZCrAoiBAw0DXbEf6djUQ==

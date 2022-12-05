@@ -68,7 +68,7 @@ test(
             '0.3.0',
             perf
         );
-        t.equal(validation.errors, []);
+        t.equal(validation.errors, null);
         t.ok(docHasMarkup({ doc: perf, type: "wrapper", subtype: "usfm:w" }), "perf has wrapper");
         t.ok(docHasMarkup({ doc: perf, type: "start_milestone", subtype: "usfm:zaln" }), "perf has alignment");
         let perf2;

@@ -1,7 +1,7 @@
 const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
-const { UWProskomma } = require("uw-proskomma");
+const { Proskomma } = require("proskomma");
 const Epitelete = require("../../dist/index").default;
 
 const testGroup = "alignedUsfm";
@@ -15,13 +15,29 @@ const originalUsfm = fse
   .toString();
 
 const getEpi = (usfm) => {
-  const proskomma = new UWProskomma();
+  const proskomma = new Proskomma([
+      {
+          name: "org",
+          type: "string",
+          regex: "^[^\\s]+$"
+      },
+      {
+          name: "lang",
+          type: "string",
+          regex: "^[^\\s]+$"
+      },
+      {
+          name: "abbr",
+          type: "string",
+          regex: "^[A-za-z0-9_-]+$"
+      }
+  ]);
   proskomma.importDocument(
     { org: "test", lang: "fra", abbr: "web" },
     "usfm",
     usfm
   );
-  const epitelete = new Epitelete({ proskomma, docSetId: "test/fra_web" });
+  const epitelete = new Epitelete({ proskomma, docSetId: "test_fra_web" });
   return epitelete;
 };
 

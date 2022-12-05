@@ -1,12 +1,28 @@
 const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
-const {UWProskomma} = require("uw-proskomma");
+const { Proskomma } = require("proskomma");
 const Epitelete = require("../../dist/index").default;
 
 const testGroup = "Clear";
 
-const proskomma = new UWProskomma();
+const proskomma = new Proskomma([
+    {
+        name: "org",
+        type: "string",
+        regex: "^[^\\s]+$"
+    },
+    {
+        name: "lang",
+        type: "string",
+        regex: "^[^\\s]+$"
+    },
+    {
+        name: "abbr",
+        type: "string",
+        regex: "^[A-za-z0-9_-]+$"
+    }
+]);
 // const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "fra_lsg_succinct.json")));
 const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "eng_engWEBBE_succinct.json")));
 proskomma.loadSuccinctDocSet(succinctJson);
@@ -28,9 +44,9 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode);
-            t.ok("LUK" in epitelete.getDocuments(), "Can not clearPerf because no document was added.");
+            t.ok("TIT" in epitelete.getDocuments(), "Can not clearPerf because no document was added.");
             epitelete.clearPerf()
             t.same(epitelete.getDocuments(), {});
             t.same(epitelete.history, {});

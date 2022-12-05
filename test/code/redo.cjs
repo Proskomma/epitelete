@@ -1,14 +1,30 @@
 const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
-const {UWProskomma} = require("uw-proskomma");
+const { Proskomma } = require("proskomma");
 const Epitelete = require("../../dist/index").default;
-const _ = require("lodash");
+import deepCopy from 'rfdc/default';
 
 
 const testGroup = "Redo";
 
-const proskomma = new UWProskomma();
+const proskomma = new Proskomma([
+    {
+        name: "org",
+        type: "string",
+        regex: "^[^\\s]+$"
+    },
+    {
+        name: "lang",
+        type: "string",
+        regex: "^[^\\s]+$"
+    },
+    {
+        name: "abbr",
+        type: "string",
+        regex: "^[A-za-z0-9_-]+$"
+    }
+]);
 // const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "fra_lsg_succinct.json")));
 const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "eng_engWEBBE_succinct.json")));
 proskomma.loadSuccinctDocSet(succinctJson);
@@ -20,7 +36,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const canRedo = epitelete.canRedo(bookCode);
             t.notOk(canRedo);
         }catch (err){
@@ -37,7 +53,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode);
             const canRedo = epitelete.canRedo(bookCode);
             t.notOk(canRedo);
@@ -54,11 +70,11 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.getDocuments();
-            const _doc = _.cloneDeep(documents[bookCode]);
-            const lukeDoc = _.cloneDeep(_doc);
+            const _doc = deepCopy(documents[bookCode]);
+            const lukeDoc = deepCopy(_doc);
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
@@ -85,11 +101,11 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const perf = await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();
-            const _doc = _.cloneDeep(documents[bookCode]);
-            const lukeDoc = _.cloneDeep(_doc);
+            const _doc = deepCopy(documents[bookCode]);
+            const lukeDoc = deepCopy(_doc);
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
@@ -116,7 +132,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             t.same(epitelete.history,{});
             const doc = await epitelete.readPerf(bookCode);
             const history = epitelete.history[bookCode];
@@ -155,7 +171,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode)
             const redoPerf = await epitelete.redoPerf(bookCode);
             t.notOk(redoPerf);
@@ -173,11 +189,11 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode)
             const documents = epitelete.getDocuments();
-            const _doc = _.cloneDeep(documents[bookCode]);
-            const lukeDoc = _.cloneDeep(_doc);
+            const _doc = deepCopy(documents[bookCode]);
+            const lukeDoc = deepCopy(_doc);
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
@@ -204,12 +220,12 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const perf = await epitelete.readPerf(bookCode);
             const perfKeys = Object.keys(perf.sequences);
             const documents = epitelete.getDocuments();
-            const _doc = _.cloneDeep(documents[bookCode]);
-            const lukeDoc = _.cloneDeep(_doc);
+            const _doc = deepCopy(documents[bookCode]);
+            const lukeDoc = deepCopy(_doc);
             // console.log("Luke:",JSON.stringify(lukeDoc, null, 4));
             const sequences = lukeDoc?.sequences;
             const sequenceId3 = Object.keys(sequences)[3];
@@ -243,7 +259,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             const canRedo = epitelete.canRedo(bookCode);
             t.notOk(canRedo);
         }catch (err){

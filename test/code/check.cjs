@@ -1,13 +1,28 @@
 const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
-const {UWProskomma} = require("uw-proskomma");
+const { Proskomma } = require("proskomma");
 const Epitelete = require("../../dist/index").default;
-const _ = require("lodash");
 
 const testGroup = "Check";
 
-const proskomma = new UWProskomma();
+const proskomma = new Proskomma([
+    {
+        name: "org",
+        type: "string",
+        regex: "^[^\\s]+$"
+    },
+    {
+        name: "lang",
+        type: "string",
+        regex: "^[^\\s]+$"
+    },
+    {
+        name: "abbr",
+        type: "string",
+        regex: "^[A-za-z0-9_-]+$"
+    }
+]);
 
 const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "eng_engWEBBE_succinct.json")));
 proskomma.loadSuccinctDocSet(succinctJson);
@@ -20,7 +35,7 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();
             const sequences = documents[bookCode]?.sequences;
@@ -41,20 +56,16 @@ test(
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({proskomma, docSetId});
-            const bookCode = "LUK";
+            const bookCode = "TIT";
             await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();
-            // console.log(documents);
             const sequences = documents[bookCode]?.sequences;
-            
             const mainSequenceId = documents[bookCode]?.main_sequence_id;
             const mainSequence = sequences[mainSequenceId];
-            // console.log("Luke:",JSON.stringify(mainSequence, null, 4));
             // Insert an out of order verse marker.
-            // console.log(mainSequence.blocks[3].content[0]);
-            mainSequence.blocks[3].content.push({ type: 'mark', subtype: 'verses', atts: { number: 2 } })
+            mainSequence.blocks[2].content.push({ type: 'mark', subtype: 'verses', atts: { number: 1 } })
             const warnings = await epitelete.checkPerfSequence(mainSequence);
-            t.deepEqual(warnings, [ 'Verse 2 is out of order, expected 11', 'Verse 11 is out of order, expected 3' ])
+            t.deepEqual(warnings, [ 'Verse 1 is out of order, expected 10', 'Verse 10 is out of order, expected 2' ])
         } catch (err) {
             t.error(err);
         }

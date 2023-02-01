@@ -2,7 +2,7 @@ import { Validator, PipelineHandler } from 'proskomma-json-tools';
 import pipelines from './pipelines';
 import transformActions from './transforms';
 import deepCopy from 'rfdc/default';
-import { validateParams } from './utils';
+import { getPathValue, validateParams } from './utils';
 
 /**
  * PERF Middleware for Editors in the Proskomma Ecosystem
@@ -231,7 +231,11 @@ class Epitelete {
         const {perf:readPerf, pipelineData: readPipelineData} = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument: savedPerf });
         validatorResult = this.validator.validate('constraint','perfDocument','0.3.0', readPerf);
         if (!validatorResult.isValid) {
-            throw new Error(`readPerf is schema invalid: ${JSON.stringify(validatorResult.errors)}`);
+            const detailError = validatorResult.errors.map(error => {
+                const value = getPathValue({object: readPerf, path: error.instancePath});
+                return {...error, value: JSON.stringify(value,null,2)}
+            })
+            throw new Error(`readPerf is schema invalid: ${JSON.stringify(detailError)}`);
         }
         this.setPipelineData(bookCode, readPipelineData);
         return readPerf;
@@ -511,7 +515,7 @@ class Epitelete {
     async readUsfm(bookCode, options) {
         const perf = await this.readPerf(bookCode, options);
         if(this.pipelineHandler === null) this.instanciatePipelineHandler();
-        const output = await this.pipelineHandler.runPipeline("perf2usfmPipeline", { perf: perf });
+        const output = await this.pipelineHandler.runPipeline("perfToUsfmPipeline", { perf: perf });
         return output.usfm;
     }
 

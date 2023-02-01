@@ -26,3 +26,8 @@ export const removeAttribute = (obj, attributeName) => {
 
     return outObject;
 }
+
+export const getPathValue = ({ object, path }) => path.split("/").reduce((value,key) => {
+    value = value[key]
+    return value
+}, object);

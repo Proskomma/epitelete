@@ -1,7 +1,6 @@
-import { Validator } from 'proskomma-json-tools';
+import { Validator, PipelineHandler } from 'proskomma-json-tools';
 import pipelines from './pipelines';
 import transformActions from './transforms';
-import { PipelineHandler } from 'pipeline-handler';
 import deepCopy from 'rfdc/default';
 import { validateParams } from './utils';
 
@@ -633,6 +632,6 @@ export default Epitelete;
 
 /**
  * PipelineHandlers instance
- * @typedef {import('pipeline-handler')} PipelineHandler
+ * @typedef {typeof import('proskomma-json-tools').PipelineHandler} PipelineHandler
  * @see {@link https://github.com/DanielC-N/pipelineHandler}
  */

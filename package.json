@@ -11,7 +11,7 @@
     "apiGen": "npx run-func ./api.generate.js insertApiDocs",
     "test": "yarn run build && bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "yarn run build && tape -r @babel/register test/code/*.cjs",
-    "drill": "node utils/drill.js",
+    "drill": "yarn run build && node utils/drill.js",
     "oneTest": "yarn run build && tape -r @babel/register test/code/%TESTSCRIPT%.cjs",
     "oneTestOnLinux": "yarn run build ; tape -r @babel/register test/code/$TESTSCRIPT.cjs",
     "build": "babel src -d dist --copy-files",

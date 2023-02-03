@@ -1,0 +1,4116 @@
+{
+  "schema": {
+    "structure": "flat",
+    "structure_version": "0.2.1",
+    "constraints": [
+      {
+        "name": "perf",
+        "version": "0.2.1"
+      }
+    ]
+  },
+  "metadata": {
+    "translation": {
+      "id": "dcs/en_ult",
+      "selectors": {
+        "org": "dcs",
+        "lang": "en",
+        "abbr": "ult"
+      },
+      "properties": {},
+      "tags": []
+    },
+    "document": {
+      "id": "TIT EN_ULT en_English_ltr Tue May 31 2022 10:51:11 GMT-0400 (Eastern Daylight Time) tc",
+      "bookCode": "TIT",
+      "usfm": "3.0",
+      "ide": "UTF-8",
+      "h": "Titus",
+      "toc": "The Letter of Paul to Titus",
+      "toc2": "Titus",
+      "toc3": "Tit",
+      "properties": {},
+      "tags": []
+    }
+  },
+  "sequences": {
+    "YWQwNGZlYmEt": {
+      "type": "main",
+      "blocks": [
+                {
+          "type": "graft",
+          "subtype": "title",
+          "target": "MGM1MTU5ZmIt"
+        },
+        {
+          "type": "paragraph",
+          "subtype": "usfm:p",
+          "content": [
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:ts"
+            },
+            {
+              "type": "mark",
+              "subtype": "chapter",
+              "atts": {
+                "number": "1"
+              }
+            },
+            {
+              "type": "mark",
+              "subtype": "verses",
+              "atts": {
+                "number": "1"
+              }
+            },
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G39720"
+                ],
+                "x-lemma": [
+                  "Παῦλος"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "NMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Παῦλος"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "Paul"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            ", ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G14010"
+                ],
+                "x-lemma": [
+                  "δοῦλος"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "NMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "δοῦλος"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "a"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "servant"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G23160"
+                ],
+                "x-lemma": [
+                  "θεός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "2"
+                ],
+                "x-content": [
+                  "Θεοῦ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "of"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "5"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "God"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G11610"
+                ],
+                "x-lemma": [
+                  "δέ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "CC",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "δὲ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "and"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G06520"
+                ],
+                "x-lemma": [
+                  "ἀπόστολος"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "NMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἀπόστολος"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "an"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "apostle"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G24240"
+                ],
+                "x-lemma": [
+                  "Ἰησοῦς"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Ἰησοῦ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "of"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "5"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "Jesus"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G55470"
+                ],
+                "x-lemma": [
+                  "χριστός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Χριστοῦ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "Christ"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            ", ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G25960"
+                ],
+                "x-lemma": [
+                  "κατά"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "P",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "A",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "κατὰ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "for"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G41020"
+                ],
+                "x-lemma": [
+                  "πίστις"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "AFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "πίστιν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "the"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "4"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "faith"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G15880"
+                ],
+                "x-lemma": [
+                  "ἐκλεκτός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "NS",
+                  "",
+                  "",
+                  "",
+                  "GMP",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἐκλεκτῶν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "of"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "3"
+                ],
+                "x-occurrences": [
+                  "5"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "the"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "4"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "chosen"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "people"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G23160"
+                ],
+                "x-lemma": [
+                  "θεός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "2"
+                ],
+                "x-content": [
+                  "Θεοῦ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "of"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "4"
+                ],
+                "x-occurrences": [
+                  "5"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "God"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G25320"
+                ],
+                "x-lemma": [
+                  "καί"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "CC",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "καὶ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "and"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G19220"
+                ],
+                "x-lemma": [
+                  "ἐπίγνωσις"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "AFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἐπίγνωσιν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "the"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "3"
+                ],
+                "x-occurrences": [
+                  "4"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "knowledge"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G02250"
+                ],
+                "x-lemma": [
+                  "ἀλήθεια"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἀληθείας"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "of"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "5"
+                ],
+                "x-occurrences": [
+                  "5"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "the"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "4"
+                ],
+                "x-occurrences": [
+                  "4"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "truth"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G35880"
+                ],
+                "x-lemma": [
+                  "ὁ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "EA",
+                  "",
+                  "",
+                  "",
+                  "GFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "τῆς"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "that"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G25960"
+                ],
+                "x-lemma": [
+                  "κατά"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "P",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "A",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "κατ’"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "agrees"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "with"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G21500"
+                ],
+                "x-lemma": [
+                  "εὐσέβεια"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "AFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "εὐσέβειαν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "godliness"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            ", ",
+            {
+              "type": "mark",
+              "subtype": "verses",
+              "atts": {
+                "number": "2"
+              }
+            },
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G19090"
+                ],
+                "x-lemma": [
+                  "ἐπί"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "P",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "D",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἐπ’"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "with"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G16800"
+                ],
+                "x-lemma": [
+                  "ἐλπίς"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "DFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἐλπίδι"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "the"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "certain"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "hope"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G22220"
+                ],
+                "x-lemma": [
+                  "ζωή"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ζωῆς"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "of"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G01660"
+                ],
+                "x-lemma": [
+                  "αἰώνιος"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "AA",
+                  "",
+                  "",
+                  "",
+                  "GFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "αἰωνίου"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "eternal"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G22220"
+                ],
+                "x-lemma": [
+                  "ζωή"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ζωῆς"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "life"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G37390"
+                ],
+                "x-lemma": [
+                  "ὅς"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "RR",
+                  "",
+                  "",
+                  "",
+                  "AFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἣν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "that"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G23160"
+                ],
+                "x-lemma": [
+                  "θεός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "NMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Θεὸς"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "God"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            ", ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G35880"
+                ],
+                "x-lemma": [
+                  "ὁ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "EA",
+                  "",
+                  "",
+                  "",
+                  "NMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ὁ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "who"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G08930"
+                ],
+                "x-lemma": [
+                  "ἀψευδής"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "AA",
+                  "",
+                  "",
+                  "",
+                  "NMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἀψευδὴς"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "does"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "not"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "lie"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            ", ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G18610"
+                ],
+                "x-lemma": [
+                  "ἐπαγγέλλω"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "V",
+                  "IAM3",
+                  "",
+                  "S",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἐπηγγείλατο"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "promised"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G42530"
+                ],
+                "x-lemma": [
+                  "πρό"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "P",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "G",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "πρὸ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "before"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G01660"
+                ],
+                "x-lemma": [
+                  "αἰώνιος"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "AA",
+                  "",
+                  "",
+                  "",
+                  "GMP",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "αἰωνίων"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "all"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "the"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "ages"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G55500"
+                ],
+                "x-lemma": [
+                  "χρόνος"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMP",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "χρόνων"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "of"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "time"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            ". ",
+            {
+              "type": "mark",
+              "subtype": "verses",
+              "atts": {
+                "number": "3"
+              }
+            },
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G11610"
+                ],
+                "x-lemma": [
+                  "δέ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "CC",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "δὲ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "But"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G25400"
+                ],
+                "x-lemma": [
+                  "καιρός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "DMP",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "καιροῖς"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "at"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "the"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "3"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G23980"
+                ],
+                "x-lemma": [
+                  "ἴδιος"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "EF",
+                  "",
+                  "",
+                  "",
+                  "DMP",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἰδίοις"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "right"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G25400"
+                ],
+                "x-lemma": [
+                  "καιρός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "DMP",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "καιροῖς"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "time"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            ", ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G53190"
+                ],
+                "x-lemma": [
+                  "φανερόω"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "V",
+                  "IAA3",
+                  "",
+                  "S",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἐφανέρωσεν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "he"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "revealed"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G08460"
+                ],
+                "x-lemma": [
+                  "αὐτός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "RP",
+                  "",
+                  "",
+                  "3GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "αὐτοῦ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "his"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G35880"
+                ],
+                "x-lemma": [
+                  "ὁ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "EA",
+                  "",
+                  "",
+                  "",
+                  "AMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "τὸν"
+                ]
+              }
+            },
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G30560"
+                ],
+                "x-lemma": [
+                  "λόγος"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "AMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "λόγον"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "word"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G17220"
+                ],
+                "x-lemma": [
+                  "ἐν"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "P",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "D",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἐν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "by"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G27820"
+                ],
+                "x-lemma": [
+                  "κήρυγμα"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "DNS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "κηρύγματι"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "the"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "3"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "proclamation"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G37390"
+                ],
+                "x-lemma": [
+                  "ὅς"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "RR",
+                  "",
+                  "",
+                  "",
+                  "ANS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ὃ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "that"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G14730"
+                ],
+                "x-lemma": [
+                  "ἐγώ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "RP",
+                  "",
+                  "",
+                  "1N",
+                  "S",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἐγὼ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "I"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G41000"
+                ],
+                "x-lemma": [
+                  "πιστεύω"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "V",
+                  "IAP1",
+                  "",
+                  "S",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἐπιστεύθην"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "was"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "entrusted"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "with"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G25960"
+                ],
+                "x-lemma": [
+                  "κατά"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "P",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "A",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "κατ’"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "by"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G20030"
+                ],
+                "x-lemma": [
+                  "ἐπιταγή"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "AFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἐπιταγὴν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "the"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "3"
+                ],
+                "x-occurrences": [
+                  "3"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "command"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G35880"
+                ],
+                "x-lemma": [
+                  "ὁ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "EA",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "τοῦ"
+                ]
+              }
+            },
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G49900"
+                ],
+                "x-lemma": [
+                  "σωτήρ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Σωτῆρος"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "of"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G23160"
+                ],
+                "x-lemma": [
+                  "θεός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Θεοῦ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "God"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G14730"
+                ],
+                "x-lemma": [
+                  "ἐγώ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "RP",
+                  "",
+                  "",
+                  "1G",
+                  "P",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἡμῶν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "our"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G35880"
+                ],
+                "x-lemma": [
+                  "ὁ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "EA",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "τοῦ"
+                ]
+              }
+            },
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G49900"
+                ],
+                "x-lemma": [
+                  "σωτήρ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Σωτῆρος"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "Savior"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            ". ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:ts"
+            },
+            " ",
+            {
+              "type": "mark",
+              "subtype": "verses",
+              "atts": {
+                "number": "4"
+              }
+            },
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G51030"
+                ],
+                "x-lemma": [
+                  "Τίτος"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "DMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Τίτῳ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "To"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "Titus"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            ", ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G50430"
+                ],
+                "x-lemma": [
+                  "τέκνον"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "DNS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "τέκνῳ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "a"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G11030"
+                ],
+                "x-lemma": [
+                  "γνήσιος"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "AA",
+                  "",
+                  "",
+                  "",
+                  "DNS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "γνησίῳ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "true"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G50430"
+                ],
+                "x-lemma": [
+                  "τέκνον"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "DNS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "τέκνῳ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "son"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G25960"
+                ],
+                "x-lemma": [
+                  "κατά"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "P",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "A",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "κατὰ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "in"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G41020"
+                ],
+                "x-lemma": [
+                  "πίστις"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "AFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "πίστιν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "a"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G28390"
+                ],
+                "x-lemma": [
+                  "κοινός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "AA",
+                  "",
+                  "",
+                  "",
+                  "AFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "κοινὴν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "common"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G41020"
+                ],
+                "x-lemma": [
+                  "πίστις"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "AFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "πίστιν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "faith"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            ". ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G54850"
+                ],
+                "x-lemma": [
+                  "χάρις"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "NFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "χάρις"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "Grace"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G25320"
+                ],
+                "x-lemma": [
+                  "καί"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "CC",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "2"
+                ],
+                "x-content": [
+                  "καὶ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "and"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G15150"
+                ],
+                "x-lemma": [
+                  "εἰρήνη"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "NFS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "εἰρήνη"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "peace"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G05750"
+                ],
+                "x-lemma": [
+                  "ἀπό"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "P",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "G",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἀπὸ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "from"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G23160"
+                ],
+                "x-lemma": [
+                  "θεός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Θεοῦ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "God"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G39620"
+                ],
+                "x-lemma": [
+                  "πατήρ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Πατρὸς"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "the"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            " ",
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "Father"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G25320"
+                ],
+                "x-lemma": [
+                  "καί"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "CC",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "2"
+                ],
+                "x-content": [
+                  "καὶ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "and"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "2"
+                ],
+                "x-occurrences": [
+                  "2"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G55470"
+                ],
+                "x-lemma": [
+                  "χριστός"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Χριστοῦ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "Christ"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G24240"
+                ],
+                "x-lemma": [
+                  "Ἰησοῦς"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Ἰησοῦ"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "Jesus"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G14730"
+                ],
+                "x-lemma": [
+                  "ἐγώ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "RP",
+                  "",
+                  "",
+                  "1G",
+                  "P",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "ἡμῶν"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "our"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            " ",
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G35880"
+                ],
+                "x-lemma": [
+                  "ὁ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "EA",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "τοῦ"
+                ]
+              }
+            },
+            {
+              "type": "start_milestone",
+              "subtype": "usfm:zaln",
+              "atts": {
+                "x-strong": [
+                  "G49900"
+                ],
+                "x-lemma": [
+                  "σωτήρ"
+                ],
+                "x-morph": [
+                  "Gr",
+                  "N",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "GMS",
+                  ""
+                ],
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ],
+                "x-content": [
+                  "Σωτῆρος"
+                ]
+              }
+            },
+            {
+              "type": "wrapper",
+              "subtype": "usfm:w",
+              "content": [
+                "Savior"
+              ],
+              "atts": {
+                "x-occurrence": [
+                  "1"
+                ],
+                "x-occurrences": [
+                  "1"
+                ]
+              }
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            {
+              "type": "end_milestone",
+              "subtype": "usfm:zaln"
+            },
+            "."
+          ]
+        }
+      ]
+    },
+    "MGM1MTU5ZmIt": {
+      "type": "title",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "subtype": "usfm:mt",
+          "content": [
+            "Titus"
+          ]
+        }
+      ]
+    }
+  },
+  "main_sequence_id": "YWQwNGZlYmEt"
+}

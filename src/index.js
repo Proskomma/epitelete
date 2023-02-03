@@ -357,14 +357,17 @@ class Epitelete {
         if (!validatorResult.isValid) {
             throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;
         }
+
+        const { sequences: originalSequences, ...perf } = perfDocument;
         const sequences = {
-            ...perfDocument.sequences,
+            ...originalSequences,
             [sequenceId]: (shouldClone ? deepCopy(perfSequence) : perfSequence)
         }
-        perfDocument.sequences = sequences;
+        perf["sequences"] = sequences;
 
         const { writePipeline, ...readOptions } = options;
-        const { perf:newPerfDoc, pipelineData } = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });
+        const { perf: newPerfDoc, pipelineData } = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument: perf });
+        newPerfDoc.sequences = {...originalSequences, [sequenceId]: newPerfDoc.sequences[sequenceId]};
 
         const history = this.history[bookCode];
         history.stack = history.stack.slice(history.cursor);

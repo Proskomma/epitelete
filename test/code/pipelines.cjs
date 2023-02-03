@@ -47,7 +47,6 @@ proskomma.loadSuccinctDocSet(succinctJson);
 
 const alignedPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "TIT_dcs_eng-alignment_perf_v0.2.1.json")));
 
-
 test(
     `read follows correct pipeline flow. (${testGroup})`,
     async t => {
@@ -115,5 +114,57 @@ test(
         await epitelete.readPerf(bookCode, { readPipeline })
             .then(() => t.pass(`Doesn't throw after receiving more data than expected. received: "${dataLenght}", expected: "${expectedDataLength}"`))
             .catch(() => t.fail(`Throws after receiving more data than expected. received: "${dataLenght}", expected: "${expectedDataLength}"`))
+    }
+)
+
+test(
+    `mergeAlignment does not produce duplicate words when receiving graft sequences. (${testGroup})`,
+    async t => {
+        const bookCode = "TIT";
+        const docSetId = "DBL/eng_engWEBBE";
+        const epitelete = new Epitelete({ docSetId });
+        let perf;
+        const readOptions = {readPipeline: "stripAlignmentPipeline"}
+        const writeOptions = {
+            writePipeline: "mergeAlignmentPipeline",
+            ...readOptions
+        }
+        try {
+            perf = await epitelete.sideloadPerf(bookCode, alignedPerf, readOptions);
+        } catch (err) {
+            t.fail(`sideloadPerf() threw an error: ${err}`);
+        }
+        t.ok(!!perf);
+        t.ok(/Paul,/.test(perf.sequences[perf.main_sequence_id].blocks[1].content[3]), "Contains word to be tested");
+        const validator = new Validator();
+        let validation = validator.validate(
+            'constraint',
+            'perfDocument',
+            '0.3.0',
+            perf || {}
+        );
+        t.equal(validation.errors, null);
+        let perf2;
+        try {
+            let index = 2
+            let sequenceId = perf.main_sequence_id
+            const getSequence = (sequences, type) => {
+                sequenceId = Object.keys(sequences).find(key => sequences[key].type === type)
+                return sequences[sequenceId]
+            };
+            const type = "title"
+            let sequence = getSequence(perf.sequences, type);
+            perf2 = perf;
+            while (index) {
+                perf2 = await epitelete.writePerf(bookCode, sequenceId, sequence, writeOptions);
+                sequence = getSequence(perf2.sequences, type);
+                index--;
+            }
+        } catch (err) {
+            t.fail(`writePerf() threw an error: ${err}`);
+        }
+        t.ok(!!perf2);
+        t.notOk(/PaulPaul/.test(perf2.sequences[perf2.main_sequence_id].blocks[1].content[3]), "No duplicated words");
+        t.end();
     }
 )

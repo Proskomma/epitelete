@@ -45,12 +45,15 @@ class Epitelete {
         this.proskomma = proskomma;
         this.pipelineHandler = new PipelineHandler({
             pipelines: pipelines || options.pipelines
-                ? { ...pipelines, ...options.pipelines } : null,
+            ? { ...pipelines, ...options.pipelines } : null,
             transforms: transformActions || options.transforms
-                ? { ...transformActions, ...options.transforms } : null,
+            ? { ...transformActions, ...options.transforms } : null,
             proskomma: proskomma,
         });
         this.docSetId = docSetId;
+
+        /** @type saved: the latest perf saved*/
+        this.saved = {};
         /** @type history */
         this.history = {};
         this.validator = new Validator();
@@ -107,6 +110,23 @@ class Epitelete {
             documents[bookCode] = this.getDocument(bookCode);
             return documents;
         }, {});
+    }
+
+    /**
+     * Stores the reference to the current perfDocument in history.
+     * @param {string} bookCode 
+     */
+    savePerf(bookCode) {
+        this.saved[bookCode] = this.getBookData(bookCode);
+    }
+
+    /**
+     * Checks if the current perfDocument in history matches the stored one.
+     * @param {string} bookCode 
+     * @returns 
+     */
+    canSavePerf(bookCode) {
+        return this.saved[bookCode] !== this.getBookData(bookCode);
     }
 
     setBookHistory(bookCode) {
@@ -238,6 +258,7 @@ class Epitelete {
             throw new Error(`readPerf is schema invalid: ${JSON.stringify(detailError)}`);
         }
         this.setPipelineData(bookCode, readPipelineData);
+        this.savePerf(bookCode);
         return readPerf;
     }
 
@@ -252,7 +273,7 @@ class Epitelete {
      * @return {Promise<perfDocument>} same sideloaded PERF document
      */
     async sideloadPerf(bookCode, perfDocument, options = {}) {
-        validateParams(["writePipeline", "readPipeline", "safe"], options, "Unexpected option in sideloadPerf");
+        validateParams(["writePipeline", "readPipeline", "cloning"], options, "Unexpected option in sideloadPerf");
 
         if (this.backend === "proskomma") {
             throw "Can't call sideloadPerf in proskomma mode";
@@ -280,7 +301,7 @@ class Epitelete {
      * @return {Promise<perfDocument>} fetched PERF document
      */
     async fetchPerf(bookCode, options = {}) {
-        validateParams(["writePipeline","readPipeline","safe"], options, "Unexpected option in fetchPerf");
+        validateParams(["writePipeline","readPipeline","cloning"], options, "Unexpected option in fetchPerf");
 
         if (this.backend === "standalone") {
             throw "Can't call fetchPerf in standalone mode";
@@ -312,7 +333,7 @@ class Epitelete {
      * @return {Promise<perfDocument>} found or fetched PERF document
      */
     async readPerf(bookCode, options = {}) {
-        validateParams(["readPipeline","safe"], options, "Unexpected option in readPerf");
+        validateParams(["readPipeline","cloning"], options, "Unexpected option in readPerf");
         const shouldClone = options.cloning ?? true;
 
         if (!this.history[bookCode] && this.backend === "proskomma") {
@@ -340,7 +361,7 @@ class Epitelete {
      * @return {Promise<perfDocument>} modified PERF document
      */
     async writePerf(bookCode, sequenceId, perfSequence, options = {}) {
-        validateParams(["writePipeline","readPipeline","safe"], options, "Unexpected option in writePerf");
+        validateParams(["writePipeline","readPipeline","cloning"], options, "Unexpected option in writePerf");
         const shouldClone = options.cloning ?? true;
 
         const perfDocument = this.getDocument(bookCode, false);
@@ -629,6 +650,10 @@ export default Epitelete;
 
 /**
  * @typedef {Object<string, bookHistory>} history
+ */
+
+/**
+ * @typedef {Object<string, perfDocument>} saved
  */
 
 /**

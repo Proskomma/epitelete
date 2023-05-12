@@ -206,8 +206,11 @@ test(
         const unaligned = await epitelete.sideloadPerf(bookCode, perfWithNewGrafts).catch((err) => {
             console.log(err)
         });
+        // console.log(JSON.stringify(unaligned, null, 4));
         t.equals(Object.keys(unaligned.sequences).length, 1);
+
         const merged = await epitelete.writePerf(bookCode, ...extractSequence(unaligned), writeOptions);
+        // console.log(JSON.stringify(merged, null, 4));
         t.equals(Object.keys(merged.sequences).length, 3);
     }
 )

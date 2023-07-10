@@ -999,17 +999,12 @@
     lodash.isundefined "^3.0.1"
     lodash.uniq "^4.5.0"
 
-"@findr/perf@^1.0.3-beta.13":
-  version "1.0.3-beta.13"
-  resolved "https://registry.yarnpkg.com/@findr/perf/-/perf-1.0.3-beta.13.tgz#c986271326de03837d66f4a842d6a1b0c1da63b7"
-  integrity sha512-wYdTfJTdsUFKzdO0iy/naDwzlA8zKoZwgY7CMmd2XZ1+5MD9d4hbN4h/CXp2J7YmbyrUW3P2Y3w0iC+1OtSDGw==
+"@findr/perf@^1.0.3-beta.17":
+  version "1.0.3-beta.17"
+  resolved "https://registry.yarnpkg.com/@findr/perf/-/perf-1.0.3-beta.17.tgz#e0837afd6cf81028c782c0708a534f0fef5df7b1"
+  integrity sha512-qOAG+MsGQfnvq6AEhnAYhpDCUt0bkmenQQn36Ty2WhN83wAIwGN1n0tyhzrnXZO6CcgKgtgMzbodchPLLijkhg==
   dependencies:
-    proskomma-json-tools "0.7.1"
-
-"@findr/text@^1.0.7-beta.4":
-  version "1.0.7-beta.4"
-  resolved "https://registry.yarnpkg.com/@findr/text/-/text-1.0.7-beta.4.tgz#d3f2f3e34fba15334637d20fdc2f94f86be1c260"
-  integrity sha512-bkZuNkYXelaJdtiWfo+6npN6+TpuQcjTAUFdpp1QJe+37eTQK4iytWka6UT+WnPNWUqHyvVHhMWnRV94pjPlvg==
+    proskomma-json-tools "^0.7.1"
 
 "@graphql-tools/merge@8.3.12":
   version "8.3.12"
@@ -3736,17 +3731,6 @@ process@^0.11.1, process@^0.11.10:
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
   integrity sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==
 
-proskomma-json-tools@0.7.1, proskomma-json-tools@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.7.1.tgz#1ad2690f8438a5b79bd5ed6593bf221cb4b7599a"
-  integrity sha512-8a8eKJwbOgvabCe+Kv97zKnp1WAnwo6zU0jc3dPNILFUZojxzeXjH7xu/Jk6tbwC8TBPK57ldJSoQ6S9eTvD3w==
-  dependencies:
-    "@babel/core" "^7.17.10"
-    "@babel/plugin-proposal-throw-expressions" "^7.18.6"
-    ajv "^8.11.0"
-    cheerio "^1.0.0-rc.12"
-    deep-equal "^2.0.5"
-
 proskomma-json-tools@^0.5.9:
   version "0.5.11"
   resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.5.11.tgz#508f97066b1b45fac25529d8cc8ebdf18343cd7f"
@@ -3755,6 +3739,17 @@ proskomma-json-tools@^0.5.9:
     "@babel/core" "^7.17.10"
     "@babel/plugin-proposal-throw-expressions" "^7.18.6"
     ajv "^8.11.0"
+    deep-equal "^2.0.5"
+
+proskomma-json-tools@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.7.1.tgz#1ad2690f8438a5b79bd5ed6593bf221cb4b7599a"
+  integrity sha512-8a8eKJwbOgvabCe+Kv97zKnp1WAnwo6zU0jc3dPNILFUZojxzeXjH7xu/Jk6tbwC8TBPK57ldJSoQ6S9eTvD3w==
+  dependencies:
+    "@babel/core" "^7.17.10"
+    "@babel/plugin-proposal-throw-expressions" "^7.18.6"
+    ajv "^8.11.0"
+    cheerio "^1.0.0-rc.12"
     deep-equal "^2.0.5"
 
 proskomma@^0.9.2:

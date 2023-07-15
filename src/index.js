@@ -2,7 +2,7 @@ import { Validator, PipelineHandler } from 'proskomma-json-tools';
 import pipelines from './pipelines';
 import transformActions from './transforms';
 import deepCopy from 'rfdc/default';
-import { getPathValue, validateParams } from './utils';
+import { findNewGraft, generateId, getPathValue, validateParams } from './utils';
 
 /**
  * PERF Middleware for Editors in the Proskomma Ecosystem
@@ -361,8 +361,9 @@ class Epitelete {
      * @return {Promise<perfDocument>} modified PERF document
      */
     async writePerf(bookCode, sequenceId, perfSequence, options = {}) {
-        validateParams(["writePipeline","readPipeline","cloning"], options, "Unexpected option in writePerf");
-        const shouldClone = options.cloning ?? true;
+        validateParams(["writePipeline","readPipeline","cloning","insertSequences"], options, "Unexpected option in writePerf");
+        const { writePipeline, cloning, insertSequences, ...readOptions } = options;
+        const shouldClone = cloning ?? true;
 
         const perfDocument = this.getDocument(bookCode, false);
 
@@ -379,6 +380,19 @@ class Epitelete {
             throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;
         }
 
+        const newSequences = {};
+        if (insertSequences) {
+            findNewGraft(perfSequence, (graft) => {
+                const sequenceId = generateId();
+                newSequences[sequenceId] = {
+                    type: graft.subtype,
+                    blocks: []
+                };
+                graft.target = sequenceId;
+                delete (graft.new);
+            });
+        }
+
         const { sequences: originalSequences, ...perf } = perfDocument;
         const sequences = {
             ...originalSequences,
@@ -386,9 +400,8 @@ class Epitelete {
         }
         perf["sequences"] = sequences;
 
-        const { writePipeline, ...readOptions } = options;
         const { perf: newPerfDoc, pipelineData } = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument: perf });
-        newPerfDoc.sequences = {...originalSequences, [sequenceId]: newPerfDoc.sequences[sequenceId]};
+        newPerfDoc.sequences = {...originalSequences,...newSequences, [sequenceId]: newPerfDoc.sequences[sequenceId]};
 
         const history = this.history[bookCode];
         history.stack = history.stack.slice(history.cursor);

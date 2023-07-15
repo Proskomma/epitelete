@@ -1,3 +1,6 @@
+import UUID from 'pure-uuid';
+import base64 from 'base-64';
+
 export const validateParams = (expectedParams, params, errorMessage) => {
     const _expectedParams = new Set(expectedParams);
     const unknownParams = Object.keys(params).filter(p => !_expectedParams.has(p));
@@ -31,3 +34,43 @@ export const getPathValue = ({ object, path }) => path.split("/").reduce((value,
     value = value[key]
     return value
 }, object);
+
+export const generateId = () => base64.encode(new UUID(4)).substring(0, 12);
+
+export const findObject = (obj = {}, key, value) => {
+    const result = [];
+    const recursiveSearch = (obj = {}) => {
+        if (!obj || typeof obj !== 'object') { return;};
+        if (obj[key] === value){
+            result.push(obj);
+        };
+        Object.keys(obj).forEach(function (k) {
+            recursiveSearch(obj[k]);
+        });
+    }
+    recursiveSearch(obj);
+    return result;
+}
+
+export const findNewGraft = (obj = {}, onNewGraft) => {
+    const result = [];
+    const recursiveSearch = (obj = {}) => {
+        if (!obj || typeof obj !== 'object') { return; };
+        if (obj.type === "graft" && obj.new){
+            result.push(obj);
+            onNewGraft(obj);
+        };
+        if (obj.blocks) {
+            obj.blocks.forEach(function (block) {
+                recursiveSearch(block);
+            });
+        }
+        if (obj.content) {
+            obj.content.forEach(function (contentElement) {
+                recursiveSearch(contentElement);
+            });
+        }
+    }
+    recursiveSearch(obj);
+    return result;
+}

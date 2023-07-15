@@ -4,6 +4,7 @@ const fse = require("fs-extra");
 const { Proskomma } = require("proskomma");
 const Epitelete = require("../../dist/index").default;
 import deepCopy from 'rfdc/default';
+import { extractSequence } from "../../utils";
 
 const testGroup = "Write";
 
@@ -187,5 +188,29 @@ test(
         const undone = await epitelete.undoPerf(bookCode, readOptions);
 
         t.deepEqual(unaligned, undone, "undoing with filter returns same as reading previous with filter");
+    }
+)
+
+const perfWithNewGrafts = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "new_grafts.json")));
+
+test(
+    `creates new sequences for new grafts (${testGroup})`,
+    async t => {
+        t.plan(2)
+        //vague test, requires further testing to improve confidence. Good enough for now.
+        const docSetId = "DCS/en_ult";
+        const epitelete = new Epitelete({ docSetId });
+        const bookCode = "TIT";
+        const writeOptions = { insertSequences: true };
+        
+        const unaligned = await epitelete.sideloadPerf(bookCode, perfWithNewGrafts).catch((err) => {
+            console.log(err)
+        });
+        // console.log(JSON.stringify(unaligned, null, 4));
+        t.equals(Object.keys(unaligned.sequences).length, 1);
+
+        const merged = await epitelete.writePerf(bookCode, ...extractSequence(unaligned), writeOptions);
+        // console.log(JSON.stringify(merged, null, 4));
+        t.equals(Object.keys(merged.sequences).length, 3);
     }
 )

@@ -32,11 +32,16 @@ proskomma.loadSuccinctDocSet(succinctJson);
 test(
     `roundtrip unchanged PERF (${testGroup})`,
     async t => {
-        t.plan(1);
+        t.plan(2);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
             const bookCode = "TIT";
+            let expectedActions = ["loadPerf", "writePerf"];
+            let actions = [];
+            epitelete.observe(({ action, data }) => {
+                actions.push(action);
+            });
             await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();
             const lukeDoc = documents[bookCode];
@@ -44,6 +49,7 @@ test(
             const sequenceId3 = Object.keys(sequences)[3];
             const sequence3 = sequences[sequenceId3];
             const newDoc = await epitelete.writePerf(bookCode, sequenceId3, sequence3);
+            t.deepEqual(actions, expectedActions, "observers work");
             t.deepEqual(newDoc,lukeDoc, "expect to be unchanged");
         } catch (err) {
             t.error(err);

@@ -5,6 +5,13 @@ import fnr from '@findr/perf'
 import deepCopy from 'rfdc/default';
 import { findNewGraft, generateId, getPathValue, validateParams } from './utils';
 
+const ACTIONS = {
+    WRITE_PERF: 'writePerf',
+    READ_PERF: 'readPerf',
+    LOAD_PERF: 'loadPerf',
+    UNDO_PERF: 'undoPerf',
+    REDO_PERF: 'redoPerf',
+}
 /**
  * PERF Middleware for Editors in the Proskomma Ecosystem
  * @class
@@ -27,6 +34,8 @@ class Epitelete {
         if (!docSetId) {
             throw new Error("docSetId is required");
         }
+
+        this._observers = [];
 
         const query = `{ docSet(id: "${docSetId}") { id } }`;
         const { data: gqlResult } = proskomma?.gqlQuerySync(query) || {};
@@ -59,6 +68,21 @@ class Epitelete {
         this.history = {};
         this.validator = new Validator();
         this.backend = proskomma ? 'proskomma' : 'standalone';
+    }
+
+    unobserve(observer) {
+        this._observers = this._observers.filter(o => o !== observer);
+    }
+
+    observe(observer) {
+        this._observers.push(observer);
+        return () => this.unobserve(observer);
+    }
+
+    notifyObservers(...args) {
+        this._observers.forEach(observer => {
+            observer(...args);
+        });
     }
 
     /**
@@ -260,6 +284,7 @@ class Epitelete {
         }
         this.setPipelineData(bookCode, readPipelineData);
         this.savePerf(bookCode);
+        this.notifyObservers({ action: ACTIONS.LOAD_PERF, data: readPerf });
         return readPerf;
     }
 
@@ -412,8 +437,9 @@ class Epitelete {
 
         if (history.stack.length > this.options.historySize)
             history.stack.pop();
-
-        return await this.readPerf(bookCode, readOptions);
+        const returnedPerf = await this.readPerf(bookCode, readOptions);
+        this.notifyObservers({ action: ACTIONS.WRITE_PERF, data: returnedPerf });
+        return returnedPerf
     }
 
     /**
@@ -428,7 +454,9 @@ class Epitelete {
         if (this.canUndo(bookCode)) {
             const history = this.history[bookCode];
             ++history.cursor;
-            return await this.readPerf(bookCode, options);
+            const perf = await this.readPerf(bookCode, options);
+            this.notifyObservers({ action: ACTIONS.UNDO_PERF, data: perf });
+            return perf
         }
         return null;
     }
@@ -445,7 +473,9 @@ class Epitelete {
         if (this.canRedo(bookCode)) {
             const history = this.history[bookCode];
             --history.cursor;
-            return await this.readPerf(bookCode, options);
+            const perf = await this.readPerf(bookCode, options);
+            this.notifyObservers({ action: ACTIONS.REDO_PERF, data: perf });
+            return perf
         }
         return null;
     }

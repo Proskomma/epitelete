@@ -1,6 +1,7 @@
 import { Validator, PipelineHandler } from 'proskomma-json-tools';
 import pipelines from './pipelines';
 import transformActions from './transforms';
+import fnr from '@findr/perf'
 import deepCopy from 'rfdc/default';
 import { findNewGraft, generateId, getPathValue, validateParams } from './utils';
 
@@ -45,9 +46,9 @@ class Epitelete {
         this.proskomma = proskomma;
         this.pipelineHandler = new PipelineHandler({
             pipelines: pipelines || options.pipelines
-            ? { ...pipelines, ...options.pipelines } : null,
+            ? { ...pipelines, ...options.pipelines, ...fnr.pipelines } : null,
             transforms: transformActions || options.transforms
-            ? { ...transformActions, ...options.transforms } : null,
+            ? { ...transformActions, ...options.transforms, ...fnr.transforms } : null,
             proskomma: proskomma,
         });
         this.docSetId = docSetId;

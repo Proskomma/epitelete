@@ -221,3 +221,43 @@ test(
         // console.log(output.matches.matches);
     }
 )
+
+
+test.only(
+    `makeDocumentsReport() (${testGroup})`,
+    async t => {
+        t.plan(10);
+        const docSetId = "DBL/eng_engWEBBE";
+        const epitelete = new Epitelete({proskomma, docSetId});
+        await epitelete.fetchPerf("MAT");
+        await epitelete.fetchPerf("MRK");
+        await epitelete.fetchPerf("LUK");
+        await epitelete.fetchPerf("JHN");
+
+        const data = {
+        perf: {},
+        params: {
+            target: "Zacharias",
+            replacement: "Zacarias",
+            replacementKeys: [1]
+        },
+        };
+        const report = await epitelete.makeDocumentReport(
+            'LUK',
+            "findAndReplace",
+            data
+        ).then(output => {
+            t.ok('results' in output);
+            t.ok('length' in output.results);
+            t.equal(output.results.length, 9);
+            t.ok('match' in output.results[0]);
+            t.equal(output.results[0].match, 'Zacharias');
+            t.ok('metadata' in output.results[0]);
+            t.ok('chapter' in output.results[0].metadata);
+            t.equal(output.results[0].metadata.chapter, '1');
+            t.ok('verses' in output.results[0].metadata);
+            t.equal(output.results[0].metadata.verses, '5');
+        });
+        // console.log(output.matches.matches);
+    }
+)

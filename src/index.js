@@ -1,9 +1,17 @@
 import { Validator, PipelineHandler } from 'proskomma-json-tools';
 import pipelines from './pipelines';
 import transformActions from './transforms';
+import fnr from '@findr/perf'
 import deepCopy from 'rfdc/default';
-import { getPathValue, validateParams } from './utils';
+import { findNewGraft, generateId, getPathValue, validateParams } from './utils';
 
+const ACTIONS = {
+    WRITE_PERF: 'writePerf',
+    READ_PERF: 'readPerf',
+    LOAD_PERF: 'loadPerf',
+    UNDO_PERF: 'undoPerf',
+    REDO_PERF: 'redoPerf',
+}
 /**
  * PERF Middleware for Editors in the Proskomma Ecosystem
  * @class
@@ -27,6 +35,8 @@ class Epitelete {
             throw new Error("docSetId is required");
         }
 
+        this._observers = [];
+
         const query = `{ docSet(id: "${docSetId}") { id } }`;
         const { data: gqlResult } = proskomma?.gqlQuerySync(query) || {};
 
@@ -45,9 +55,9 @@ class Epitelete {
         this.proskomma = proskomma;
         this.pipelineHandler = new PipelineHandler({
             pipelines: pipelines || options.pipelines
-            ? { ...pipelines, ...options.pipelines } : null,
+            ? { ...pipelines, ...options.pipelines, ...fnr.pipelines } : null,
             transforms: transformActions || options.transforms
-            ? { ...transformActions, ...options.transforms } : null,
+            ? { ...transformActions, ...options.transforms, ...fnr.transforms } : null,
             proskomma: proskomma,
         });
         this.docSetId = docSetId;
@@ -58,6 +68,21 @@ class Epitelete {
         this.history = {};
         this.validator = new Validator();
         this.backend = proskomma ? 'proskomma' : 'standalone';
+    }
+
+    unobserve(observer) {
+        this._observers = this._observers.filter(o => o !== observer);
+    }
+
+    observe(observer) {
+        this._observers.push(observer);
+        return () => this.unobserve(observer);
+    }
+
+    notifyObservers(...args) {
+        this._observers.forEach(observer => {
+            observer(...args);
+        });
     }
 
     /**
@@ -265,6 +290,7 @@ class Epitelete {
         }
         this.setPipelineData(bookCode, readPipelineData);
         this.savePerf(bookCode);
+        this.notifyObservers({ action: ACTIONS.LOAD_PERF, data: readPerf });
         return readPerf;
     }
 
@@ -475,8 +501,9 @@ class Epitelete {
      * @return {Promise<perfDocument>} modified PERF document
      */
     async writePerf(bookCode, sequenceId, perfSequence, options = {}) {
-        validateParams(["writePipeline","readPipeline","cloning"], options, "Unexpected option in writePerf");
-        const shouldClone = options.cloning ?? true;
+        validateParams(["writePipeline","readPipeline","cloning","insertSequences"], options, "Unexpected option in writePerf");
+        const { writePipeline, cloning, insertSequences, ...readOptions } = options;
+        const shouldClone = cloning ?? true;
 
         const perfDocument = this.getDocument(bookCode, false);
 
@@ -493,6 +520,19 @@ class Epitelete {
             throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;
         }
 
+        const newSequences = {};
+        if (insertSequences) {
+            findNewGraft(perfSequence, (graft) => {
+                const sequenceId = generateId();
+                newSequences[sequenceId] = {
+                    type: graft.subtype,
+                    blocks: []
+                };
+                graft.target = sequenceId;
+                delete (graft.new);
+            });
+        }
+
         const { sequences: originalSequences, ...perf } = perfDocument;
         const sequences = {
             ...originalSequences,
@@ -500,9 +540,8 @@ class Epitelete {
         }
         perf["sequences"] = sequences;
 
-        const { writePipeline, ...readOptions } = options;
         const { perf: newPerfDoc, pipelineData } = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument: perf });
-        newPerfDoc.sequences = {...originalSequences, [sequenceId]: newPerfDoc.sequences[sequenceId]};
+        newPerfDoc.sequences = {...originalSequences,...newSequences, [sequenceId]: newPerfDoc.sequences[sequenceId]};
 
         const history = this.history[bookCode];
         history.stack = history.stack.slice(history.cursor);
@@ -512,8 +551,9 @@ class Epitelete {
 
         if (history.stack.length > this.options.historySize)
             history.stack.pop();
-
-        return await this.readPerf(bookCode, readOptions);
+        const returnedPerf = await this.readPerf(bookCode, readOptions);
+        this.notifyObservers({ action: ACTIONS.WRITE_PERF, data: returnedPerf });
+        return returnedPerf
     }
 
     /**
@@ -528,7 +568,9 @@ class Epitelete {
         if (this.canUndo(bookCode)) {
             const history = this.history[bookCode];
             ++history.cursor;
-            return await this.readPerf(bookCode, options);
+            const perf = await this.readPerf(bookCode, options);
+            this.notifyObservers({ action: ACTIONS.UNDO_PERF, data: perf });
+            return perf
         }
         return null;
     }
@@ -545,7 +587,9 @@ class Epitelete {
         if (this.canRedo(bookCode)) {
             const history = this.history[bookCode];
             --history.cursor;
-            return await this.readPerf(bookCode, options);
+            const perf = await this.readPerf(bookCode, options);
+            this.notifyObservers({ action: ACTIONS.REDO_PERF, data: perf });
+            return perf
         }
         return null;
     }

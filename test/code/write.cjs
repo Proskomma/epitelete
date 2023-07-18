@@ -4,6 +4,7 @@ const fse = require("fs-extra");
 const { Proskomma } = require("proskomma");
 const Epitelete = require("../../dist/index").default;
 import deepCopy from 'rfdc/default';
+import { extractSequence } from "../../utils";
 
 const testGroup = "Write";
 
@@ -31,11 +32,16 @@ proskomma.loadSuccinctDocSet(succinctJson);
 test(
     `roundtrip unchanged PERF (${testGroup})`,
     async t => {
-        t.plan(1);
+        t.plan(2);
         try {
             const docSetId = "DBL/eng_engWEBBE";
             const epitelete = new Epitelete({ proskomma, docSetId });
             const bookCode = "TIT";
+            let expectedActions = ["loadPerf", "writePerf"];
+            let actions = [];
+            epitelete.observe(({ action, data }) => {
+                actions.push(action);
+            });
             await epitelete.readPerf(bookCode);
             const documents = epitelete.getDocuments();
             const lukeDoc = documents[bookCode];
@@ -43,6 +49,7 @@ test(
             const sequenceId3 = Object.keys(sequences)[3];
             const sequence3 = sequences[sequenceId3];
             const newDoc = await epitelete.writePerf(bookCode, sequenceId3, sequence3);
+            t.deepEqual(actions, expectedActions, "observers work");
             t.deepEqual(newDoc,lukeDoc, "expect to be unchanged");
         } catch (err) {
             t.error(err);
@@ -187,5 +194,29 @@ test(
         const undone = await epitelete.undoPerf(bookCode, readOptions);
 
         t.deepEqual(unaligned, undone, "undoing with filter returns same as reading previous with filter");
+    }
+)
+
+const perfWithNewGrafts = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "new_grafts.json")));
+
+test(
+    `creates new sequences for new grafts (${testGroup})`,
+    async t => {
+        t.plan(2)
+        //vague test, requires further testing to improve confidence. Good enough for now.
+        const docSetId = "DCS/en_ult";
+        const epitelete = new Epitelete({ docSetId });
+        const bookCode = "TIT";
+        const writeOptions = { insertSequences: true };
+        
+        const unaligned = await epitelete.sideloadPerf(bookCode, perfWithNewGrafts).catch((err) => {
+            console.log(err)
+        });
+        // console.log(JSON.stringify(unaligned, null, 4));
+        t.equals(Object.keys(unaligned.sequences).length, 1);
+
+        const merged = await epitelete.writePerf(bookCode, ...extractSequence(unaligned), writeOptions);
+        // console.log(JSON.stringify(merged, null, 4));
+        t.equals(Object.keys(merged.sequences).length, 3);
     }
 )

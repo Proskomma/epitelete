@@ -3,35 +3,9 @@
     "id": 0,
     "type": "Inputs",
     "inputs": {
-      "usfmTarget": "text",
-      "selectorsTarget": "json",
+      "perfTarget": "json",
       "perfSource": "json"
     }
-  },
-  {
-    "id": 1,
-    "title": "USFM to PERF",
-    "name": "usfm2perf",
-    "type": "Transform",
-    "inputs": [
-      {
-        "name": "usfm",
-        "type": "text",
-        "source": "Input usfmTarget"
-      },
-      {
-        "name": "selectors",
-        "type": "json",
-        "source": "Input selectorsTarget"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "perf",
-        "type": "json"
-      }
-    ],
-    "description": "USFM=>PERF: Conversion via Proskomma"
   },
   {
     "id": 2,
@@ -42,7 +16,7 @@
       {
         "name": "perf",
         "type": "json",
-        "source": "Transform 1 perf"
+        "source": "Input perfTarget"
       }
     ],
     "outputs": [
@@ -62,7 +36,7 @@
       {
         "name": "perf",
         "type": "json",
-        "source": "Transform 1 perf"
+        "source": "Input perfTarget"
       },
       {
         "name": "verseWords",

@@ -1,0 +1,171 @@
+[
+  {
+    "id": 0,
+    "type": "Inputs",
+    "inputs": {
+      "perf": "json"
+    }
+  },
+  {
+    "id": 1,
+    "title": "Transform 1",
+    "name": "calculateUsfmChapterPositions",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Input perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "report",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Generates positions for inserting chapter numbers into USFM"
+  },
+  {
+    "id": 2,
+    "title": "Transform 2",
+    "name": "alignedPerfFormatToUsfm",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Input perf"
+      },
+      {
+        "name": "report",
+        "type": "json",
+        "source": "Transform 1 report"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "usfm",
+        "type": "text"
+      },
+      {
+        "name": "selectors",
+        "type": "json"
+      }
+    ],
+    "description": "aligned PERF + chapterReport => USFM"
+  },
+  {
+    "id": 3,
+    "title": "USFM to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Transform 2 usfm"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Transform 2 selectors"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 4,
+    "title": "Transform 4",
+    "name": "verseWords",
+    "type": "Transform",
+    "transformName": "verseWords",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "verseWords",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Counts words occurrences"
+  },
+  {
+    "id": 6,
+    "title": "Strip Alignment",
+    "name": "stripAlignment",
+    "type": "Transform",
+    "transformName": "stripAlignment",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      },
+      {
+        "name": "verseWords",
+        "type": "json",
+        "source": "Transform 4 verseWords"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      },
+      {
+        "name": "strippedAlignment",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Strips alignment markup"
+  },
+  {
+    "id": 9,
+    "title": "Merge stripped perf",
+    "name": "mergePerfText",
+    "type": "Transform",
+    "transformName": "mergePerfText",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 6 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Merge consecutive text strings"
+  },
+  {
+    "id": 999,
+    "type": "Outputs",
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 9 perf"
+      },
+      {
+        "name": "strippedAlignment",
+        "type": "json",
+        "source": "Transform 6 strippedAlignment"
+      }
+    ]
+  }
+]

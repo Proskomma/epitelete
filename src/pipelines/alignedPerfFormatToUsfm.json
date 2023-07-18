@@ -1,0 +1,74 @@
+[
+  {
+    "id": 0,
+    "type": "Inputs",
+    "inputs": {
+      "perf": "json"
+    }
+  },
+  {
+    "id": 1,
+    "title": "Transform 1",
+    "name": "calculateUsfmChapterPositions",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Input perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "report",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Generates positions for inserting chapter numbers into USFM"
+  },
+  {
+    "id": 2,
+    "title": "Transform 2",
+    "name": "alignedPerfFormatToUsfm",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Input perf"
+      },
+      {
+        "name": "report",
+        "type": "json",
+        "source": "Transform 1 report"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "usfm",
+        "type": "text"
+      },
+      {
+        "name": "selectors",
+        "type": "json"
+      }
+    ],
+    "description": "aligned PERF + chapterReport => USFM"
+  },
+  {
+    "id": 999,
+    "type": "Outputs",
+    "outputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Transform 2 usfm"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Transform 2 selectors"
+      }
+    ]
+  }
+]

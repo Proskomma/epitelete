@@ -31,3 +31,18 @@ export const getPathValue = ({ object, path }) => path.split("/").reduce((value,
     value = value[key]
     return value
 }, object);
+
+export const handleOccurences = (arrayWords) => {
+    let len = arrayWords.length;
+    let occurences = new Map();
+    let posOccurence = [...arrayWords];
+    for(let i = 0; i < len; i++) {
+        if(occurences.has(arrayWords[i]) && arrayWords[i] !== "") {
+            occurences.set(arrayWords[i], occurences.get(arrayWords[i]) + 1);
+        } else {
+            occurences.set(arrayWords[i], 1);
+        }
+        posOccurence[i] = occurences.get(arrayWords[i]);
+    };
+    return [occurences, posOccurence];
+}

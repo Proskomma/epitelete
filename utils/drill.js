@@ -3,7 +3,7 @@ const path = require("path");
 
 try {
   const [, , customTarget] = process.argv;
-  const DEFAULT_TARGET = "*";
+  const DEFAULT_TARGET = "alignedPerf";
   const target = customTarget || DEFAULT_TARGET;
   const targetPath = path.resolve(__dirname, "..", "test", "code", `${target}.cjs`);
   const command = spawn(

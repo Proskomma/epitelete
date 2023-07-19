@@ -88,7 +88,7 @@ test.only(`perfToRichPerf validation (${testGroup})`, async (t) => {
     // console.log("richPerf ==\n", JSON.stringify(richPerf, null, 2));
     // // let richPerfDoc = await epiteleteInstance.fetchPerf(bookCode, {writePipeline: "perfToRichPerf"});
 
-    // // HERE I CAN DO MODIFCATIONS IN MY RICH PERF
+    // ***HERE I CAN DO MODIFCATIONS IN MY RICH PERF***
     // // const sequenceId = ;
     // const sequenceRichPerfDoc = richPerfDoc.sequences[richPerfDoc.main_sequence_id];
 

@@ -65,7 +65,7 @@ const getPerfData = (perf) => {
   return { sequences: _sequences, metadata };
 };
 
-test.only(`perfToRichPerf validation (${testGroup})`, async (t) => {
+test(`perfToRichPerf validation (${testGroup})`, async (t) => {
   t.plan(2);
   try {
     const epiteleteInstance = getEpi(originalUsfm);

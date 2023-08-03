@@ -454,6 +454,7 @@ class Epitelete {
      * @returns 
      */
     async fetchRichPerf(bookCode, options = {}) {
+        // TODO : change to name perfSource for a more generic one
         validateParams(["writePipeline","readPipeline","cloning","perfSource"], options, "Unexpected option in fetchRichPerf");
 
         if (this.backend === "standalone") {

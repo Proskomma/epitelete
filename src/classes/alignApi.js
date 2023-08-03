@@ -1,8 +1,4 @@
-// import { Proskomma } from 'proskomma-cross';
 import ProskommaInterface from './ProskommaInterface';
-// import { PipelineHandler } from 'proskomma-json-tools';
-// import pipelines from '../pipeline-tools/pipelines';
-// import transforms from '../pipeline-tools/transforms';
 
 class Aligner {
     /**
@@ -11,7 +7,7 @@ class Aligner {
      * @param {String[]} targetUsfm - target raw str/json, code lang and abbr
      * @param {boolean} verbose
     */
-    constructor({proskomma= null, sourceText=[], targetText=[], verbose=false}) {
+    constructor({proskomma=null, sourceText=[], targetText=[], verbose=false}) {
         this.numberVersesInChapters = [];
         this.numChapters = 0;
         this.numVersesOfCurrentChapter = 0;
@@ -45,6 +41,10 @@ class Aligner {
                 this.numVersesOfCurrentChapter = this.numberVersesInChapters[0].length;
                 this.bookCode = this.bookCodeSrc;
             }
+        } else if(!proskomma) {
+            this.bookCodeTrg = this.proskommaInterface.getBookCode();
+            this.docSetIdTrg = this.proskommaInterface.getId()[0];
+            this.targetText = targetText[0];
         } else {
             this.targetText = "";
         }
@@ -59,6 +59,25 @@ class Aligner {
         this.currentTargetSentenceStr = "";
         this.verbose = verbose;
         this.AlignementJSON = JSON.parse("{}");
+    }
+
+    setSourceText(raw, codeLang, abbr) {
+        let resRaw = this.proskommaInterface.addRawDocument(raw, codeLang, abbr);
+        this.bookCodeSrc = resRaw[0];
+        this.docSetIdSrc = resRaw[1];
+        this.targetText = raw;
+        if(this.bookCodeSrc !== "" && this.bookCodeTrg !== "" && this.bookCodeSrc != this.bookCodeTrg) {
+            throw new Error("the book code doesn't match. Are you trying to align two different books ?");
+        } else {
+            let resintegrity = this.checkIntegrity(this.docSetIdSrc, this.bookCodeSrc, this.docSetIdTrg, this.bookCodeTrg);
+            let isGood = resintegrity[0];
+            if(!isGood) {
+                throw Error("the source book does not match the number of chapters/verses of the target book\n", "src ==", resintegrity[1], "| target ==", resintegrity[2]);
+            }
+            this.numberVersesInChapters = resintegrity[1];
+            this.numVersesOfCurrentChapter = this.numberVersesInChapters[0].length;
+            this.bookCode = this.bookCodeSrc;
+        }
     }
 
     setTargetText(raw, codeLang, abbr) {
@@ -468,4 +487,4 @@ class Aligner {
     }
 }
 
-module.exports = { Aligner };
+export default Aligner;

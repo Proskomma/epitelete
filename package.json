@@ -32,9 +32,10 @@
   "homepage": "https://github.com/Proskomma/epitelete#readme",
   "dependencies": {
     "@babel/core": "^7.22.9",
-    "proskomma-json-tools": "^0.7.2",
     "@findr/perf": "^1.0.3-beta.17",
+    "axios": "^1.4.0",
     "base-64": "^1.0.0",
+    "proskomma-json-tools": "^0.7.2",
     "pure-uuid": "^1.6.3",
     "rfdc": "^1.3.0"
   },

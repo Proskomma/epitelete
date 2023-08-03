@@ -1,7 +1,5 @@
-import { Proskomma } from 'proskomma-core';
+import { Proskomma } from 'proskomma';
 import Axios from 'axios';
-// const path = require('path');
-// const fse = require('fs-extra');
 
 class ProskommaInterface {
 

@@ -651,6 +651,13 @@ class Epitelete {
         return warnings;
     }
 
+    getMainSequence(bookCode) {
+        let documents = this.getDocuments();
+        let sequences = documents[bookCode]?.sequences;
+        let mainSequenceId = Object.keys(sequences)[0];
+        return sequences[mainSequenceId];
+    }
+
     /**
      * Get array of book codes from history
      * @return {string[]} array of bookCodes

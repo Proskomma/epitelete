@@ -66,7 +66,7 @@ const getPerfData = (perf) => {
 };
 
 test.only(`perfToRichPerf validation (${testGroup})`, async (t) => {
-  t.plan(1);
+  t.plan(2);
   try {
     const epiteleteInstance = getEpi(originalUsfm);
     let bookCode = "TIT";
@@ -121,7 +121,7 @@ test.only(`perfToRichPerf validation (${testGroup})`, async (t) => {
 
     // source perf (greek, hebrew?)
     // target usfm (french, spanish, russian, etc.) aligned or not
-    // const { perf } = await pipelineH.runPipeline("alignedUsfmToAlignedPerf", {
+    // const { perf } = await pipelineH.runPipeline("usfmToRichPerf", {
     //   "usfmTarget": originalUsfm,
     //   "selectorsTarget": {"lang": "eng", "abbr": "ust"},
     //   "perfSource": sourceGreekPerf,
@@ -134,24 +134,28 @@ test.only(`perfToRichPerf validation (${testGroup})`, async (t) => {
       richPerf || {}
     );
     t.equal(validation.errors, null);
+
+    const warnings = await epiteleteInstance.checkPerfSequence(epiteleteInstance.getMainSequence(bookCode));
+    t.deepEqual(warnings, []);
+
   } catch (err) {
     console.log(err);
-    t.fail("alignedUsfmToAlignedPerf throws on valid perf");
+    t.fail("perfToRichPerf throws on valid perf");
   }
 });
 
-test(`roundtrip alignedUsfmToAlignedPerf validation (${testGroup})`, async (t) => {
+test(`roundtrip usfmToRichPerf validation (${testGroup})`, async (t) => {
   t.plan(3);
   try {
     const epiteleteInstance = getEpi(originalUsfm);
     const pipelineH = epiteleteInstance.getPipelineHandler();
-    const { perf } = await pipelineH.runPipeline("alignedUsfmToAlignedPerf", {
+    const { perf } = await pipelineH.runPipeline("usfmToRichPerf", {
       "usfmTarget": originalUsfm,
       "selectorsTarget": {"lang": "eng", "abbr": "ust"},
       "perfSource": sourceGreekPerf,
     });
     
-    const { usfm, selectors } = await pipelineH.runPipeline("alignedPerfFormatToUsfm", {
+    const { usfm, selectors } = await pipelineH.runPipeline("richPerfToUsfm", {
       "perf": perf
     });
 
@@ -160,7 +164,7 @@ test(`roundtrip alignedUsfmToAlignedPerf validation (${testGroup})`, async (t) =
     t.ok(usfm.split("\n")[0].length > 0);
   } catch (err) {
     console.log(err);
-    t.fail("roundtrip alignedUsfmToAlignedPerf throws on valid perf");
+    t.fail("roundtrip usfmToRichPerf throws on valid perf");
   }
 });
 
@@ -169,7 +173,7 @@ test(`roundtrip stripRichAlignedPerf validation (${testGroup})`, async (t) => {
   try {
     const epiteleteInstance = getEpi(originalUsfm);
     const pipelineH = epiteleteInstance.getPipelineHandler();
-    const { perf } = await pipelineH.runPipeline("alignedUsfmToAlignedPerf", {
+    const { perf } = await pipelineH.runPipeline("usfmToRichPerf", {
       "usfmTarget": originalUsfm,
       "selectorsTarget": {"lang": "eng", "abbr": "ust"},
       "perfSource": sourceGreekPerf,

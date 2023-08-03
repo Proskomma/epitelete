@@ -1,15 +1,17 @@
 import reports from "./reports";
-import alignedUsfmToAlignedPerf from './alignedUsfmToAlignedPerf.json';
-import alignedPerfFormatToUsfm from './alignedPerfFormatToUsfm.json';
+import usfmToRichPerf from './usfmToRichPerf.json';
+import richPerfToUsfm from './richPerfToUsfm.json';
 import perfToRichPerf from './perfToRichPerf.json';
 import stripRichAlignedPerf from './stripRichAlignedPerf.json';
+import richPerfToPerf from './richPerfToPerf.json';
 
 const wordSearch = reports.wordSearch;
 
 export default {
     wordSearch,
-    alignedUsfmToAlignedPerf,
-    alignedPerfFormatToUsfm,
+    usfmToRichPerf,
+    richPerfToUsfm,
     stripRichAlignedPerf,
-    perfToRichPerf
+    perfToRichPerf,
+    richPerfToPerf
 }

@@ -29,7 +29,7 @@
   {
     "id": 2,
     "title": "Transform 2",
-    "name": "alignedPerfFormatToUsfm",
+    "name": "richPerfToUsfm",
     "type": "Transform",
     "inputs": [
       {

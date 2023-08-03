@@ -42,7 +42,7 @@ test(
             const mainSequenceId = Object.keys(sequences)[0];
             const mainSequence = sequences[mainSequenceId];
             const warnings = await epitelete.checkPerfSequence(mainSequence);
-            t.deepEqual(warnings, [])
+            t.deepEqual(warnings, []);
         } catch (err) {
             t.error(err);
         }

@@ -125,7 +125,7 @@
   {
     "id": 6,
     "title": "Transform 6",
-    "name": "perfToAlignedPerfFormat",
+    "name": "perfToRichPerf",
     "type": "Transform",
     "inputs": [
       {

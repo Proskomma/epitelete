@@ -34,7 +34,7 @@ const buildEndWrapper = (atts, type, isnested = false) => {
     return str + type + "*";
 }
 
-const localAlignedPerfFormatToUsfm = {
+const localRichPerfToUsfm = {
     startDocument: [
         {
             description: "Set up environment",
@@ -295,15 +295,15 @@ const localAlignedPerfFormatToUsfm = {
     ]
 };
 
-const alignedPerfFormatToUsfmCode = function ({perf, report}) {
-    const cl = new PerfRenderFromJson({srcJson: perf, actions: localAlignedPerfFormatToUsfm});
+const richPerfToUsfmCode = function ({perf, report}) {
+    const cl = new PerfRenderFromJson({srcJson: perf, actions: localRichPerfToUsfm});
     const output = {};
     cl.renderDocument({docId: "", config: { report }, output});
     return {usfm: output.usfm, selectors: output.selectors};
 }
 
-const alignedPerfFormatToUsfm = {
-    name: "alignedPerfFormatToUsfm",
+const richPerfToUsfm = {
+    name: "richPerfToUsfm",
     type: "Transform",
     description: "PERF=>USFM",
     inputs: [
@@ -328,6 +328,6 @@ const alignedPerfFormatToUsfm = {
             type: "json"
         }
     ],
-    code: alignedPerfFormatToUsfmCode
+    code: richPerfToUsfmCode
 }
-export default alignedPerfFormatToUsfm;
+export default richPerfToUsfm;

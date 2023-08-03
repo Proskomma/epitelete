@@ -223,7 +223,7 @@ test(
 )
 
 
-test.only(
+test(
     `makeDocumentsReport() (${testGroup})`,
     async t => {
         t.plan(10);

@@ -1,21 +1,21 @@
 import wordSearch from "./wordSearch";
-import perfToAlignedPerfFormat from "./perfToAlignedPerfFormat";
+import perfToRichPerf from "./perfToRichPerf";
 import stripAlignment from "./stripAlignment";
 import mergePerfText from "./mergePerfText";
 import usfm2perf from "./usfm2perf";
 import verseWords from "./verseWords";
 import parseGreekUsfm from "./parseGreekUsfm";
 import calculateUsfmChapterPositions from "./calculateUsfmChapterPositions";
-import alignedPerfFormatToUsfm from "./alignedPerfFormatToUsfm";
+import richPerfToUsfm from "./richPerfToUsfm";
 
 export default {
     wordSearch,
-    perfToAlignedPerfFormat,
+    perfToRichPerf,
     stripAlignment,
     mergePerfText,
     usfm2perf,
     verseWords,
     parseGreekUsfm,
     calculateUsfmChapterPositions,
-    alignedPerfFormatToUsfm
+    richPerfToUsfm
 }

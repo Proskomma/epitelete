@@ -44,7 +44,7 @@ const specialMark = function(bookCode, chapterNum, verseNum, tokenNumber, atts) 
     }
 }
 
-const localPerfToAlignedPerfFormat = {
+const localPerfToRichPerf = {
     startDocument: [
         {
             description: "setup",
@@ -188,10 +188,6 @@ const localPerfToAlignedPerfFormat = {
                             }
                         }
                     }
-                    if(alignments.greekWords.length > 0) {
-                        console.log("there's still greek words unaligned to push !!");
-                        console.log("alignments.greekWords ==",alignments.greekWords)
-                    }
                     return false;
                 } catch (err) {
                     console.error(err);
@@ -231,11 +227,11 @@ const localPerfToAlignedPerfFormat = {
     ]
 };
 
-const perfToAlignedPerfFormatCode = function ({ perf, verseWords: totalOccurrences, stripped: strippedMarkup, greekReport }) {
+const perfToRichPerfCode = function ({ perf, verseWords: totalOccurrences, stripped: strippedMarkup, greekReport }) {
     const cl = new PerfRenderFromJson({
         srcJson: perf,
         actions: mergeActions(
-            [localPerfToAlignedPerfFormat, render.perfToPerf.renderActions.identityActions]
+            [localPerfToRichPerf, render.perfToPerf.renderActions.identityActions]
         )
     });
     const output = {};
@@ -251,8 +247,8 @@ const perfToAlignedPerfFormatCode = function ({ perf, verseWords: totalOccurrenc
     return { perf: output.perf }; // identityActions currently put PERF directly in output
 }
 
-const perfToAlignedPerfFormat = {
-    name: "perfToAlignedPerfFormat",
+const perfToRichPerf = {
+    name: "perfToRichPerf",
     type: "Transform",
     description: "PERF=>PERF adds report to verses",
     inputs: [
@@ -283,8 +279,8 @@ const perfToAlignedPerfFormat = {
             type: "json"
         },
     ],
-    code: perfToAlignedPerfFormatCode
+    code: perfToRichPerfCode
 };
-export default perfToAlignedPerfFormat;
+export default perfToRichPerf;
 
 

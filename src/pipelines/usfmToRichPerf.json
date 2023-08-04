@@ -1,0 +1,171 @@
+[
+  {
+    "id": 0,
+    "type": "Inputs",
+    "inputs": {
+      "usfmTarget": "text",
+      "selectorsTarget": "json",
+      "perfSource": "json"
+    }
+  },
+  {
+    "id": 1,
+    "title": "USFM to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Input usfmTarget"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Input selectorsTarget"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 2,
+    "title": "Transform 2",
+    "name": "verseWords",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 1 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "verseWords",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Counts target's words occurrences"
+  },
+  {
+    "id": 3,
+    "title": "Transform 3",
+    "name": "stripAlignment",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 1 perf"
+      },
+      {
+        "name": "verseWords",
+        "type": "json",
+        "source": "Transform 2 verseWords"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      },
+      {
+        "name": "strippedAlignment",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Strips target's alignment markup"
+  },
+  {
+    "id": 4,
+    "title": "Transform 4",
+    "name": "mergePerfText",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Merge consecutive text strings"
+  },
+  {
+    "id": 5,
+    "title": "Generate a report from Greek PERF",
+    "name": "parseGreekUsfm",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Input perfSource"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "report",
+        "type": "json"
+      }
+    ],
+    "description": "Generate a detailled occurences greek and lemma report"
+  },
+  {
+    "id": 6,
+    "title": "Transform 6",
+    "name": "perfToRichPerf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 4 perf"
+      },
+      {
+        "name": "stripped",
+        "type": "json",
+        "source": "Transform 3 strippedAlignment"
+      },
+      {
+        "name": "verseWords",
+        "type": "json",
+        "source": "Transform 2 verseWords"
+      },
+      {
+        "name": "greekReport",
+        "type": "json",
+        "source": "Transform 5 report"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF adds report to verses"
+  },
+  {
+    "id": 999,
+    "type": "Outputs",
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 6 perf"
+      }
+    ]
+  }
+]

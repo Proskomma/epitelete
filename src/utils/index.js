@@ -35,6 +35,21 @@ export const getPathValue = ({ object, path }) => path.split("/").reduce((value,
     return value
 }, object);
 
+export const handleOccurences = (arrayWords) => {
+    let len = arrayWords.length;
+    let occurences = new Map();
+    let posOccurence = [...arrayWords];
+    for(let i = 0; i < len; i++) {
+        if(occurences.has(arrayWords[i]) && arrayWords[i] !== "") {
+            occurences.set(arrayWords[i], occurences.get(arrayWords[i]) + 1);
+        } else {
+            occurences.set(arrayWords[i], 1);
+        }
+        posOccurence[i] = occurences.get(arrayWords[i]);
+    };
+    return [occurences, posOccurence];
+}
+
 export const generateId = () => base64.encode(new UUID(4)).substring(0, 12);
 
 export const findObject = (obj = {}, key, value) => {

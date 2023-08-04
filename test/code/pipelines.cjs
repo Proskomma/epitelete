@@ -96,7 +96,7 @@ test(
         const bookCode = "TIT";
         const docSetId = "DBL/eng_engWEBBE";
         const epitelete = new Epitelete({ docSetId });
-        const readPipeline = "stripAlignmentPipeline"
+        const readPipeline = "stripAlignmentPipeline";
         await epitelete.sideloadPerf(bookCode, alignedPerf);
 
         const pipelineInputs = epitelete.pipelineHandler?.pipelines[readPipeline]?.[0]?.inputs;

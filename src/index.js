@@ -188,7 +188,7 @@ class Epitelete {
         const { stack, cursor } = this.getBookHistory(bookCode);
         stack[cursor] ??= {};
         stack[cursor].perfDocument = clone ? deepCopy(perfDocument) : perfDocument;
-        return perfDocument
+        return perfDocument;
     }
 
     /**
@@ -227,7 +227,7 @@ class Epitelete {
      * @return {Promise<perfDocument>} - Transformed PERF document
      * @private
      */
-    async runPipeline({ bookCode, pipelineName, perfDocument }) {
+    async runPipeline({ bookCode, pipelineName, perfDocument, multiplePerfs = false }) {
         if (!pipelineName) return { perf: perfDocument };
         const storedData = this.getPipelineData(bookCode);
         const [_inputs] = this.pipelineHandler.pipelines[pipelineName];
@@ -236,7 +236,13 @@ class Epitelete {
             if (inputKey in inputs) data[inputKey] = storedData[inputKey];
             return data;
         }, {}) : undefined;
-        const pipelineArgs = { perf: perfDocument, ...data };
+        let pipelineArgs = null;
+        if(multiplePerfs) {
+            const { perfSource, perfTarget } = perfDocument;
+            pipelineArgs = { perfSource: perfSource, perfTarget: perfTarget, ...data };
+        } else {
+            pipelineArgs = { perf: perfDocument, ...data };
+        }
         const { perf, ...pipelineData } = await this.pipelineHandler.runPipeline(pipelineName, pipelineArgs);
         return { perf, pipelineData };
     }
@@ -256,7 +262,7 @@ class Epitelete {
      */
     async loadPerf(bookCode, perfDocument, options) {
         const shouldClone = options.cloning ?? true;
-        const { writePipeline, readPipeline } = options;
+        const { writePipeline, readPipeline, perfSource } = options;
         const {perf:writePerf, pipelineData: writePipelineData} = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument });
         let validatorResult = this.validator.validate('constraint','perfDocument','0.3.0', writePerf);
         if (!validatorResult.isValid) {
@@ -285,6 +291,40 @@ class Epitelete {
         this.setPipelineData(bookCode, readPipelineData);
         this.savePerf(bookCode);
         this.notifyObservers({ action: ACTIONS.LOAD_PERF, data: readPerf });
+        return readPerf;
+    }
+
+    async loadPerfToRichPerf(bookCode, perfDocuments, options) {
+        const shouldClone = options.cloning ?? true;
+        // const { sourcePerf, targetPerf } = perfDocuments;
+        const { writePipeline, readPipeline } = options;
+        const {perf:writePerf, pipelineData: writePipelineData} = await this.runPipeline({ bookCode, pipelineName: writePipeline, perfDocument:perfDocuments  });
+        let validatorResult = this.validator.validate('constraint','perfDocument','0.3.0', writePerf);
+        if (!validatorResult.isValid) {
+            throw new Error(`writePerf is schema invalid: ${JSON.stringify(validatorResult.errors)}`);
+        }
+        this.setPipelineData(bookCode, writePipelineData);
+        const savedPerf = this.addDocument({
+            bookCode,
+            perfDocument: writePerf,
+            clone: shouldClone
+        });
+        validatorResult = this.validator.validate('constraint','perfDocument','0.3.0', savedPerf);
+        if (!validatorResult.isValid) {
+            throw new Error(`savedPerf is schema invalid: ${JSON.stringify(validatorResult.errors)}`);
+        }
+        // console.log(JSON.stringify(writePerf, " ", 4));
+        const {perf:readPerf, pipelineData: readPipelineData} = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument: savedPerf });
+        validatorResult = this.validator.validate('constraint','perfDocument','0.3.0', readPerf);
+        if (!validatorResult.isValid) {
+            const detailError = validatorResult.errors.map(error => {
+                const value = getPathValue({object: readPerf, path: error.instancePath});
+                return {...error, value: JSON.stringify(value,null,2)}
+            })
+            throw new Error(`readPerf is schema invalid: ${JSON.stringify(detailError)}`);
+        }
+        this.setPipelineData(bookCode, readPipelineData);
+        this.savePerf(bookCode);
         return readPerf;
     }
 
@@ -327,7 +367,7 @@ class Epitelete {
      * @return {Promise<perfDocument>} fetched PERF document
      */
     async fetchPerf(bookCode, options = {}) {
-        validateParams(["writePipeline","readPipeline","cloning"], options, "Unexpected option in fetchPerf");
+        validateParams(["writePipeline","readPipeline","cloning", "perfSource"], options, "Unexpected option in fetchPerf");
 
         if (this.backend === "standalone") {
             throw "Can't call fetchPerf in standalone mode";
@@ -359,20 +399,95 @@ class Epitelete {
      * @return {Promise<perfDocument>} found or fetched PERF document
      */
     async readPerf(bookCode, options = {}) {
-        validateParams(["readPipeline","cloning"], options, "Unexpected option in readPerf");
+        validateParams(["readPipeline","cloning", "perfSource"], options, "Unexpected option in readPerf");
         const shouldClone = options.cloning ?? true;
 
         if (!this.history[bookCode] && this.backend === "proskomma") {
+            if(options.perfSource) {
+                return this.fetchRichPerf(bookCode, options)
+            }
             return this.fetchPerf(bookCode, options);
         }
         if (!this.history[bookCode] && this.backend === "standalone") {
             throw `No document with bookCode="${bookCode}" found in memory. Use sideloadPerf() to load the document.`;
         }
-        const perfDocument = this.getDocument(bookCode, shouldClone);
+        let perfDocument = null;
         const { readPipeline } = options;
-        const { perf, pipelineData } = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument });
-        this.setPipelineData(bookCode, pipelineData);
-        return perf;
+        if(options.perfSource) {
+            perfDocument = { perfTarget:this.getDocument(bookCode, shouldClone), perfSource:options.perfSource };
+            const { perf, pipelineData } = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument, multiplePerfs: true });
+            this.setPipelineData(bookCode, pipelineData);
+            return perf;
+        } else {
+            perfDocument = this.getDocument(bookCode, shouldClone);
+            const { perf, pipelineData } = await this.runPipeline({ bookCode, pipelineName: readPipeline, perfDocument });
+            this.setPipelineData(bookCode, pipelineData);
+            return perf;
+        }
+    }
+
+    // TODO
+    async sideLoadRichPerf(bookCode, richPerfDocument, options = {}) {
+        validateParams(["writePipeline", "readPipeline", "cloning"], options, "Unexpected option in sideloadPerf");
+
+        if (this.backend === "proskomma") {
+            throw "Can't call sideloadPerf in proskomma mode";
+        }
+
+        if (!bookCode || !richPerfDocument) {
+            throw "sideloadPerf requires 2 arguments (bookCode, richPerfDocument)";
+        }
+
+        const validatorResult = this.validator.validate('constraint','perfDocument','0.3.0', richPerfDocument);
+        if (!validatorResult.isValid) {
+            throw `perfJSON is not valid. \n${JSON.stringify(validatorResult,null,2)}`;
+        }
+        return await this.loadPerf(bookCode, richPerfDocument, options);
+    }
+    
+    /**
+     * Fetch a richPerf document.
+     * @param {string} bookCode
+     * @param {object} [options]
+     * @param {string} [options.writePipeline] - name of pipeline to be run through before saving to memory.
+     * @param {string} [options.readPipeline] - name of pipeline to be run through after saving to memory.
+     * @returns 
+     */
+    async fetchRichPerf(bookCode, options = {}) {
+        // TODO : change to name perfSource for a more generic one
+        validateParams(["writePipeline","readPipeline","cloning","perfSource"], options, "Unexpected option in fetchRichPerf");
+
+        if (this.backend === "standalone") {
+            throw "Can't call fetchPerf in standalone mode";
+        }
+        if (!bookCode) {
+            throw new Error("fetchPerf requires argument (bookCode)");
+        }
+         if (bookCode.length > 3 || !/^[A-Z0-9]{3}$/.test(bookCode)) {
+            throw new Error(`Invalid bookCode: "${bookCode}". Only three characters (uppercase letters [A-Z] or numbers [0-9]) allowed.`);
+        }
+        const query = `{docSet(id: "${this.docSetId}") { document(bookCode: "${bookCode}") { perf } } }`;
+        const { data } = this.proskomma.gqlQuerySync(query);
+        const queryResult = data.docSet.document.perf;
+
+        if (!queryResult) {
+            throw new Error(`No document with bookCode="${bookCode}" found.`);
+        }
+        const perfDocument = JSON.parse(queryResult);
+
+        const richPerfDocument = this.runPipeline("TIT", "perfToRichPerf", perfDocument);
+        return await this.load(bookCode, richPerfDocument, options);
+    }
+ 
+
+    async getRichPerf(bookCode, sourcePerf) {
+        let perfDoc = await this.readPerf(bookCode);
+        const output = await this.pipelineHandler.runPipeline("perfToRichPerf", {
+            "perfTarget": perfDoc,
+            "perfSource": sourcePerf
+        });
+
+        return output.perf;
     }
 
     /**
@@ -535,6 +650,13 @@ class Epitelete {
             return warnings;
         }, []);
         return warnings;
+    }
+
+    getMainSequence(bookCode) {
+        let documents = this.getDocuments();
+        let sequences = documents[bookCode]?.sequences;
+        let mainSequenceId = Object.keys(sequences)[0];
+        return sequences[mainSequenceId];
     }
 
     /**

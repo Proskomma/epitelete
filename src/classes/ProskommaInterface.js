@@ -45,7 +45,7 @@ class ProskommaInterface {
     }
 
     getIds() {
-        let listIds = this.queryPk("{ documents { id } }");
+        let listIds = this.queryPkSync("{ documents { id } }");
         let arrayIds = [];
         listIds.data.documents.forEach(element => {
             arrayIds.push(element.id);
@@ -54,12 +54,8 @@ class ProskommaInterface {
     }
 
     getId() {
-        let listIds = this.queryPk("{ document { id } }");
-        let arrayIds = [];
-        listIds.data.document.forEach(element => {
-            arrayIds.push(element.id);
-        });
-        return arrayIds;
+        let listIds = this.queryPkSync("{ document { id } }");
+        return [listIds.data.document.id];
     }
 
 

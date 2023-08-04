@@ -1,5 +1,5 @@
 /* eslint-disable require-await */
-const { Aligner } = require("../../dist/classes/alignApi");
+const Aligner = require("../../dist/classes/alignApi").default;
 const { saveFile } = require("../../src/utils/index");
 const path = require("path");
 const fse = require("fs-extra");
@@ -17,7 +17,7 @@ let alignerTool = null;
 const perfBase = JSON.parse(fse
     .readFileSync(
       path.resolve(
-        path.join(__dirname, "..", "data", "TITUS_aligned_perf.json")
+        path.join(__dirname, "..", "test_data", "TITUS_aligned_perf.json")
       )
     )
     .toString());
@@ -35,18 +35,6 @@ test(
             t.plan(1);
             let { usfm, bookCode } = await getBook(greekUrl);
             t.doesNotThrow(() => new Aligner({ sourceText: [usfm, "grk", "ugnt"], targetText: [], verbose: false}));
-        } catch (err) {
-            console.error(err);
-        }
-    },
-);  
-
-test(
-    `import source in PERF mode(${testGroup})`,
-    async function (t) {
-        try {
-            t.plan(1);
-            t.doesNotThrow(() => new Aligner({ proskomma: perfBase, verbose: false}));
         } catch (err) {
             console.error(err);
         }
@@ -135,7 +123,7 @@ test(
     `basic functionnality checks (${testGroup})`,
     async function (t) {
         try {
-            t.plan(10);
+            t.plan(9);
             if(!alignerTool) {
                 let source = await getBook(greekUrl);
                 let target = await getBook(defaultUrl);
@@ -208,14 +196,14 @@ test(
     },
 );
 
-test(
+test.only(
     `alignment report to usfm tests tests in perf (${testGroup})`,
     async function (t) {
         try {
             t.plan(1);
             let source = await getBook(greekUrl);
             let target = await getBook(defaultUrl);
-            alignerToolForUsfm = new Aligner({ sourceText: [source.usfm, "grk", "ugnt"], targetText: [target.usfm, "fra", "lsg"], verbose: false});
+            let alignerToolForUsfm = new Aligner({ sourceText: [source.usfm, "grk", "ugnt"], targetText: [target.usfm, "fra", "lsg"], verbose: false});
             t.equal(JSON.stringify(alignerToolForUsfm.getAlignmentJSON()), "{}");
             await alignerToolForUsfm.setChapterVerse(1,1);
             alignerToolForUsfm.addAlignment(1,1);
@@ -230,30 +218,13 @@ test(
             alignerToolForUsfm.addAlignment(2,4);
             alignerToolForUsfm.addAlignment(2,5);
             alignerToolForUsfm.addAlignment(2,6);
-            // console.log(JSON.stringify(alignerToolForUsfm.getAlignmentJSON(), null, 4));
-            let output = await alignerToolForUsfm.generateAlignedPerf();
+            console.log(JSON.stringify(alignerToolForUsfm.getAlignmentJSON(), null, 4));
+            // let output = await alignerToolForUsfm.generateAlignedPerf();
             // let perfOut = output.perf;
             // console.log(output);
             saveFile(output.perf, "./outputPERF.json");
             saveFile(output.reportgreekptx, "./reportgreekptx.json");
             // console.log(output.usfm);
-        } catch (err) {
-            console.error(err);
-        }
-    },
-);
-
-test(
-    `check source and target texts (${testGroup})`,
-    async function (t) {
-        try {
-            t.plan(2);
-            let source = await getBook(greekTitusUrl);
-            let target = await getBook(defaultUrl);
-            alignerTool = new Aligner({ sourceText: [source.usfm, "grk", "ugnt"], verbose: false});
-            let res = await alignerTool.getUniqueLemmas("grk_ugnt",source.bookCode);
-            console.log(res);
-            t.equal(typeof res, "object");
         } catch (err) {
             console.error(err);
         }

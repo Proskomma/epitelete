@@ -43,7 +43,7 @@ class Aligner {
             }
         } else if(!proskomma) {
             this.bookCodeTrg = this.proskommaInterface.getBookCode();
-            this.docSetIdTrg = this.proskommaInterface.getId()[0];
+            this.docSetIdTrg = this.proskommaInterface.getIds()[0];
             this.targetText = targetText[0];
         } else {
             this.targetText = "";
@@ -182,11 +182,6 @@ class Aligner {
         let query = `{ docSet (id: "${this.idtexts[0]}") { document(bookCode:"${this.bookCode}") { ${type} }}}`;
         let { data } = await this.proskommaInterface.queryPk(query);
         return data.docSet.document[`${type}`];
-    }
-
-    async getUniqueLemmas() {
-        let res = await this.proskommaInterface.getUniqueLemmas();
-        return res;
     }
 
     /**

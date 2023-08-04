@@ -222,8 +222,8 @@ test.only(
             // let output = await alignerToolForUsfm.generateAlignedPerf();
             // let perfOut = output.perf;
             // console.log(output);
-            saveFile(output.perf, "./outputPERF.json");
-            saveFile(output.reportgreekptx, "./reportgreekptx.json");
+            // saveFile(output.perf, "./outputPERF.json");
+            // saveFile(output.reportgreekptx, "./reportgreekptx.json");
             // console.log(output.usfm);
         } catch (err) {
             console.error(err);

@@ -9,7 +9,7 @@
   "scripts": {
     "doc": "jsdoc -c jsdoc.json",
     "apiGen": "npx run-func ./api.generate.js insertApiDocs",
-    "test": "yarn run build && bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
+    "test": "yarn run build && bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/faucet/bin/cmd.js\"",
     "rawTest": "yarn run build && tape -r @babel/register test/code/*.cjs",
     "drill": "yarn run build && node utils/drill.js",
     "oneTest": "yarn run build && tape -r @babel/register test/code/%TESTSCRIPT%.cjs",
@@ -48,7 +48,7 @@
     "jsdoc-to-markdown": "^8.0.1",
     "path": "^0.12.7",
     "proskomma": "^0.9.3",
-    "tap-summary": "^4.0.0",
+    "faucet": "^0.0.4",
     "tape": "^5.7.4"
   }
 }
